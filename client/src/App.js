@@ -39,7 +39,7 @@ class App extends Component {
         }
     };
 
-    makeSearchRequest = query => {
+    makeSearchRequest = (query) => {
         axios.get(`https://api.discogs.com/database/search?q=${query}&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
                 this.setState({ queryResult: response.data });
