@@ -15,7 +15,7 @@ mongoose
     .then(() => console.log('MongoDB connected'))
     .catch(error => console.log(error));
 
-app.use('api/items', items);
+app.use('/api/items', items);
 
 const port = process.env.PORT || 5000;
 

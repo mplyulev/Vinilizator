@@ -16,6 +16,7 @@
     "mongoose": "^5.4.0"
   },
   "devDependencies": {
+    "@types/express": "^4.16.0",
     "nodemon": "^1.18.9"
   }
 }
