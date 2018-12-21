@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
+
 import {
     Collapse,
     Navbar,
@@ -6,11 +8,11 @@ import {
     NavbarBrand,
     Nav,
     NavItem,
-    NavLink,
     UncontrolledDropdown,
     DropdownToggle,
     DropdownMenu,
     DropdownItem } from 'reactstrap';
+import { ROUTE_MY_COLLECTION, ROUTE_SEARCH } from '../constants';
 
 class AppNavBar extends Component {
     state = {
@@ -31,9 +33,14 @@ class AppNavBar extends Component {
                     <NavbarToggler onClick={this.toggle} />
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="ml-auto" navbar>
-                            <NavItem>
-                                <NavLink href="/components/">Components</NavLink>
-                            </NavItem>
+                            <NavLink to={ROUTE_SEARCH}
+                                     activeClassName="selected">
+                                SEARCH
+                            </NavLink>
+                            <NavLink to={ROUTE_MY_COLLECTION}
+                                     activeClassName="selected">
+                                MY COLLECTION
+                            </NavLink>
                         </Nav>
                     </Collapse>
                 </Navbar>

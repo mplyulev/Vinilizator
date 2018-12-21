@@ -6,8 +6,7 @@ import axios from 'axios';
 import {
     Redirect,
     Route,
-    Switch,
-    withRouter
+    Switch
 } from 'react-router-dom';
 
 import './App.css';
@@ -15,7 +14,15 @@ import AppNavBar from './components/AppNavBar';
 import SearchBar from './components/SearchBar';
 import RecordsList from './components/RecordsList';
 
-import { DEBOUNCE_TIME, DISCOGS_KEY, DISCOGS_SECRET } from './constants';
+import {
+    DATA_TYPE_ARTIST,
+    DATA_TYPE_LABEL, DATA_TYPE_MASTER, DATA_TYPE_RELEASE,
+    DEBOUNCE_TIME,
+    DISCOGS_KEY,
+    DISCOGS_SECRET,
+    ROUTE_HOME,
+    ROUTE_SEARCH
+} from './constants';
 
 class App extends Component {
     constructor(props) {
@@ -55,17 +62,48 @@ class App extends Component {
         }
     }
 
-  render() {
-      const { queryResult } = this.state;
+    render() {
+        const { queryResult } = this.state;
+        console.log(queryResult);
 
-    return (
-        <div>
-          <AppNavBar />
-          <SearchBar searchQuery={this.searchQuery} />
-            <RecordsList queryResult={queryResult} />
-        </div>
-    );
-  }
+        if (!_.isEmpty(queryResult)) {
+            const searchResultArtists = queryResult.results.filter(result => {
+                return result.type === DATA_TYPE_ARTIST
+            });
+
+            const searchResultLabels = queryResult.results.filter(result => {
+                return result.type === DATA_TYPE_LABEL
+            });
+
+            const searchResultReleases = queryResult.results.filter(result => {
+                return result.type === DATA_TYPE_RELEASE
+            });
+
+            const searchResultMaster = queryResult.results.filter(result => {
+                return result.type === DATA_TYPE_MASTER
+            });
+
+            console.log(searchResultArtists, searchResultLabels, searchResultReleases, searchResultMaster);
+        }
+
+        return (
+            <div>
+              <AppNavBar />
+                <div className="router-container">
+                    <Switch>
+                        <Route exact path="/"
+                               render={() => <Redirect to={ROUTE_HOME} />} />
+                        <Route exact path={ROUTE_SEARCH}
+                               render={() => <SearchBar searchQuery={this.searchQuery} />} />
+                        <Route exact path={ROUTE_SEARCH}
+                               render={() => <SearchBar searchQuery={this.searchQuery} />} />
+                        <Route exact path="/404" render={() => null} />
+                        <Redirect to="/404" />
+                    </Switch>
+                </div>
+            </div>
+        );
+    }
 }
 
 export default App;
