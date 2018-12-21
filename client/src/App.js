@@ -11,12 +11,10 @@ import {
 
 import './App.css';
 import AppNavBar from './components/AppNavBar';
-import SearchBar from './components/SearchBar';
+import SearchPage from './components/SearchPage';
 import RecordsList from './components/RecordsList';
 
 import {
-    DATA_TYPE_ARTIST,
-    DATA_TYPE_LABEL, DATA_TYPE_MASTER, DATA_TYPE_RELEASE,
     DEBOUNCE_TIME,
     DISCOGS_KEY,
     DISCOGS_SECRET,
@@ -36,13 +34,11 @@ class App extends Component {
         this.searchQuery = _.debounce(this.searchQuery, DEBOUNCE_TIME);
     }
 
-    sortDataByType(data) {
-
-    }
-
     searchQuery = (value) => {
-        if (value.length >=0) {
+        if (value.length > 0) {
             this.setState({ searchQuery: value });
+        } else {
+            this.setState({ queryResult: {}, searchQuery: '' })
         }
     };
 
@@ -63,28 +59,7 @@ class App extends Component {
     }
 
     render() {
-        const { queryResult } = this.state;
-        console.log(queryResult);
-
-        if (!_.isEmpty(queryResult)) {
-            const searchResultArtists = queryResult.results.filter(result => {
-                return result.type === DATA_TYPE_ARTIST
-            });
-
-            const searchResultLabels = queryResult.results.filter(result => {
-                return result.type === DATA_TYPE_LABEL
-            });
-
-            const searchResultReleases = queryResult.results.filter(result => {
-                return result.type === DATA_TYPE_RELEASE
-            });
-
-            const searchResultMaster = queryResult.results.filter(result => {
-                return result.type === DATA_TYPE_MASTER
-            });
-
-            console.log(searchResultArtists, searchResultLabels, searchResultReleases, searchResultMaster);
-        }
+        const { queryResult, searchQuery } = this.state;
 
         return (
             <div>
@@ -94,9 +69,7 @@ class App extends Component {
                         <Route exact path="/"
                                render={() => <Redirect to={ROUTE_HOME} />} />
                         <Route exact path={ROUTE_SEARCH}
-                               render={() => <SearchBar searchQuery={this.searchQuery} />} />
-                        <Route exact path={ROUTE_SEARCH}
-                               render={() => <SearchBar searchQuery={this.searchQuery} />} />
+                               render={() => <SearchPage queryResult={queryResult} searchQueryString={searchQuery} searchQuery={this.searchQuery} />} />
                         <Route exact path="/404" render={() => null} />
                         <Redirect to="/404" />
                     </Switch>
