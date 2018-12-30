@@ -28,7 +28,9 @@ class AppNavBar extends Component {
     render() {
         return (
             <div>
-                <Navbar color="light" light expand="sm" className="mb-5">
+                <Navbar color="light"
+                        light expand="sm"
+                        className="mb-5 navbar">
                     <NavbarBrand href="/">VYNILIZATOR</NavbarBrand>
                     <NavbarToggler onClick={this.toggle} />
                     <Collapse isOpen={this.state.isOpen} navbar>

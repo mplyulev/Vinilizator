@@ -9,7 +9,7 @@ import {
     Switch
 } from 'react-router-dom';
 
-import './App.css';
+import './styles/App.scss';
 import AppNavBar from './components/AppNavBar';
 import SearchPage from './components/SearchPage';
 import RecordsList from './components/RecordsList';
@@ -18,7 +18,7 @@ import {
     DEBOUNCE_TIME,
     DISCOGS_KEY,
     DISCOGS_SECRET,
-    ROUTE_HOME,
+    ROUTE_HOME, ROUTE_MY_COLLECTION,
     ROUTE_SEARCH
 } from './constants';
 
@@ -69,6 +69,8 @@ class App extends Component {
                         <Route exact path="/"
                                render={() => <Redirect to={ROUTE_HOME} />} />
                         <Route exact path={ROUTE_SEARCH}
+                               render={() => <SearchPage queryResult={queryResult} searchQueryString={searchQuery} searchQuery={this.searchQuery} />} />
+                        <Route exact path={ROUTE_MY_COLLECTION}
                                render={() => <SearchPage queryResult={queryResult} searchQueryString={searchQuery} searchQuery={this.searchQuery} />} />
                         <Route exact path="/404" render={() => null} />
                         <Redirect to="/404" />
