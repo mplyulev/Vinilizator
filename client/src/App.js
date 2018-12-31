@@ -48,7 +48,18 @@ class App extends Component {
                 this.setState({ queryResult: response.data });
             })
             .catch(error => {
-                console.log(error);
+                console.error(error);
+            });
+    };
+
+    getNextPageResults = () => {
+        const {searchQuery} = this.state;
+        axios.get(`https://api.discogs.com/database/search?q=${searchQuery}?10,50&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
+            .then(response => {
+                this.setState({ queryResult: response.data });
+            })
+            .catch(error => {
+                console.error(error);
             });
     };
 
@@ -69,7 +80,7 @@ class App extends Component {
                         <Route exact path="/"
                                render={() => <Redirect to={ROUTE_HOME} />} />
                         <Route exact path={ROUTE_SEARCH}
-                               render={() => <SearchPage queryResult={queryResult} searchQueryString={searchQuery} searchQuery={this.searchQuery} />} />
+                               render={() => <SearchPage getNextPageResult={this.getNextPageResults} queryResult={queryResult} searchQueryString={searchQuery} searchQuery={this.searchQuery} />} />
                         <Route exact path={ROUTE_MY_COLLECTION}
                                render={() => <SearchPage queryResult={queryResult} searchQueryString={searchQuery} searchQuery={this.searchQuery} />} />
                         <Route exact path="/404" render={() => null} />
