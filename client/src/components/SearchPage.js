@@ -31,29 +31,25 @@ class SearchPage extends Component {
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
-        if (this.props.searchQueryString !== nextProps.searchQueryString) {
-            this.setState({allFilterQueryResult: nextProps.queryResult.results});
-            console.log(nextProps.queryResult.results);
-        }
-    }
+        const { filterType } = nextProps;
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        const {allFilterQueryResult} = this.state;
-        console.log(allFilterQueryResult);
-        if (allFilterQueryResult && !_.isEmpty(allFilterQueryResult.results) && allFilterQueryResult.results.length > 0) {
-            const searchResultArtist = allFilterQueryResult.results.filter(result => {
+        if (nextProps.requestPending !== this.props.requestPending && !nextProps.requestPending && !filterType) {
+
+            const queryResult = nextProps.allFilterQueryResult;
+
+            const searchResultArtist = queryResult.results.filter(result => {
                 return result.type === DATA_TYPE_ARTIST
             });
 
-            const searchResultLabel = allFilterQueryResult.results.filter(result => {
+            const searchResultLabel = queryResult.results.filter(result => {
                 return result.type === DATA_TYPE_LABEL
             });
 
-            const searchResultRelease = allFilterQueryResult.results.filter(result => {
+            const searchResultRelease = queryResult.results.filter(result => {
                 return result.type === DATA_TYPE_RELEASE
             });
 
-            const searchResultMaster = allFilterQueryResult.results.filter(result => {
+            const searchResultMaster = queryResult.results.filter(result => {
                 return result.type === DATA_TYPE_MASTER
             });
 
@@ -61,65 +57,65 @@ class SearchPage extends Component {
         }
     }
 
-
     render () {
-        const { queryResult, getNextPageResult, makeSearchRequest, searchQueryString } = this.props;
+        const { getNextPageResult, makeSearchRequest, searchQueryString, filterType, allFilterQueryResult, currentQueryResult } = this.props;
         const {
-            allFilterQueryResult,
             searchResultArtist,
             searchResultLabel,
             searchResultMaster,
             searchResultRelease
         } = this.state;
 
-        console.log(this.state)
+        const queryResult = !filterType ? allFilterQueryResult : currentQueryResult;
 
         return (
             <div>
                 <InputGroup>
                     <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
-                    <Input onChange={this.onChange} placeholder={searchQueryString}/>
+                    <Input onChange={this.onChange} placeholder={searchQueryString} />
                 </InputGroup>
                 {!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1
-                    ? <Pagination getNextPageResult={getNextPageResult} data={queryResult.pagination}/>
+                    ? <Pagination getNextPageResult={getNextPageResult}
+                                  filterType={filterType}
+                                  data={queryResult.pagination} />
                     : null}
-                <div className="search-result-container">
-                    {!_.isEmpty(queryResult) && queryResult.results.length > 0
-                        ? <span onClick={() => makeSearchRequest(searchQueryString)} className="result-filter">All
-                            <span className="result-number">{queryResult.results.length}</span>
-                        </span>
-                        : null}
-                    {searchResultRelease && searchResultRelease.length > 0
-                        ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_RELEASE)} className="result-filter">Releases
-                            <span className="result-number">{searchResultRelease.length}</span>
-                        </span>
-                        : null}
-                    {searchResultLabel && searchResultLabel.length > 0
-                        ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_LABEL)} className="result-filter">Labels
-                            <span className="result-number">{searchResultLabel.length}</span>
-                        </span>
-                        : null}
-                    {searchResultArtist && searchResultArtist.length > 0
-                        ?
-                        <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_ARTIST)} className="result-filter">Artists
-                            <span className="result-number">{searchResultArtist.length}</span>
-                        </span>
-                        : null}
-                    {searchResultMaster && searchResultMaster.length > 0
-                        ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_MASTER)} className="result-filter">Master
-                            <span className="result-number">{searchResultMaster.length}</span>
-                        </span>
-                        : null}
-                    <div className="results-container"> {
-                        !_.isEmpty(queryResult.results) && queryResult.results.map(result => {
-                            return (<Release data={result} key={result.id}></Release>)
-                        })
+                <Fragment>
+                    {!_.isEmpty(queryResult.results) && queryResult.results.length >= 1 ?
+                        <div className="search-result-container">
+                            <span onClick={() => makeSearchRequest(searchQueryString)}
+                                  className="result-filter">All</span>
+                            {searchResultRelease && searchResultRelease.length > 0
+                                ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_RELEASE)}
+                                        className="result-filter">Releases</span>
+                                : null}
+                            {searchResultLabel && searchResultLabel.length > 0
+                                ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_LABEL)}
+                                        className="result-filter">Labels</span>
+                                : null}
+                            {searchResultArtist && searchResultArtist.length > 0
+                                ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_ARTIST)}
+                                        className="result-filter">Artists</span>
+                                : null}
+                            {searchResultMaster && searchResultMaster.length > 0
+                                ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_MASTER)}
+                                        className="result-filter">Master</span>
+                                : null}
+                            <span>Results: {queryResult.pagination.items} of {allFilterQueryResult.pagination.items}</span>
+                            <div className="results-container"> {
+                                !_.isEmpty(queryResult.results) && queryResult.results.map(result => {
+                                    return (<Release data={result} key={result.id}></Release>)
+                                })
+                            }
+                            </div>
+                            {!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1
+                                ? <Pagination getNextPageResult={getNextPageResult}
+                                              filterType={filterType}
+                                              data={queryResult.pagination} />
+                                : null}
+                        </div>
+                        : null
                     }
-                    </div>
-                    {!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1
-                        ? <Pagination getNextPageResult={getNextPageResult} data={queryResult.pagination}/>
-                        : null}
-                </div>
+                </Fragment>
             </div>
         );
     }

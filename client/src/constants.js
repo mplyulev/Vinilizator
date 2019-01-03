@@ -15,7 +15,7 @@ export const ROUTE_MY_COLLECTION = '/colletction';
 
 //COMMON
 export const PAGINATION_WIDTH = 324;
-export const PAGIANTION_PAGES_PER_SLIDE = 6;
+export const PAGINATION_PAGES_PER_SLIDE = 6;
 
 //URLS
 

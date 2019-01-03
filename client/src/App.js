@@ -27,7 +27,9 @@ class App extends Component {
 
         this.state = {
             searchQuery: '',
-            queryResult: {}
+            currentQueryResult: [],
+            allFilterQueryResult: [],
+            filterType: ''
         };
 
         this.searchQuery = _.debounce(this.searchQuery, DEBOUNCE_TIME);
@@ -37,15 +39,20 @@ class App extends Component {
         if (value.length > 0) {
             this.setState({ searchQuery: value });
         } else {
-            this.setState({ queryResult: {}, searchQuery: '' })
+            this.setState({ currentQueryResult: {}, searchQuery: '' })
         }
     };
 
     makeSearchRequest = (query, type) => {
+        console.log(type);
         this.setState({requestPending: true});
         axios.get(`https://api.discogs.com/database/search?q=${query}&type=${type || 'all'}&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
-                this.setState({ queryResult: response.data, requestPending: false });
+                type
+                    ? this.setState({ currentQueryResult: response.data, filterType: type})
+                    : this.setState({ allFilterQueryResult: response.data, filterType: type});
+
+                this.setState({requestPending: false});
             })
             .catch(error => {
                 console.error(error);
@@ -53,14 +60,20 @@ class App extends Component {
             });
     };
 
-    getNextPageResult = (page) => {
+    getNextPageResult = (page, type) => {
+        this.setState({requestPending: true});
         const {searchQuery} = this.state;
-        axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&page=${page}&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
+        axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${type || 'all'}&page=${page}&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
-                this.setState({ queryResult: response.data });
+                type
+                    ? this.setState({ currentQueryResult: response.data, filterType: type})
+                    : this.setState({ allFilterQueryResult: response.data, filterType: type});
+
+                this.setState({requestPending: false});
             })
             .catch(error => {
                 console.error(error);
+                this.setState({requestPending: false});
             });
     };
 
@@ -71,7 +84,7 @@ class App extends Component {
     }
 
     render() {
-        const { queryResult, searchQuery } = this.state;
+        const { currentQueryResult, searchQuery, requestPending, allFilterQueryResult, filterType } = this.state;
 
         return (
             <div>
@@ -82,11 +95,15 @@ class App extends Component {
                                render={() => <Redirect to={ROUTE_HOME} />} />
                         <Route exact path={ROUTE_SEARCH}
                                render={() => <SearchPage getNextPageResult={this.getNextPageResult}
-                                                         queryResult={queryResult}
+                                                         currentQueryResult={currentQueryResult}
+                                                         allFilterQueryResult={allFilterQueryResult}
+                                                         requestPending={requestPending}
+                                                         filterType={filterType}
                                                          makeSearchRequest={this.makeSearchRequest}
-                                                         searchQueryString={searchQuery} searchQuery={this.searchQuery} />} />
+                                                         searchQueryString={searchQuery}
+                                                         searchQuery={this.searchQuery} />} />
                         <Route exact path={ROUTE_MY_COLLECTION}
-                               render={() => <SearchPage queryResult={queryResult} searchQueryString={searchQuery} searchQuery={this.searchQuery} />} />
+                               render={() => <SearchPage currentQueryResult={currentQueryResult} searchQueryString={searchQuery} searchQuery={this.searchQuery} />} />
                         <Route exact path="/404" render={() => null} />
                         <Redirect to="/404" />
                     </Switch>
