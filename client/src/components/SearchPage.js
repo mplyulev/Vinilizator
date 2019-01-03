@@ -16,11 +16,14 @@ class SearchPage extends Component {
         super(props);
 
         this.state = {
-            data: {}
+            allFilterQueryResult: [],
+            searchResultArtist: [],
+            searchResultLabel: [],
+            searchResultRelease: [],
+            searchResultMaster: []
         };
 
         this.onChange = this.onChange.bind(this);
-        this.setFilter = this.setFilter.bind(this);
     }
 
     onChange(event) {
@@ -28,79 +31,87 @@ class SearchPage extends Component {
     }
 
     componentWillReceiveProps(nextProps, nextContext) {
-        if (_.isEmpty(this.props.queryResult.results && _.isEmpty(nextProps.queryResult.results))) {
-            this.setState({data: nextProps.queryResult.results});
+        if (this.props.searchQueryString !== nextProps.searchQueryString) {
+            this.setState({allFilterQueryResult: nextProps.queryResult.results});
+            console.log(nextProps.queryResult.results);
         }
     }
 
-    setFilter(data) {
-        console.log('asd');
-        this.setState({data: data});
-    }
-
-    render () {
-        const { queryResult, getNextPageResult} = this.props;
-
-        let searchResultArtist,
-            searchResultLabel,
-            searchResultMaster,
-            searchResultRelease;
-
-        if (queryResult && !_.isEmpty(queryResult.results) && queryResult.results.length > 0) {
-            searchResultArtist = queryResult.results.filter(result => {
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const {allFilterQueryResult} = this.state;
+        console.log(allFilterQueryResult);
+        if (allFilterQueryResult && !_.isEmpty(allFilterQueryResult.results) && allFilterQueryResult.results.length > 0) {
+            const searchResultArtist = allFilterQueryResult.results.filter(result => {
                 return result.type === DATA_TYPE_ARTIST
             });
 
-            searchResultLabel = queryResult.results.filter(result => {
+            const searchResultLabel = allFilterQueryResult.results.filter(result => {
                 return result.type === DATA_TYPE_LABEL
             });
 
-            searchResultRelease = queryResult.results.filter(result => {
+            const searchResultRelease = allFilterQueryResult.results.filter(result => {
                 return result.type === DATA_TYPE_RELEASE
             });
 
-            searchResultMaster = queryResult.results.filter(result => {
+            const searchResultMaster = allFilterQueryResult.results.filter(result => {
                 return result.type === DATA_TYPE_MASTER
             });
+
+            this.setState({searchResultMaster, searchResultRelease, searchResultLabel, searchResultArtist});
         }
+    }
+
+
+    render () {
+        const { queryResult, getNextPageResult, makeSearchRequest, searchQueryString } = this.props;
+        const {
+            allFilterQueryResult,
+            searchResultArtist,
+            searchResultLabel,
+            searchResultMaster,
+            searchResultRelease
+        } = this.state;
+
+        console.log(this.state)
 
         return (
             <div>
                 <InputGroup>
                     <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
-                    <Input onChange={this.onChange} placeholder={this.props.searchQueryString}/>
+                    <Input onChange={this.onChange} placeholder={searchQueryString}/>
                 </InputGroup>
-
+                {!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1
+                    ? <Pagination getNextPageResult={getNextPageResult} data={queryResult.pagination}/>
+                    : null}
                 <div className="search-result-container">
                     {!_.isEmpty(queryResult) && queryResult.results.length > 0
-                        ? <span onClick={() => this.setFilter(queryResult.results)} className="result-filter">All
+                        ? <span onClick={() => makeSearchRequest(searchQueryString)} className="result-filter">All
                             <span className="result-number">{queryResult.results.length}</span>
                         </span>
                         : null}
                     {searchResultRelease && searchResultRelease.length > 0
-                        ? <span onClick={() => this.setFilter(searchResultRelease)} className="result-filter">Releases
+                        ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_RELEASE)} className="result-filter">Releases
                             <span className="result-number">{searchResultRelease.length}</span>
                         </span>
                         : null}
                     {searchResultLabel && searchResultLabel.length > 0
-                        ? <span onClick={() => this.setFilter(searchResultLabel)} className="result-filter">Labels
+                        ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_LABEL)} className="result-filter">Labels
                             <span className="result-number">{searchResultLabel.length}</span>
                         </span>
                         : null}
                     {searchResultArtist && searchResultArtist.length > 0
                         ?
-                        <span onClick={() => this.setFilter(searchResultArtist)} className="result-filter">Artists
+                        <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_ARTIST)} className="result-filter">Artists
                             <span className="result-number">{searchResultArtist.length}</span>
                         </span>
                         : null}
                     {searchResultMaster && searchResultMaster.length > 0
-                        ? <span onClick={() => this.setFilter(searchResultMaster)} className="result-filter">Master
+                        ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_MASTER)} className="result-filter">Master
                             <span className="result-number">{searchResultMaster.length}</span>
                         </span>
                         : null}
-
                     <div className="results-container"> {
-                        !_.isEmpty(this.state.data) && this.state.data.map(result => {
+                        !_.isEmpty(queryResult.results) && queryResult.results.map(result => {
                             return (<Release data={result} key={result.id}></Release>)
                         })
                     }

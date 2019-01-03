@@ -12,12 +12,11 @@ import {
 import './styles/App.scss';
 import AppNavBar from './components/AppNavBar';
 import SearchPage from './components/SearchPage';
-import RecordsList from './components/RecordsList';
 
 import {
     DEBOUNCE_TIME,
     DISCOGS_KEY,
-    DISCOGS_SECRET,
+    DISCOGS_SECRET, DOGS_SEARCH_URL,
     ROUTE_HOME, ROUTE_MY_COLLECTION,
     ROUTE_SEARCH
 } from './constants';
@@ -42,19 +41,21 @@ class App extends Component {
         }
     };
 
-    makeSearchRequest = (query) => {
-        axios.get(`https://api.discogs.com/database/search?q=${query}&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
+    makeSearchRequest = (query, type) => {
+        this.setState({requestPending: true});
+        axios.get(`https://api.discogs.com/database/search?q=${query}&type=${type || 'all'}&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
-                this.setState({ queryResult: response.data });
+                this.setState({ queryResult: response.data, requestPending: false });
             })
             .catch(error => {
                 console.error(error);
+                this.setState({requestPending: false});
             });
     };
 
-    getNextPageResults = () => {
+    getNextPageResult = (page) => {
         const {searchQuery} = this.state;
-        axios.get(`https://api.discogs.com/database/search?q=${searchQuery}?10,50&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
+        axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&page=${page}&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
                 this.setState({ queryResult: response.data });
             })
@@ -80,7 +81,10 @@ class App extends Component {
                         <Route exact path="/"
                                render={() => <Redirect to={ROUTE_HOME} />} />
                         <Route exact path={ROUTE_SEARCH}
-                               render={() => <SearchPage getNextPageResult={this.getNextPageResults} queryResult={queryResult} searchQueryString={searchQuery} searchQuery={this.searchQuery} />} />
+                               render={() => <SearchPage getNextPageResult={this.getNextPageResult}
+                                                         queryResult={queryResult}
+                                                         makeSearchRequest={this.makeSearchRequest}
+                                                         searchQueryString={searchQuery} searchQuery={this.searchQuery} />} />
                         <Route exact path={ROUTE_MY_COLLECTION}
                                render={() => <SearchPage queryResult={queryResult} searchQueryString={searchQuery} searchQuery={this.searchQuery} />} />
                         <Route exact path="/404" render={() => null} />

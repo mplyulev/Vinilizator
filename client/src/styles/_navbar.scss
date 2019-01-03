@@ -1,0 +1,27 @@
+.navbar {
+  background-color: black !important;
+  color: white !important;
+
+  .navbar-brand {
+    color: white;
+    font-weight: 1000;
+
+    &:hover {
+      color: white !important;
+    }
+  }
+
+  a {
+    margin: 0 15px;
+    color: white;
+    text-decoration: none;
+
+    &:hover {
+      color: red;
+    }
+
+    &.selected {
+      color: red;
+    }
+  }
+}

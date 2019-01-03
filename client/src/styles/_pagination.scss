@@ -1,0 +1,52 @@
+// pagination
+.pagination-wrapper {
+  position: relative;
+  width: 440px;
+  margin: 30px auto 60px;
+
+  .toolbar {
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .numbers-wrapper {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -25px;
+    overflow: hidden;
+    width: 320px;
+    margin: 0 auto;
+
+    .page-number-wrapper {
+      margin: 0 2px;
+
+      .page-number {
+        width: 50px;
+        padding: 5px !important;
+        line-height: 1.3 !important;
+        border-radius: 2px !important;
+
+        &:hover {
+          background-color: black !important;
+        }
+      }
+    }
+  }
+
+  .icon-arrow {
+    position: relative;
+    bottom: 7px;
+    font-size: 32px;
+    cursor: pointer;
+    color: gray;
+
+    &.left{
+      float: left;
+    }
+
+    &.right {
+      float: right;
+    }
+  }
+}
