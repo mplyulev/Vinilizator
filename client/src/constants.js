@@ -10,6 +10,7 @@ export const DATA_TYPE_ARTIST = 'artist';
 //ROUTES
 
 export const ROUTE_HOME = '/';
+export const ROUTE_LOGIN = '/register';
 export const ROUTE_SEARCH = '/search';
 export const ROUTE_MY_COLLECTION = '/colletction';
 
