@@ -13,13 +13,14 @@ import './styles/App.scss';
 import AppNavBar from './components/AppNavBar';
 import SearchPage from './components/SearchPage';
 import SignUp from './components/SignUp';
+import SignIn from './components/SignIn';
 
 import {
     DEBOUNCE_TIME,
     DISCOGS_KEY,
     DISCOGS_SECRET, DOGS_SEARCH_URL,
     ROUTE_HOME, ROUTE_LOGIN, ROUTE_MY_COLLECTION,
-    ROUTE_SEARCH
+    ROUTE_SEARCH, ROUTE_SIGN_IN, ROUTE_SIGN_UP
 } from './constants';
 
 class App extends Component {
@@ -94,7 +95,9 @@ class App extends Component {
                     <Switch>
                         <Route exact path="/"
                                render={() => <Redirect to={ROUTE_HOME} />} />
-                        <Route exact path={ROUTE_LOGIN}
+                        <Route exact path={ROUTE_SIGN_IN}
+                               render={() => <SignIn />} />
+                        <Route exact path={ROUTE_SIGN_UP}
                                render={() => <SignUp />} />
                         <Route exact path={ROUTE_SEARCH}
                                render={() => <SearchPage getNextPageResult={this.getNextPageResult}

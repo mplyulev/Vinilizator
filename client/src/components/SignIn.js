@@ -18,7 +18,7 @@ export default class SignUp extends Component {
     }
 
     validateForm() {
-        return this.state.email.length > 0 && this.state.password.length > 0 && this.state.username.length > 0;
+        return this.state.email.length > 0 && this.state.password.length > 0;
     }
 
     handleChange = event => {
@@ -30,32 +30,21 @@ export default class SignUp extends Component {
     handleSubmit = event => {
         event.preventDefault();
 
-        const { username, password, email } = this.state;
+        const { password, email } = this.state;
 
-        axios.post('/api/controllers/authentication/register', { username, password, email })
+        axios.post('/api/controllers/authentication/login', { password, email })
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
-                    res.data.usernameError ? this.setState({usernameError: res.data.msg}) : this.setState({usernameError: ''});
-                    res.data.emailError ? this.setState({emailError: res.data.msg}) : this.setState({emailError: ''});
+                    // res.data.usernameError ? this.setState({usernameError: res.data.msg}) : this.setState({usernameError: ''});
+                    // res.data.emailError ? this.setState({emailError: res.data.msg}) : this.setState({emailError: ''});
                 }
             });
     };
 
     render() {
         return (
-            <div className="sign-up-wrapper authentication-wrapper">
-                <form className="sign-up-form" onSubmit={this.handleSubmit}>
-                    <FormGroup>
-                        <Label for="username">Username</Label>
-                        <Input
-                            autoFocus
-                            type="username"
-                            id="username"
-                            name="username"
-                            onChange={this.handleChange}
-                        />
-                        <span className="error">{this.state.usernameError}</span>
-                    </FormGroup>
+            <div className="sign-in-wrapper authentication-wrapper">
+                <form className="sign-in-form" onSubmit={this.handleSubmit}>
                     <FormGroup>
                         <Label for="email">Email</Label>
                         <Input
@@ -81,7 +70,7 @@ export default class SignUp extends Component {
                         disabled={!this.validateForm()}
                         type="submit"
                     >
-                        Register
+                        Login
                     </Button>
                 </form>
             </div>

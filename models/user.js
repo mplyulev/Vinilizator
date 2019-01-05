@@ -20,39 +20,38 @@ const userSchema = new Schema({
 userSchema.methods.setPassword = password => {
     this.salt = crypto.randomBytes(16).toString('hex');
     this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex');
+    const encryptedPassword = {
+        hash: this.hash,
+        salt: this.salt
+    };
 
-    return this.hash;
+    return encryptedPassword;
 };
 
-userSchema.methods.validatePassword = function(password) {
-    const hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex');
-    return this.hash === hash;
+userSchema.methods.validatePassword = function(password, hash, salt) {
+    const currentHash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
+    return hash === currentHash;
 };
 
-userSchema.methods.validateEmailUsernameAccessibility = async (email, username) => {
+userSchema.methods.validateEmailUsernameAccessibility = (email, username) => {
     const errors = {};
-
-    const sameEmailError = User.findOne({ email: email }).then(function(result) {
-        if (result) {
-            errors.emailError = true;
+   return User.findOne( {
+        $or: [
+            { email : email },
+            { username: username }
+        ]
+    }).then(function(user) {
+        if (user && user.email === email) {
+            errors.email = true;
         }
-    });
 
-    const sameUsernameError = User.findOne({ username: username }).then(function(result) {
-        if (result) {
-            errors.usernameError = true
+        if (user && user.username === username) {
+            errors.username = true;
         }
-    });
 
-    return errors;
+       return errors
+    });
 };
-
-// userSchema.methods.validateUsernameAccessibility = username => {
-//
-//     return User.findOne({ username: username }).then(function(result) {
-//         return result !== null;
-//     });
-// };
 
 userSchema.methods.generateJwt = function() {
     const expiry = new Date();

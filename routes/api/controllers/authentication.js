@@ -12,63 +12,71 @@ router.post('/register', function(req, res) {
     if (!username || !password || !email) {
         res.json({success: false, msg: 'Please pass username and password.'});
     } else {
-        const newUser = new User();
-        newUser.hash = newUser.setPassword(password);
+        const newUser = new User({
+            email,
+            username
+        });
 
-        const errors = newUser.validateEmailUsernameAccessibility(email, username);
-        errors.then((result) => console.log(result))
+        newUser.hash = newUser.setPassword(password).hash;
+        newUser.salt = newUser.setPassword(password).salt;
 
-        let usernameError = '';
-        let emailError = '';
-
-        // doesEmailAlreadyExist.then(user => {
-        //     if (user) {
-        //         emailError = 'Fuck iif email'
-        //     } else {
-        //        newUser.email = email;
-        //     }
-        // });
-        //
-        // doesUsernameAlreadyExist.then(user => {
-        //     if (user) {
-        //         usernameError = 'fuckoff username';
-        //     } else {
-        //         newUser.username = username;
-        //     }
-        // });
-
-        console.log(newUser);
-
-        // save the user
-        newUser.save(function(err) {
-            if (err) {
-                return res.json({success: false, msg: 'Username already exists.'});
+        const validateEmailUsernameAccessibility = newUser.validateEmailUsernameAccessibility(email, username);
+        validateEmailUsernameAccessibility.then(errors => {
+            if (errors && errors.username) {
+                return res.json({success: false, usernameError: true, msg: 'Username is taken'});
             }
-            res.json({success: true, msg: 'Successfully created new user.'});
+
+            if (errors && errors.email) {
+                return res.json({success: false, emailError: true, msg: 'Email already registered'});
+            }
+
+            if (errors && !errors.username && !errors.email) {
+                newUser.save(function (err) {
+                    if (err) {
+                        return res.json({success: false, msg: 'Problem with registration. Please try again later'});
+                    }
+                    res.json({success: true, msg: 'Successfully created new user.'});
+                });
+            }
         });
     }
 });
 
 router.post('/login', function(req, res) {
     User.findOne({
-        username: req.body.username
+        email: req.body.email
     }, function(err, user) {
         if (err) throw err;
 
         if (!user) {
-            res.status(401).send({success: false, msg: 'Authentication failed. User not found.'});
+            res.status(401).send({success: false, msg: 'There is no user registered with this email'});
         } else {
-            // check if password matches
-            user.comparePassword(req.body.password, function (err, isMatch) {
-                if (isMatch && !err) {
-                    // if user is found and password is right create a token
-                    const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET);
-                    // return the information including token as JSON
-                    res.json({success: true, token: 'JWT ' + token});
-                } else {
-                    res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
-                }
-            });
+            const { password, hash, salt } = req.body;
+            const userModel = new User();
+            console.log(password);
+
+            const isPasswordValid = userModel.validatePassword(password, hash, salt);
+            console.log(isPasswordValid);
+
+            // isPasswordValid.then(isPasswordValid => {
+            //     if (isPasswordValid) {
+            //         res.json({success: true, token: User.generateJwt()});
+            //     } else {
+            //         res.json({success: false, msg: 'Wrong password'});
+            //     }
+            // })
+
+
+            // user.comparePassword(req.body.password, function (err, isMatch) {
+            //     if (isMatch && !err) {
+            //         // if user is found and password is right create a token
+            //         const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET);
+            //         // return the information including token as JSON
+            //         res.json({success: true, token: 'JWT ' + token});
+            //     } else {
+            //         res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
+            //     }
+            // });
         }
     });
 });
