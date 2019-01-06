@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import _ from 'lodash';
+import { withRouter } from "react-router-dom";
 import axios from 'axios';
 
 import {
@@ -12,16 +13,21 @@ import {
 import './styles/App.scss';
 import AppNavBar from './components/AppNavBar';
 import SearchPage from './components/SearchPage';
-import SignUp from './components/SignUp';
-import SignIn from './components/SignIn';
 
 import {
     DEBOUNCE_TIME,
     DISCOGS_KEY,
-    DISCOGS_SECRET, DOGS_SEARCH_URL,
-    ROUTE_HOME, ROUTE_LOGIN, ROUTE_MY_COLLECTION,
-    ROUTE_SEARCH, ROUTE_SIGN_IN, ROUTE_SIGN_UP
+    DISCOGS_SECRET,
+    DOGS_SEARCH_URL,
+    ROUTE_HOME,
+    ROUTE_MY_COLLECTION,
+    ROUTE_SEARCH,
+    ROUTE_SIGN_IN,
+    ROUTE_SIGN_UP
 } from './constants';
+import Authentication from "./components/Authentication";
+
+const AppContext = React.createContext();
 
 class App extends Component {
     constructor(props) {
@@ -31,7 +37,9 @@ class App extends Component {
             searchQuery: '',
             currentQueryResult: [],
             allFilterQueryResult: [],
-            filterType: ''
+            filterType: '',
+            lastRequestedRoute: '',
+            token: localStorage.getItem('token') || ''
         };
 
         this.searchQuery = _.debounce(this.searchQuery, DEBOUNCE_TIME);
@@ -46,7 +54,6 @@ class App extends Component {
     };
 
     makeSearchRequest = (query, type) => {
-        console.log(type);
         this.setState({requestPending: true});
         axios.get(`https://api.discogs.com/database/search?q=${query}&type=${type || 'all'}&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
@@ -57,7 +64,6 @@ class App extends Component {
                 this.setState({requestPending: false});
             })
             .catch(error => {
-                console.error(error);
                 this.setState({requestPending: false});
             });
     };
@@ -79,44 +85,92 @@ class App extends Component {
             });
     };
 
+    setToken = (token) => {
+        this.setState({token});
+        localStorage.setItem('token', token);
+    };
+
+    componentDidMount() {
+        const {token} = this.state;
+        if (!token && this.props.location.pathname !== ROUTE_SIGN_UP) {
+            console.log(this.props.location.pathname);
+            this.setState({lastRequestedRoute: this.props.location.pathname});
+            this.props.history.push(ROUTE_SIGN_IN);
+        }
+    }
+
+    componentWillReceiveProps(nextProps, nextContext) {
+        const {token} = this.state;
+        const prevPath = this.props.location.pathname;
+        const nextPath = nextProps.location.pathname;
+
+        if (prevPath !== nextPath && nextPath !== ROUTE_SIGN_UP && nextPath !== ROUTE_SIGN_IN) {
+            if (!token) {
+                this.setState({lastRequestedRoute: nextProps.location.pathname});
+                this.props.history.push(ROUTE_SIGN_IN);
+            }
+        }
+    }
+
     componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevState.token !== this.state.token) {
+            this.props.history.push(this.state.lastRequestedRoute || ROUTE_HOME);
+        }
         if (prevState.searchQuery !== this.state.searchQuery) {
             this.makeSearchRequest(this.state.searchQuery);
         }
     }
 
     render() {
-        const { currentQueryResult, searchQuery, requestPending, allFilterQueryResult, filterType } = this.state;
+        const {
+            currentQueryResult,
+            searchQuery,
+            requestPending,
+            allFilterQueryResult,
+            filterType
+        } = this.state;
+        const { location } = this.props;
 
         return (
-            <div>
-              <AppNavBar />
-                <div className="router-container">
-                    <Switch>
-                        <Route exact path="/"
-                               render={() => <Redirect to={ROUTE_HOME} />} />
-                        <Route exact path={ROUTE_SIGN_IN}
-                               render={() => <SignIn />} />
-                        <Route exact path={ROUTE_SIGN_UP}
-                               render={() => <SignUp />} />
-                        <Route exact path={ROUTE_SEARCH}
-                               render={() => <SearchPage getNextPageResult={this.getNextPageResult}
-                                                         currentQueryResult={currentQueryResult}
-                                                         allFilterQueryResult={allFilterQueryResult}
-                                                         requestPending={requestPending}
-                                                         filterType={filterType}
-                                                         makeSearchRequest={this.makeSearchRequest}
-                                                         searchQueryString={searchQuery}
-                                                         searchQuery={this.searchQuery} />} />
-                        <Route exact path={ROUTE_MY_COLLECTION}
-                               render={() => <SearchPage currentQueryResult={currentQueryResult} searchQueryString={searchQuery} searchQuery={this.searchQuery} />} />
-                        <Route exact path="/404" render={() => null} />
-                        <Redirect to="/404" />
-                    </Switch>
+            <AppContext.Provider props={{
+                state: this.state,
+                searchQuery: this.searchQuery
+            }}>
+                <div>
+                    {location.pathname !== ROUTE_SIGN_UP
+                    && location.pathname !== ROUTE_SIGN_IN
+                        ? <AppNavBar />
+                        : null
+                    }
+                    <div className="router-container">
+                        <Switch>
+                            <Route exact path="/"
+                                   render={() => <Redirect to={ROUTE_HOME}/>}/>
+                            <Route exact path={ROUTE_SIGN_IN}
+                                   render={() => <Authentication setToken={this.setToken} isLoginFormActive={true}/>}/>
+                            <Route exact path={ROUTE_SIGN_UP}
+                                   render={() => <Authentication setToken={this.setToken} isLoginFormActive={false}/>}/>
+                            <Route exact path={ROUTE_SEARCH}
+                                   render={() => <SearchPage getNextPageResult={this.getNextPageResult}
+                                                             currentQueryResult={currentQueryResult}
+                                                             allFilterQueryResult={allFilterQueryResult}
+                                                             requestPending={requestPending}
+                                                             filterType={filterType}
+                                                             makeSearchRequest={this.makeSearchRequest}
+                                                             searchQueryString={searchQuery}
+                                                             searchQuery={this.searchQuery}/>}/>
+                            <Route exact path={ROUTE_MY_COLLECTION}
+                                   render={() => <SearchPage currentQueryResult={currentQueryResult}
+                                                             searchQueryString={searchQuery}
+                                                             searchQuery={this.searchQuery}/>}/>
+                            <Route exact path="/404" render={() => null}/>
+                            <Redirect to="/404"/>
+                        </Switch>
+                    </div>
                 </div>
-            </div>
+            </AppContext.Provider>
         );
     }
 }
 
-export default App;
+export default withRouter(App);

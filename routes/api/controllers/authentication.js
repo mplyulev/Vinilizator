@@ -17,8 +17,10 @@ router.post('/register', function(req, res) {
             username
         });
 
-        newUser.hash = newUser.setPassword(password).hash;
-        newUser.salt = newUser.setPassword(password).salt;
+        const encryptedPassword = newUser.setPassword(password)
+
+        newUser.hash = encryptedPassword.hash;
+        newUser.salt = encryptedPassword.salt;
 
         const validateEmailUsernameAccessibility = newUser.validateEmailUsernameAccessibility(email, username);
         validateEmailUsernameAccessibility.then(errors => {
@@ -35,7 +37,8 @@ router.post('/register', function(req, res) {
                     if (err) {
                         return res.json({success: false, msg: 'Problem with registration. Please try again later'});
                     }
-                    res.json({success: true, msg: 'Successfully created new user.'});
+                    res.json({success: true, msg: 'Successfully created new user.', token: newUser.generateJwt()});
+                    newUser.generateJwt();
                 });
             }
         });
@@ -43,40 +46,30 @@ router.post('/register', function(req, res) {
 });
 
 router.post('/login', function(req, res) {
-    User.findOne({
-        email: req.body.email
+    User.findOne( {
+        $or: [
+            { email : req.body.email },
+            { username: req.body.email }
+        ]
     }, function(err, user) {
         if (err) throw err;
 
         if (!user) {
-            res.status(401).send({success: false, msg: 'There is no user registered with this email'});
+            res.json({success: false, msg: 'Wrong username/email or password'});
         } else {
-            const { password, hash, salt } = req.body;
+            const { password } = req.body;
+            const {hash, salt} = user;
             const userModel = new User();
-            console.log(password);
-
             const isPasswordValid = userModel.validatePassword(password, hash, salt);
             console.log(isPasswordValid);
 
-            // isPasswordValid.then(isPasswordValid => {
-            //     if (isPasswordValid) {
-            //         res.json({success: true, token: User.generateJwt()});
-            //     } else {
-            //         res.json({success: false, msg: 'Wrong password'});
-            //     }
-            // })
 
+                if (isPasswordValid) {
+                    res.json({success: true, token: userModel.generateJwt()});
+                } else {
+                    res.json({success: false, msg: 'Wrong username/email or password'});
+                }
 
-            // user.comparePassword(req.body.password, function (err, isMatch) {
-            //     if (isMatch && !err) {
-            //         // if user is found and password is right create a token
-            //         const token = jwt.sign(user.toJSON(), process.env.JWT_SECRET);
-            //         // return the information including token as JSON
-            //         res.json({success: true, token: 'JWT ' + token});
-            //     } else {
-            //         res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
-            //     }
-            // });
         }
     });
 });

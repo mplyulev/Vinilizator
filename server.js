@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 
-const items = require('./routes/api/items');
 const authentication = require('./routes/api/controllers/authentication');
 
 const app = express();
@@ -19,7 +18,6 @@ mongoose
     .catch(error => console.log(error));
 
 app.use(passport.initialize());
-app.use('/api/items', items);
 app.use('/api/controllers/authentication', authentication);
 
 app.use(function(req, res, next) {

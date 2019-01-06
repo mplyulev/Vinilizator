@@ -3,7 +3,8 @@ import { Button, FormGroup, Input, Label } from "reactstrap";
 import axios from 'axios';
 import {RESPONSE_STATUS_SUCCESS} from "../constants";
 
-export default class SignUp extends Component {
+
+class SignIn extends Component {
     constructor(props) {
         super(props);
 
@@ -11,9 +12,7 @@ export default class SignUp extends Component {
             username: '',
             email: '',
             password: '',
-            emailError: '',
-            passwordError: '',
-            usernameError: ''
+            serverError: ''
         };
     }
 
@@ -35,20 +34,21 @@ export default class SignUp extends Component {
         axios.post('/api/controllers/authentication/login', { password, email })
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
-                    // res.data.usernameError ? this.setState({usernameError: res.data.msg}) : this.setState({usernameError: ''});
-                    // res.data.emailError ? this.setState({emailError: res.data.msg}) : this.setState({emailError: ''});
+                    res.data.success ?  this.props.setToken(res.data.token) : this.setState({serverError: res.data.msg});
                 }
             });
     };
 
     render() {
+        const {serverError} = this.state;
+
         return (
             <div className="sign-in-wrapper authentication-wrapper">
                 <form className="sign-in-form" onSubmit={this.handleSubmit}>
                     <FormGroup>
-                        <Label for="email">Email</Label>
+                        <Label for="email">Username or Email</Label>
                         <Input
-                            type="email"
+                            type="text"
                             id="email"
                             name="email"
                             onChange={this.handleChange}
@@ -65,6 +65,7 @@ export default class SignUp extends Component {
                         />
                         <span className="error">{this.state.passwordError}</span>
                     </FormGroup>
+                    <span className="error">{serverError}</span>
                     <Button
                         block
                         disabled={!this.validateForm()}
@@ -77,3 +78,5 @@ export default class SignUp extends Component {
         );
     }
 }
+
+export default SignIn;

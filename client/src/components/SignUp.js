@@ -3,7 +3,7 @@ import { Button, FormGroup, Input, Label } from "reactstrap";
 import axios from 'axios';
 import {RESPONSE_STATUS_SUCCESS} from "../constants";
 
-export default class SignUp extends Component {
+class SignUp extends Component {
     constructor(props) {
         super(props);
 
@@ -37,6 +37,10 @@ export default class SignUp extends Component {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     res.data.usernameError ? this.setState({usernameError: res.data.msg}) : this.setState({usernameError: ''});
                     res.data.emailError ? this.setState({emailError: res.data.msg}) : this.setState({emailError: ''});
+
+                    if (res.data.success) {
+                        this.props.setToken(res.data.token);
+                    }
                 }
             });
     };
@@ -49,7 +53,7 @@ export default class SignUp extends Component {
                         <Label for="username">Username</Label>
                         <Input
                             autoFocus
-                            type="username"
+                            type="text"
                             id="username"
                             name="username"
                             onChange={this.handleChange}
@@ -88,3 +92,5 @@ export default class SignUp extends Component {
         );
     }
 }
+
+export default SignUp;
