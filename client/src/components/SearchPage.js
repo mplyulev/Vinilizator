@@ -20,7 +20,8 @@ class SearchPage extends Component {
             searchResultArtist: [],
             searchResultLabel: [],
             searchResultRelease: [],
-            searchResultMaster: []
+            searchResultMaster: [],
+            prevProps: props
         };
 
         this.onChange = this.onChange.bind(this);
@@ -30,10 +31,10 @@ class SearchPage extends Component {
         this.props.searchQuery(event.target.value);
     }
 
-    componentWillReceiveProps(nextProps, nextContext) {
+    static getDerivedStateFromProps(nextProps, prevState) {
         const { filterType } = nextProps;
-
-        if (nextProps.requestPending !== this.props.requestPending && !nextProps.requestPending && !filterType) {
+        const { requestPending } = prevState.prevProps;
+        if (nextProps.requestPending !== requestPending && !nextProps.requestPending && !filterType) {
 
             const queryResult = nextProps.allFilterQueryResult;
 
@@ -53,8 +54,17 @@ class SearchPage extends Component {
                 return result.type === DATA_TYPE_MASTER
             });
 
-            this.setState({searchResultMaster, searchResultRelease, searchResultLabel, searchResultArtist});
+            return {
+                prevProps: nextProps,
+                requestPending: nextProps.requestPending,
+                searchResultMaster,
+                searchResultArtist,
+                searchResultLabel,
+                searchResultRelease
+            };
         }
+
+        return null;
     }
 
     render () {
@@ -70,15 +80,15 @@ class SearchPage extends Component {
 
         return (
             <div>
-                <InputGroup>
+                <InputGroup className="search-bar">
                     <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
                     <Input onChange={this.onChange} placeholder={searchQueryString} />
                 </InputGroup>
-                {!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1
-                    ? <Pagination getNextPageResult={getNextPageResult}
-                                  filterType={filterType}
-                                  data={queryResult.pagination} />
-                    : null}
+                <Pagination getNextPageResult={getNextPageResult}
+                            filterType={filterType}
+                            isVisible={!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1}
+                            data={queryResult.pagination} />
+
                 <Fragment>
                     {!_.isEmpty(queryResult.results) && queryResult.results.length >= 1 ?
                         <div className="search-result-container">
@@ -107,11 +117,10 @@ class SearchPage extends Component {
                                 })
                             }
                             </div>
-                            {!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1
-                                ? <Pagination getNextPageResult={getNextPageResult}
-                                              filterType={filterType}
-                                              data={queryResult.pagination} />
-                                : null}
+                            <Pagination getNextPageResult={getNextPageResult}
+                                        filterType={filterType}
+                                        isVisible={!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1}
+                                        data={queryResult.pagination} />
                         </div>
                         : null
                     }

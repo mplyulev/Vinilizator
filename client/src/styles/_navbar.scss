@@ -1,3 +1,5 @@
+@import '../styles/variables';
+
 .navbar {
   background-color: black !important;
   color: white !important;
@@ -17,15 +19,15 @@
 
   a {
     margin: 0 15px;
-    color: white;
+    color: $font-color-white;
     text-decoration: none;
 
     &:hover {
-      color: red;
+      color: $font-color-darkgray;
     }
 
     &.selected {
-      color: red;
+      color: $font-color-red;
     }
   }
 }

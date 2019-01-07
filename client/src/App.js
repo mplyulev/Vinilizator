@@ -13,6 +13,7 @@ import {
 import './styles/App.scss';
 import AppNavBar from './components/AppNavBar';
 import SearchPage from './components/SearchPage';
+import MyCollection from './components/MyCollection';
 
 import {
     DEBOUNCE_TIME,
@@ -39,7 +40,9 @@ class App extends Component {
             allFilterQueryResult: [],
             filterType: '',
             lastRequestedRoute: '',
-            token: localStorage.getItem('token') || ''
+            token: localStorage.getItem('token') || '',
+            prevProps: props,
+            prevPath: props.location.pathname,
         };
 
         this.searchQuery = _.debounce(this.searchQuery, DEBOUNCE_TIME);
@@ -90,34 +93,44 @@ class App extends Component {
         localStorage.setItem('token', token);
     };
 
+    logout = () => {
+        this.setState({ token: null });
+        localStorage.removeItem('token');
+    };
+
     componentDidMount() {
         const {token} = this.state;
-        if (!token && this.props.location.pathname !== ROUTE_SIGN_UP) {
-            console.log(this.props.location.pathname);
+        if (!token && this.props.location.pathname !== ROUTE_SIGN_UP && this.props.location.pathname !== ROUTE_SIGN_IN) {
             this.setState({lastRequestedRoute: this.props.location.pathname});
             this.props.history.push(ROUTE_SIGN_IN);
         }
     }
 
-    componentWillReceiveProps(nextProps, nextContext) {
-        const {token} = this.state;
-        const prevPath = this.props.location.pathname;
+    static getDerivedStateFromProps(nextProps, prevState) {
+        const {token} = prevState;
+        const prevPath = prevState.prevProps.location.pathname;
         const nextPath = nextProps.location.pathname;
-
         if (prevPath !== nextPath && nextPath !== ROUTE_SIGN_UP && nextPath !== ROUTE_SIGN_IN) {
             if (!token) {
-                this.setState({lastRequestedRoute: nextProps.location.pathname});
-                this.props.history.push(ROUTE_SIGN_IN);
+                nextProps.history.push(ROUTE_SIGN_IN);
+                return {
+                    prevProps: nextProps,
+                    prevPath: nextProps.location.pathname,
+                    lastRequestedRoute: nextProps.location.pathname
+                };
             }
         }
+
+        return null;
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-        if (prevState.token !== this.state.token) {
-            this.props.history.push(this.state.lastRequestedRoute || ROUTE_HOME);
+        const { searchQuery, token, lastRequestedRoute } = this.state;
+        if (prevState.token !== token && lastRequestedRoute !== ROUTE_SIGN_IN) {
+            this.props.history.push(lastRequestedRoute || ROUTE_HOME);
         }
-        if (prevState.searchQuery !== this.state.searchQuery) {
-            this.makeSearchRequest(this.state.searchQuery);
+        if (prevState.searchQuery !== searchQuery) {
+            this.makeSearchRequest(searchQuery);
         }
     }
 
@@ -139,13 +152,13 @@ class App extends Component {
                 <div>
                     {location.pathname !== ROUTE_SIGN_UP
                     && location.pathname !== ROUTE_SIGN_IN
-                        ? <AppNavBar />
+                        ? <AppNavBar logout={this.logout} />
                         : null
                     }
                     <div className="router-container">
                         <Switch>
                             <Route exact path="/"
-                                   render={() => <Redirect to={ROUTE_HOME}/>}/>
+                                   render={() => <Redirect to={ROUTE_SEARCH}/>}/>
                             <Route exact path={ROUTE_SIGN_IN}
                                    render={() => <Authentication setToken={this.setToken} isLoginFormActive={true}/>}/>
                             <Route exact path={ROUTE_SIGN_UP}
@@ -160,9 +173,7 @@ class App extends Component {
                                                              searchQueryString={searchQuery}
                                                              searchQuery={this.searchQuery}/>}/>
                             <Route exact path={ROUTE_MY_COLLECTION}
-                                   render={() => <SearchPage currentQueryResult={currentQueryResult}
-                                                             searchQueryString={searchQuery}
-                                                             searchQuery={this.searchQuery}/>}/>
+                                   render={() => <MyCollection />}/>
                             <Route exact path="/404" render={() => null}/>
                             <Redirect to="/404"/>
                         </Switch>

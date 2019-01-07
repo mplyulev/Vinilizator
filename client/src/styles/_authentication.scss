@@ -23,7 +23,7 @@
   margin: 0 auto;
   height: 500px;
   overflow: hidden;
-  background-color: lightgrey;
+  background: url('../assets/paper-background2.jpg');
   border: none;
   border-radius: 500px;
   transform: translateY(-50%);
@@ -58,6 +58,9 @@
     width: 50%;
 
     .error {
+      position: relative;
+      bottom: 5px;
+      white-space: nowrap;
       color: red;
     }
   }

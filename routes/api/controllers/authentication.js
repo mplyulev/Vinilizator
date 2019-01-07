@@ -61,14 +61,12 @@ router.post('/login', function(req, res) {
             const {hash, salt} = user;
             const userModel = new User();
             const isPasswordValid = userModel.validatePassword(password, hash, salt);
-            console.log(isPasswordValid);
 
-
-                if (isPasswordValid) {
-                    res.json({success: true, token: userModel.generateJwt()});
-                } else {
-                    res.json({success: false, msg: 'Wrong username/email or password'});
-                }
+            if (isPasswordValid) {
+                res.json({success: true, token: userModel.generateJwt()});
+            } else {
+                res.json({success: false, msg: 'Wrong username/email or password'});
+            }
 
         }
     });

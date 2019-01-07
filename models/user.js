@@ -34,7 +34,7 @@ userSchema.methods.validatePassword = function(password, hash, salt) {
 
 userSchema.methods.validateEmailUsernameAccessibility = (email, username) => {
     const errors = {};
-   return User.findOne( {
+    return User.findOne( {
         $or: [
             { email : email },
             { username: username }
@@ -60,7 +60,7 @@ userSchema.methods.generateJwt = function() {
         email: this.email,
         username: this.name,
         exp: parseInt(expiry.getTime() / 1000),
-    }, 'asdasdasdasdas'); // DO NOT KEEP YOUR SECRET IN THE CODE!
+    }, 'asdq34dfagdfsg');
 };
 
 module.exports = User = mongoose.model('user', userSchema);
