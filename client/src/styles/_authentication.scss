@@ -1,33 +1,62 @@
+@import './variables';
+
 .authentication-background {
   position: absolute;
   left: 50%;
+  opacity: 0;
   width: 100vw;
   height: 100vh;
   background: url('../assets/authentication-background.png') no-repeat local center;
-  background-size: contain;
-  animation:spin 5s linear infinite;
+  background-size: 1600px;
   width: 10000px;
-  margin: 0 0 0 -5000px;
+  height: 2000px;
+  margin: -510px 0 0 -5000px;
   text-align: center;
+  transition: opacity 2s ease-in;
+
+  &.mounted {
+    opacity: 1;
+    animation:spin 5s linear infinite;
+  }
 }
 
 @keyframes spin{
+
+
   from{transform:rotate(0deg)}
   to{transform:rotate(360deg)}
 }
 
-.authentication {
+.authentication-form-wrapper {
   position: relative;
   top: 50%;
+  opacity: 0;
+  color: $font-color-white;
+  font-weight: 800;
+  transform: translateY(-50%);
+  transition: opacity 1s ease-in;
+
+  &.mounted {
+    opacity: 1;
+  }
+
+  button {
+    color: $font-color-black;
+    font-weight: 600;
+    background-color: $background-color-white;
+  }
+}
+
+.authentication {
+  position: relative;
   width: 500px;
   margin: 0 auto;
   height: 500px;
   overflow: hidden;
-  background: url('../assets/paper-background2.jpg');
+  background-color: transparent !important;
   border: none;
   border-radius: 500px;
-  transform: translateY(-50%);
-  transition: all 0.3s ease-in-out;
+  transition: all 0.5s ease-in-out;
 
   h1 {
     margin-top: 20px;
@@ -57,11 +86,22 @@
     margin: 0 auto;
     width: 50%;
 
+    &.sign-in-wrapper {
+      top: 125px;
+    }
+
     .error {
       position: relative;
       bottom: 5px;
       white-space: nowrap;
       color: red;
+    }
+
+    .sign-in-form {
+      button {
+        position: relative;
+        top: 61px;
+      }
     }
   }
 }
@@ -70,12 +110,14 @@
   .authentication-background {
     height: 10000px;
     margin: -500px 0 0 -5000px;
+    background-size: contain;
     animation: spin 10s linear infinite;
   }
 
   .authentication {
     width: 300px !important;
     height: 450px !important;
+    background: url('../assets/paper-background2.jpg');
     border-radius: 50px !important;
 
     h1 {

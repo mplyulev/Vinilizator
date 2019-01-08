@@ -1,0 +1,31 @@
+.results-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.filter-container {
+    position: relative;
+    top: 10px;
+    text-align: center;
+
+    .result-filter {
+        margin: 20px 10px;
+        color: $font-color-dimgray;
+        cursor: pointer;
+
+        &.no-pointer {
+            cursor: initial;
+        }
+
+        &.selected {
+            color: $font-color-black;
+            font-weight: 700;
+        }
+
+        @media only screen and (max-width: 767px) {
+            display: block;
+            margin: 5px 10px;
+        }
+    }
+}

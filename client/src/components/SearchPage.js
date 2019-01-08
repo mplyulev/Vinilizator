@@ -92,25 +92,27 @@ class SearchPage extends Component {
                 <Fragment>
                     {!_.isEmpty(queryResult.results) && queryResult.results.length >= 1 ?
                         <div className="search-result-container">
+                            <div className="filter-container">
                             <span onClick={() => makeSearchRequest(searchQueryString)}
-                                  className="result-filter">All</span>
-                            {searchResultRelease && searchResultRelease.length > 0
-                                ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_RELEASE)}
-                                        className="result-filter">Releases</span>
-                                : null}
-                            {searchResultLabel && searchResultLabel.length > 0
-                                ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_LABEL)}
-                                        className="result-filter">Labels</span>
-                                : null}
-                            {searchResultArtist && searchResultArtist.length > 0
-                                ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_ARTIST)}
-                                        className="result-filter">Artists</span>
-                                : null}
-                            {searchResultMaster && searchResultMaster.length > 0
-                                ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_MASTER)}
-                                        className="result-filter">Master</span>
-                                : null}
-                            <span>Results: {queryResult.pagination.items} of {allFilterQueryResult.pagination.items}</span>
+                                  className={`result-filter${!filterType ? ' selected' : ''}`}>All</span>
+                                {searchResultRelease && searchResultRelease.length > 0
+                                    ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_RELEASE)}
+                                            className={`result-filter${filterType === DATA_TYPE_RELEASE ? ' selected' : ''}`}>Releases</span>
+                                    : null}
+                                {searchResultLabel && searchResultLabel.length > 0
+                                    ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_LABEL)}
+                                            className={`result-filter${filterType === DATA_TYPE_LABEL ? ' selected' : ''}`}>Labels</span>
+                                    : null}
+                                {searchResultArtist && searchResultArtist.length > 0
+                                    ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_ARTIST)}
+                                            className={`result-filter${filterType === DATA_TYPE_ARTIST ? ' selected' : ''}`}>Artists</span>
+                                    : null}
+                                {searchResultMaster && searchResultMaster.length > 0
+                                    ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_MASTER)}
+                                            className={`result-filter${filterType === DATA_TYPE_MASTER ? ' selected' : ''}`}>Master</span>
+                                    : null}
+                                <span className="result-filter no-pointer">Results: {queryResult.pagination.items} of {allFilterQueryResult.pagination.items}</span>
+                            </div>
                             <div className="results-container"> {
                                 !_.isEmpty(queryResult.results) && queryResult.results.map(result => {
                                     return (<Release data={result} key={result.id}></Release>)

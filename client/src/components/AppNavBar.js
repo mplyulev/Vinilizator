@@ -24,7 +24,8 @@ class AppNavBar extends Component {
     render() {
         return (
             <div>
-                <Navbar color="dark"
+                <Navbar fixed={true}
+                        color="dark"
                         light expand="sm"
                         className="mb-5 navbar">
                     <NavbarBrand href="/">VYNILIZATOR</NavbarBrand>
