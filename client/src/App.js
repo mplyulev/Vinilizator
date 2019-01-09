@@ -16,12 +16,12 @@ import SearchPage from './components/SearchPage';
 import MyCollection from './components/MyCollection';
 import ReleaseFull from './components/ReleaseFull';
 
-import { parseQuery } from './helpers';
 
 import {
     DEBOUNCE_TIME,
     DISCOGS_KEY,
-    DISCOGS_SECRET, DOGS_RELEASES_URL,
+    DISCOGS_SECRET,
+    DOGS_GET_ITEM_URL,
     DOGS_SEARCH_URL,
     ROUTE_HOME,
     ROUTE_MY_COLLECTION, ROUTE_RELEASE,
@@ -50,7 +50,8 @@ class App extends Component {
             token: localStorage.getItem('token') || '',
             prevProps: props,
             prevPath: props.location.pathname,
-            requestPending: false
+            requestPending: false,
+            currentRelease: {}
         };
 
         this.searchQuery = _.debounce(this.searchQuery, DEBOUNCE_TIME);
@@ -139,14 +140,11 @@ class App extends Component {
     }
 
     getSpecificResult = (type, id) => {
-        const releaseId = parseInt(parseQuery(nextProps.location.search).id);
-
-        axios.get(`${DOGS_RELEASES_URL}/${releaseId}`)
+        axios.get(`${DOGS_GET_ITEM_URL[type]}/${id}?key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
-                console.log(response.data);
-                return {
-                    currentRelease: response.data
-                }
+                this.setState({currentRelease: response.data}, () => {
+                    this.props.history.push(`${type}/${id}`);
+                });
             })
             .catch(error => {
                 console.error(error);
@@ -194,13 +192,14 @@ class App extends Component {
                                    render={() => <Authentication setToken={this.setToken} isLoginFormActive={true}/>}/>
                             <Route exact path={ROUTE_SIGN_UP}
                                    render={() => <Authentication setToken={this.setToken} isLoginFormActive={false}/>}/>
-                            <Route exact path={ROUTE_RELEASE}
+                            <Route path={ROUTE_RELEASE}
                                    render={() => <ReleaseFull release={currentRelease} setToken={this.setToken} isLoginFormActive={false}/>}/>
                             <Route exact path={ROUTE_SEARCH}
                                    render={() => <SearchPage getNextPageResult={this.getNextPageResult}
                                                              currentQueryResult={currentQueryResult}
                                                              allFilterQueryResult={allFilterQueryResult}
                                                              requestPending={requestPending}
+                                                             getSpecificResult={this.getSpecificResult}
                                                              filterType={filterType}
                                                              history={this.props.history}
                                                              makeSearchRequest={this.makeSearchRequest}

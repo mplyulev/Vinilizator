@@ -76,7 +76,16 @@ class SearchPage extends Component {
     }
 
     render () {
-        const { getNextPageResult, searchQueryString, filterType, allFilterQueryResult, currentQueryResult, requestPending } = this.props;
+        const {
+            getNextPageResult,
+            searchQueryString,
+            filterType,
+            allFilterQueryResult,
+            currentQueryResult,
+            requestPending,
+            getSpecificResult,
+            history
+        } = this.props;
         const {
             searchResultArtist,
             searchResultLabel,
@@ -128,8 +137,9 @@ class SearchPage extends Component {
                             <div className="results-container"> {
                                 !_.isEmpty(queryResult.results) && queryResult.results.map(result => {
                                     return (
-                                        <SearchItem history={this.props.history}
+                                        <SearchItem history={history}
                                                     release={result}
+                                                    getSpecificResult={getSpecificResult}
                                                     key={result.id}>
                                         </SearchItem>
                                     );

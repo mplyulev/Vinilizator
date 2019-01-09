@@ -23,6 +23,13 @@ export const PAGINATION_PAGES_PER_SLIDE = 6;
 //URLS
 export const DOGS_SEARCH_URL = 'https://api.discogs.com/database/search';
 export const DOGS_RELEASES_URL = 'https://api.discogs.com/releases';
+export const DOGS_BASE_URL = 'https://api.discogs.com/';
+export const DOGS_GET_ITEM_URL = {
+    release: `${DOGS_BASE_URL}releases/`,
+    master: `${DOGS_BASE_URL}masters/`,
+    label: `${DOGS_BASE_URL}labels/`,
+    artist: `${DOGS_BASE_URL}artists/`
+};
 
 // RESPONSE CODES
 export const RESPONSE_STATUS_SUCCESS = 200;

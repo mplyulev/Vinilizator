@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class SearchItem extends Component {
 
     render () {
-        const {release} = this.props;
+        const {release, getSpecificResult} = this.props;
         const title = release.title;
 
         const index = title.indexOf("-");
@@ -11,7 +11,7 @@ class SearchItem extends Component {
         const itemTitle = title.substr(index + 1);
 
         return (
-            <div className="search-item-container" onClick={() => this.props.history.push(`${release.type}?id=${release.id}`)} >
+            <div className="search-item-container" onClick={() => getSpecificResult(release.type, release.id)} >
                 <img className="search-item-cover" src={release.cover_image} />
                 <p className="search-item-title">{itemTitle}</p>
                 <p className="search-item-title">{artist}</p>
