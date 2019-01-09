@@ -5,16 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5b8da01a-7da7-42f1-97ac-40f37681adb4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/AppNavBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/AppNavBar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Release.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/SearchItem.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/SearchPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/SearchPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/common/Pagination.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/common/Pagination.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/constants.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/styles/_common.scss" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/styles/_common.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/styles/_release.scss" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/styles/_release.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/styles/_searchPage.scss" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/styles/_searchPage.scss" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -59,8 +50,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/src/App.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="389">
-              <caret line="154" column="9" selection-start-line="154" selection-start-column="9" selection-end-line="154" selection-end-column="9" />
+            <state relative-caret-position="137">
+              <caret line="176" lean-forward="true" selection-start-line="176" selection-end-line="176" />
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
               </folding>
@@ -338,12 +329,12 @@
       <workItem from="1546758054596" duration="25879000" />
       <workItem from="1546874530470" duration="5537000" />
       <workItem from="1546950655862" duration="5503000" />
-      <workItem from="1547035926658" duration="9158000" />
+      <workItem from="1547035926658" duration="9660000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="192134000" />
+    <option name="totallyTimeSpent" value="192636000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="49" y="25" width="1871" height="1055" extended-state="6" />
@@ -731,8 +722,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client/src/App.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="389">
-          <caret line="154" column="9" selection-start-line="154" selection-start-column="9" selection-end-line="154" selection-end-column="9" />
+        <state relative-caret-position="137">
+          <caret line="176" lean-forward="true" selection-start-line="176" selection-end-line="176" />
           <folding>
             <element signature="e#0#41#0" expanded="true" />
           </folding>

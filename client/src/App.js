@@ -139,21 +139,19 @@ class App extends Component {
     }
 
     getSpecificResult = (type, id) => {
-        if (prevPath !== nextPath && nextPath === ROUTE_RELEASE) {
-            const releaseId = parseInt(parseQuery(nextProps.location.search).id);
+        const releaseId = parseInt(parseQuery(nextProps.location.search).id);
 
-            axios.get(`${DOGS_RELEASES_URL}/${releaseId}`)
-                .then(response => {
-                    console.log(response.data);
-                    return {
-                        currentRelease: response.data
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        }
-    }
+        axios.get(`${DOGS_RELEASES_URL}/${releaseId}`)
+            .then(response => {
+                console.log(response.data);
+                return {
+                    currentRelease: response.data
+                }
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    };
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         const { searchQuery, token, lastRequestedRoute } = this.state;
@@ -176,8 +174,6 @@ class App extends Component {
             currentRelease
         } = this.state;
         const { location } = this.props;
-
-        console.log(this.state);
 
         return (
             <AppContext.Provider props={{
