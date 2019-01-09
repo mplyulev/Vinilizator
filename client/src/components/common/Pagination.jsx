@@ -13,15 +13,17 @@ class Pagination extends Component {
     }
 
     slideToNextPagination = (nextPage, type, shouldBlockSlide, slideToTheLeft) => {
-        this.props.getNextPageResult(nextPage, type);
+        if (this.props.data.page !== nextPage) {
+            this.props.getNextPageResult(nextPage, type);
 
-        if (!shouldBlockSlide) {
-            if (nextPage % PAGINATION_PAGES_PER_SLIDE === 1 && !slideToTheLeft) {
-                this.setState({ paginationPositionRight: this.state.paginationPositionRight + PAGINATION_WIDTH});
-            }
+            if (!shouldBlockSlide) {
+                if (nextPage % PAGINATION_PAGES_PER_SLIDE === 1 && !slideToTheLeft) {
+                    this.setState({ paginationPositionRight: this.state.paginationPositionRight + PAGINATION_WIDTH});
+                }
 
-            if (nextPage % PAGINATION_PAGES_PER_SLIDE === 0 && slideToTheLeft) {
-                this.setState({ paginationPositionRight: this.state.paginationPositionRight - PAGINATION_WIDTH});
+                if (nextPage % PAGINATION_PAGES_PER_SLIDE === 0 && slideToTheLeft) {
+                    this.setState({ paginationPositionRight: this.state.paginationPositionRight - PAGINATION_WIDTH});
+                }
             }
         }
     };

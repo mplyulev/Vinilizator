@@ -14,14 +14,17 @@ import './styles/App.scss';
 import AppNavBar from './components/AppNavBar';
 import SearchPage from './components/SearchPage';
 import MyCollection from './components/MyCollection';
+import ReleaseFull from './components/ReleaseFull';
+
+import { parseQuery } from './helpers';
 
 import {
     DEBOUNCE_TIME,
     DISCOGS_KEY,
-    DISCOGS_SECRET,
+    DISCOGS_SECRET, DOGS_RELEASES_URL,
     DOGS_SEARCH_URL,
     ROUTE_HOME,
-    ROUTE_MY_COLLECTION,
+    ROUTE_MY_COLLECTION, ROUTE_RELEASE,
     ROUTE_SEARCH,
     ROUTE_SIGN_IN,
     ROUTE_SIGN_UP
@@ -37,12 +40,17 @@ class App extends Component {
         this.state = {
             searchQuery: '',
             currentQueryResult: [],
-            allFilterQueryResult: [],
+            allFilterQueryResult: {
+                pagination: {
+                    urls: {}
+                }
+            },
             filterType: '',
             lastRequestedRoute: '',
             token: localStorage.getItem('token') || '',
             prevProps: props,
             prevPath: props.location.pathname,
+            requestPending: false
         };
 
         this.searchQuery = _.debounce(this.searchQuery, DEBOUNCE_TIME);
@@ -56,9 +64,12 @@ class App extends Component {
         }
     };
 
-    makeSearchRequest = (query, type) => {
+    makeSearchRequest = (searchQuery, type) => {
         this.setState({requestPending: true});
-        axios.get(`https://api.discogs.com/database/search?q=${query}&type=${type || 'all'}&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
+        console.log('request');
+        console.log(type);
+        console.log(this.state.allFilterQueryResult, this.state.currentQueryResult);
+        axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${type || 'all'}&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
                 type
                     ? this.setState({ currentQueryResult: response.data, filterType: type})
@@ -74,6 +85,7 @@ class App extends Component {
     getNextPageResult = (page, type) => {
         this.setState({requestPending: true});
         const {searchQuery} = this.state;
+
         axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${type || 'all'}&page=${page}&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
                 type
@@ -104,6 +116,8 @@ class App extends Component {
             this.setState({lastRequestedRoute: this.props.location.pathname});
             this.props.history.push(ROUTE_SIGN_IN);
         }
+
+        this.makeSearchRequest('');
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -124,11 +138,29 @@ class App extends Component {
         return null;
     }
 
+    getSpecificResult = (type, id) => {
+        if (prevPath !== nextPath && nextPath === ROUTE_RELEASE) {
+            const releaseId = parseInt(parseQuery(nextProps.location.search).id);
+
+            axios.get(`${DOGS_RELEASES_URL}/${releaseId}`)
+                .then(response => {
+                    console.log(response.data);
+                    return {
+                        currentRelease: response.data
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+    }
+
     componentDidUpdate(prevProps, prevState, snapshot) {
         const { searchQuery, token, lastRequestedRoute } = this.state;
         if (prevState.token !== token && lastRequestedRoute !== ROUTE_SIGN_IN) {
             this.props.history.push(lastRequestedRoute || ROUTE_HOME);
         }
+
         if (prevState.searchQuery !== searchQuery) {
             this.makeSearchRequest(searchQuery);
         }
@@ -140,9 +172,12 @@ class App extends Component {
             searchQuery,
             requestPending,
             allFilterQueryResult,
-            filterType
+            filterType,
+            currentRelease
         } = this.state;
         const { location } = this.props;
+
+        console.log(this.state);
 
         return (
             <AppContext.Provider props={{
@@ -163,12 +198,15 @@ class App extends Component {
                                    render={() => <Authentication setToken={this.setToken} isLoginFormActive={true}/>}/>
                             <Route exact path={ROUTE_SIGN_UP}
                                    render={() => <Authentication setToken={this.setToken} isLoginFormActive={false}/>}/>
+                            <Route exact path={ROUTE_RELEASE}
+                                   render={() => <ReleaseFull release={currentRelease} setToken={this.setToken} isLoginFormActive={false}/>}/>
                             <Route exact path={ROUTE_SEARCH}
                                    render={() => <SearchPage getNextPageResult={this.getNextPageResult}
                                                              currentQueryResult={currentQueryResult}
                                                              allFilterQueryResult={allFilterQueryResult}
                                                              requestPending={requestPending}
                                                              filterType={filterType}
+                                                             history={this.props.history}
                                                              makeSearchRequest={this.makeSearchRequest}
                                                              searchQueryString={searchQuery}
                                                              searchQuery={this.searchQuery}/>}/>

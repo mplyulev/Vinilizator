@@ -9,6 +9,17 @@
     top: 10px;
     text-align: center;
 
+    .loading {
+        left: 0;
+        right: 0;
+        width: 100px;
+        height: 100px;
+        margin: 0 auto;
+        background: url('../assets/authentication-background.png') no-repeat local center;
+        background-size: contain;
+        animation:spin 5s linear infinite;
+    }
+
     .result-filter {
         margin: 20px 10px;
         color: $font-color-dimgray;

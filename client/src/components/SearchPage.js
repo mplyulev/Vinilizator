@@ -7,9 +7,10 @@ import Pagination from './common/Pagination';
 import {
     DATA_TYPE_ARTIST,
     DATA_TYPE_LABEL,
-    DATA_TYPE_RELEASE, DATA_TYPE_MASTER
+    DATA_TYPE_RELEASE,
+    DATA_TYPE_MASTER
 } from '../constants';
-import Release from "./Release";
+import SearchItem from "./SearchItem";
 
 class SearchPage extends Component {
     constructor(props) {
@@ -27,15 +28,12 @@ class SearchPage extends Component {
         this.onChange = this.onChange.bind(this);
     }
 
-    onChange(event) {
-        this.props.searchQuery(event.target.value);
-    }
-
     static getDerivedStateFromProps(nextProps, prevState) {
         const { filterType } = nextProps;
-        const { requestPending } = prevState.prevProps;
-        if (nextProps.requestPending !== requestPending && !nextProps.requestPending && !filterType) {
+        const { allFilterQueryResult } = prevState.prevProps;
 
+        if (nextProps.allFilterQueryResult && nextProps.allFilterQueryResult.pagination
+            && nextProps.allFilterQueryResult.pagination.urls.last !== allFilterQueryResult.pagination.urls.last) {
             const queryResult = nextProps.allFilterQueryResult;
 
             const searchResultArtist = queryResult.results.filter(result => {
@@ -56,7 +54,7 @@ class SearchPage extends Component {
 
             return {
                 prevProps: nextProps,
-                requestPending: nextProps.requestPending,
+                allFilterQueryResult,
                 searchResultMaster,
                 searchResultArtist,
                 searchResultLabel,
@@ -67,8 +65,18 @@ class SearchPage extends Component {
         return null;
     }
 
+    requestByFilter = (searchQueryString, type) => {
+        if (type !== this.props.filterType) {
+            this.props.makeSearchRequest(searchQueryString, type)
+        }
+    };
+
+    onChange(event) {
+        this.props.searchQuery(event.target.value);
+    }
+
     render () {
-        const { getNextPageResult, makeSearchRequest, searchQueryString, filterType, allFilterQueryResult, currentQueryResult } = this.props;
+        const { getNextPageResult, searchQueryString, filterType, allFilterQueryResult, currentQueryResult, requestPending } = this.props;
         const {
             searchResultArtist,
             searchResultLabel,
@@ -77,6 +85,7 @@ class SearchPage extends Component {
         } = this.state;
 
         const queryResult = !filterType ? allFilterQueryResult : currentQueryResult;
+        const isAllSearch = searchQueryString === '';
 
         return (
             <div>
@@ -84,38 +93,46 @@ class SearchPage extends Component {
                     <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
                     <Input onChange={this.onChange} placeholder={searchQueryString} />
                 </InputGroup>
-                <Pagination getNextPageResult={getNextPageResult}
+                {queryResult.pagination.pages > 1 && <Pagination getNextPageResult={getNextPageResult}
                             filterType={filterType}
                             isVisible={!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1}
                             data={queryResult.pagination} />
-
+                }
                 <Fragment>
                     {!_.isEmpty(queryResult.results) && queryResult.results.length >= 1 ?
                         <div className="search-result-container">
-                            <div className="filter-container">
-                            <span onClick={() => makeSearchRequest(searchQueryString)}
-                                  className={`result-filter${!filterType ? ' selected' : ''}`}>All</span>
-                                {searchResultRelease && searchResultRelease.length > 0
-                                    ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_RELEASE)}
-                                            className={`result-filter${filterType === DATA_TYPE_RELEASE ? ' selected' : ''}`}>Releases</span>
-                                    : null}
-                                {searchResultLabel && searchResultLabel.length > 0
-                                    ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_LABEL)}
-                                            className={`result-filter${filterType === DATA_TYPE_LABEL ? ' selected' : ''}`}>Labels</span>
-                                    : null}
-                                {searchResultArtist && searchResultArtist.length > 0
-                                    ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_ARTIST)}
-                                            className={`result-filter${filterType === DATA_TYPE_ARTIST ? ' selected' : ''}`}>Artists</span>
-                                    : null}
-                                {searchResultMaster && searchResultMaster.length > 0
-                                    ? <span onClick={() => makeSearchRequest(searchQueryString, DATA_TYPE_MASTER)}
-                                            className={`result-filter${filterType === DATA_TYPE_MASTER ? ' selected' : ''}`}>Master</span>
-                                    : null}
-                                <span className="result-filter no-pointer">Results: {queryResult.pagination.items} of {allFilterQueryResult.pagination.items}</span>
-                            </div>
+                            {!requestPending
+                                ? <div className="filter-container">
+                                <span onClick={() => this.requestByFilter(searchQueryString)}
+                                      className={`result-filter${!filterType ? ' selected' : ''}`}>All</span>
+                                    {(searchResultRelease && searchResultRelease.length > 0) || isAllSearch
+                                        ? <span onClick={() => this.requestByFilter(searchQueryString, DATA_TYPE_RELEASE)}
+                                                className={`result-filter${filterType === DATA_TYPE_RELEASE ? ' selected' : ''}`}>Releases</span>
+                                        : null}
+                                    {(searchResultLabel && searchResultLabel.length > 0) || isAllSearch
+                                        ? <span onClick={() => this.requestByFilter(searchQueryString, DATA_TYPE_LABEL)}
+                                                className={`result-filter${filterType === DATA_TYPE_LABEL ? ' selected' : ''}`}>Labels</span>
+                                        : null}
+                                    {(searchResultArtist && searchResultArtist.length > 0) || isAllSearch
+                                        ? <span onClick={() => this.requestByFilter(searchQueryString, DATA_TYPE_ARTIST)}
+                                                className={`result-filter${filterType === DATA_TYPE_ARTIST ? ' selected' : ''}`}>Artists</span>
+                                        : null}
+                                    {(searchResultMaster && searchResultMaster.length > 0) || isAllSearch
+                                        ? <span onClick={() => this.requestByFilter(searchQueryString, DATA_TYPE_MASTER)}
+                                                className={`result-filter${filterType === DATA_TYPE_MASTER ? ' selected' : ''}`}>Master</span>
+                                        : null}
+                                    <span
+                                        className="result-filter no-pointer">Results: {queryResult.pagination.items} of {allFilterQueryResult.pagination.items}</span>
+                                </div>
+                                : <div className='filter-container '><div className="loading"></div><span>Loading...</span></div>}
                             <div className="results-container"> {
                                 !_.isEmpty(queryResult.results) && queryResult.results.map(result => {
-                                    return (<Release data={result} key={result.id}></Release>)
+                                    return (
+                                        <SearchItem history={this.props.history}
+                                                    release={result}
+                                                    key={result.id}>
+                                        </SearchItem>
+                                    );
                                 })
                             }
                             </div>

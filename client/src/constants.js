@@ -14,6 +14,7 @@ export const ROUTE_SIGN_UP = '/register';
 export const ROUTE_SIGN_IN = '/login';
 export const ROUTE_SEARCH = '/search';
 export const ROUTE_MY_COLLECTION = '/colletction';
+export const ROUTE_RELEASE = '/release';
 
 //COMMON
 export const PAGINATION_WIDTH = 324;
@@ -21,6 +22,7 @@ export const PAGINATION_PAGES_PER_SLIDE = 6;
 
 //URLS
 export const DOGS_SEARCH_URL = 'https://api.discogs.com/database/search';
+export const DOGS_RELEASES_URL = 'https://api.discogs.com/releases';
 
 // RESPONSE CODES
 export const RESPONSE_STATUS_SUCCESS = 200;
