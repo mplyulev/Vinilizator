@@ -15,21 +15,26 @@ import AppNavBar from './components/AppNavBar';
 import SearchPage from './components/SearchPage';
 import MyCollection from './components/MyCollection';
 import ReleaseFull from './components/ReleaseFull';
+import MasterFull from './components/MasterFull';
+import LabelFull from './components/LabelFull';
+import ArtistFull from './components/ArtistFull';
 
 
 import {
+    DATA_TYPE_RELEASE,
     DEBOUNCE_TIME,
     DISCOGS_KEY,
     DISCOGS_SECRET,
     DOGS_GET_ITEM_URL,
-    DOGS_SEARCH_URL,
-    ROUTE_HOME,
+    DOGS_SEARCH_URL, ROUTE_ARTIST,
+    ROUTE_HOME, ROUTE_LABEL, ROUTE_MASTER,
     ROUTE_MY_COLLECTION, ROUTE_RELEASE,
     ROUTE_SEARCH,
     ROUTE_SIGN_IN,
     ROUTE_SIGN_UP
 } from './constants';
 import Authentication from "./components/Authentication";
+import LightboxWrapper from './components/common/LightboxWrapper';
 
 const AppContext = React.createContext();
 
@@ -51,7 +56,9 @@ class App extends Component {
             prevProps: props,
             prevPath: props.location.pathname,
             requestPending: false,
-            currentRelease: {}
+            currentRelease: {},
+            isLightboxOpened: false,
+            lightboxImages: []
         };
 
         this.searchQuery = _.debounce(this.searchQuery, DEBOUNCE_TIME);
@@ -70,7 +77,7 @@ class App extends Component {
         console.log('request');
         console.log(type);
         console.log(this.state.allFilterQueryResult, this.state.currentQueryResult);
-        axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${type || 'all'}&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
+            axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${type || 'all'}${type === DATA_TYPE_RELEASE ? '&format=Vinyl' : ''}&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
                 type
                     ? this.setState({ currentQueryResult: response.data, filterType: type})
@@ -162,6 +169,14 @@ class App extends Component {
         }
     }
 
+    openLightbox = images => {
+        this.setState({ isLightboxOpened: true, lightboxImages: images });
+    };
+
+    closeLightbox = () => {
+        this.setState({ isLightboxOpened: false, lightboxImages: [] });
+    };
+
     render() {
         const {
             currentQueryResult,
@@ -169,7 +184,9 @@ class App extends Component {
             requestPending,
             allFilterQueryResult,
             filterType,
-            currentRelease
+            currentRelease,
+            isLightboxOpened,
+            lightboxImages
         } = this.state;
         const { location } = this.props;
 
@@ -185,6 +202,9 @@ class App extends Component {
                         : null
                     }
                     <div className="router-container">
+                        {isLightboxOpened && <LightboxWrapper closeLightbox={this.closeLightbox}
+                                                              isLightboxOpened={isLightboxOpened}
+                                                              images={lightboxImages} />}
                         <Switch>
                             <Route exact path="/"
                                    render={() => <Redirect to={ROUTE_SEARCH}/>}/>
@@ -193,7 +213,15 @@ class App extends Component {
                             <Route exact path={ROUTE_SIGN_UP}
                                    render={() => <Authentication setToken={this.setToken} isLoginFormActive={false}/>}/>
                             <Route path={ROUTE_RELEASE}
-                                   render={() => <ReleaseFull release={currentRelease} setToken={this.setToken} isLoginFormActive={false}/>}/>
+                                   render={() => <ReleaseFull openLightbox={this.openLightbox}
+                                                              closeLightbox={this.closeLightbox}
+                                                              release={currentRelease} />}/>
+                            <Route path={ROUTE_MASTER}
+                                   render={() => <MasterFull release={currentRelease} />}/>
+                            <Route path={ROUTE_ARTIST}
+                                   render={() => <ArtistFull release={currentRelease} />}/>
+                            <Route path={ROUTE_LABEL}
+                                   render={() => <LabelFull release={currentRelease} />}/>
                             <Route exact path={ROUTE_SEARCH}
                                    render={() => <SearchPage getNextPageResult={this.getNextPageResult}
                                                              currentQueryResult={currentQueryResult}

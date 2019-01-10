@@ -139,6 +139,7 @@ class SearchPage extends Component {
                                     return (
                                         <SearchItem history={history}
                                                     release={result}
+                                                    filterType={filterType}
                                                     getSpecificResult={getSpecificResult}
                                                     key={result.id}>
                                         </SearchItem>

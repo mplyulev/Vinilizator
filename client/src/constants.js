@@ -15,6 +15,9 @@ export const ROUTE_SIGN_IN = '/login';
 export const ROUTE_SEARCH = '/search';
 export const ROUTE_MY_COLLECTION = '/colletction';
 export const ROUTE_RELEASE = '/release';
+export const ROUTE_MASTER = '/master';
+export const ROUTE_LABEL = '/label';
+export const ROUTE_ARTIST = '/artist';
 
 //COMMON
 export const PAGINATION_WIDTH = 324;
@@ -22,7 +25,7 @@ export const PAGINATION_PAGES_PER_SLIDE = 6;
 
 //URLS
 export const DOGS_SEARCH_URL = 'https://api.discogs.com/database/search';
-export const DOGS_RELEASES_URL = 'https://api.discogs.com/releases';
+export const DOGS_SPACE_GIF_URL = 'https://img.discogs.com/images/spacer.gif';
 export const DOGS_BASE_URL = 'https://api.discogs.com/';
 export const DOGS_GET_ITEM_URL = {
     release: `${DOGS_BASE_URL}releases/`,
