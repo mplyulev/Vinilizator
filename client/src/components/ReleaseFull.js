@@ -5,12 +5,19 @@ import { RESPONSE_STATUS_SUCCESS, SNACKBAR_TYPE_FAIL, SNACKBAR_TYPE_SUCCESS } fr
 
 class ReleaseFull extends Component {
 
-    test = (release) => {
-        axios.post('/api/controllers/collection/add', { release })
+    addToCollection = (release) => {
+        axios.post('/api/controllers/collection/addToCollection', { release })
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
-                    console.log(res);
-                    console.log('asdasdasd', res);
+                    this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
+                }
+            });
+    };
+
+    addToWishlist = (release) => {
+        axios.post('/api/controllers/collection/addToWishlist', { release })
+            .then((res) => {
+                if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
                 }
             });
@@ -88,12 +95,13 @@ class ReleaseFull extends Component {
                         {num_for_sale ? <p>{num_for_sale} <span>for sale on Discogs</span></p> : null}
                         {lowest_price ? <p>Lowest Price on Discogs: <span>{lowest_price} &euro;</span></p> : null}
                     </div>
-                    <Button onClick={() => this.test(release)}>Add to collection</Button>
                 </div>
                 <div className="tracklist-wrapper">
                     <h3 className="title">Tracklist</h3>
                     {tracklistTemplate}
                 </div>
+                <Button color="success" className="add-button" onClick={() => this.addToCollection(release)}>Add to collection</Button>
+                <Button color="success" className="add-button add-to-wishlist" onClick={() => this.addToWishlist(release)}>Add to wishlist</Button>
             </Fragment>
         );
     }

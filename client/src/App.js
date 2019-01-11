@@ -79,7 +79,6 @@ class App extends Component {
     };
 
     openSnackbar = (type, msg) => {
-        console.log('opening snackbar');
         this.setState({
             snackbarOptions: {
                 isOpened: true,

@@ -16,6 +16,9 @@ const userSchema = new Schema({
     vinylCollection: {
         type: Array
     },
+    wishlist: {
+        type: Array
+    },
     hash: String,
     salt: String
 });

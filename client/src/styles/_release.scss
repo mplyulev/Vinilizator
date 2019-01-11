@@ -17,7 +17,7 @@
 
     .info-wrapper {
         position: relative;
-        bottom: 7px;
+        line-height: 24px;
         font-size: 16px;
         color: $font-color-dimgray;
 
@@ -42,13 +42,25 @@
         }
 
         span, p {
-            margin: 0 auto 10px;
+            margin: 0 auto 5px;
         }
 
         .release-title {
             font-size: 24px;
             color: $font-color-dimgray;
         }
+    }
+}
+
+.add-button {
+    position: absolute;
+    top: -20px;
+    left: 30px;
+    right: 0;
+    margin: 0 auto;
+
+    &.add-to-wishlist {
+        position: relative;
     }
 }
 
@@ -76,6 +88,13 @@
             margin: 0 auto;
             margin-bottom: 30px;
         }
+    }
+
+    .add-button {
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
     }
     
     .tracklist-wrapper {
