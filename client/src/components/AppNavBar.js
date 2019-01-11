@@ -8,7 +8,7 @@ import {
     NavbarBrand,
     Nav
 } from 'reactstrap';
-import { ROUTE_MY_COLLECTION, ROUTE_SEARCH, ROUTE_SIGN_IN } from '../constants';
+import { ROUTE_COLLECTION, ROUTE_WISHLIST, ROUTE_SEARCH, ROUTE_SIGN_IN } from '../constants';
 
 class AppNavBar extends Component {
     state = {
@@ -35,9 +35,13 @@ class AppNavBar extends Component {
                                      activeClassName="selected">
                                 SEARCH
                             </NavLink>
-                            <NavLink to={ROUTE_MY_COLLECTION}
+                            <NavLink to={ROUTE_COLLECTION}
                                      activeClassName="selected">
-                                MY COLLECTION
+                                COLLECTION
+                            </NavLink>
+                            <NavLink to={ROUTE_WISHLIST}
+                                     activeClassName="selected">
+                                WISHLIST
                             </NavLink>
                             <a href={ROUTE_SIGN_IN} onClick={this.props.logout}>
                                 LOGOUT

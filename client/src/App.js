@@ -13,7 +13,8 @@ import {
 import './styles/App.scss';
 import AppNavBar from './components/AppNavBar';
 import SearchPage from './components/SearchPage';
-import MyCollection from './components/MyCollection';
+import Collection from './components/Collection';
+import Wishlist from './components/Wishlist';
 import ReleaseFull from './components/ReleaseFull';
 import MasterFull from './components/MasterFull';
 import LabelFull from './components/LabelFull';
@@ -28,11 +29,14 @@ import {
     DISCOGS_SECRET,
     DOGS_GET_ITEM_URL,
     DOGS_SEARCH_URL, ROUTE_ARTIST,
-    ROUTE_HOME, ROUTE_LABEL, ROUTE_MASTER,
-    ROUTE_MY_COLLECTION, ROUTE_RELEASE,
+    ROUTE_COLLECTION,
+    ROUTE_HOME,
+    ROUTE_LABEL,
+    ROUTE_MASTER,
+    ROUTE_RELEASE,
     ROUTE_SEARCH,
     ROUTE_SIGN_IN,
-    ROUTE_SIGN_UP
+    ROUTE_SIGN_UP, ROUTE_WISHLIST
 } from './constants';
 import Authentication from "./components/Authentication";
 import LightboxWrapper from './components/common/LightboxWrapper';
@@ -215,7 +219,7 @@ class App extends Component {
             snackbarOptions
         } = this.state;
         const { location } = this.props;
-
+        const isOnAuthRoute = location.pathname === ROUTE_SIGN_IN || location.pathname === ROUTE_SIGN_UP;
         return (
             <AppContext.Provider props={{
                 state: this.state,
@@ -227,7 +231,7 @@ class App extends Component {
                         ? <AppNavBar logout={this.logout} />
                         : null
                     }
-                    <div className="router-container">
+                    <div className={`router-container${isOnAuthRoute ? ' auth' : ''}`}>
                         {isLightboxOpened && <LightboxWrapper closeLightbox={this.closeLightbox}
                                                               isLightboxOpened={isLightboxOpened}
                                                               images={lightboxImages} />}
@@ -260,8 +264,10 @@ class App extends Component {
                                                              makeSearchRequest={this.makeSearchRequest}
                                                              searchQueryString={searchQuery}
                                                              searchQuery={this.searchQuery}/>}/>
-                            <Route exact path={ROUTE_MY_COLLECTION}
-                                   render={() => <MyCollection />}/>
+                            <Route exact path={ROUTE_COLLECTION}
+                                   render={() => <Collection />}/>
+                            <Route exact path={ROUTE_WISHLIST}
+                                   render={() => <Wishlist />}/>
                             <Route exact path="/404" render={() => null}/>
                             <Redirect to="/404"/>
                         </Switch>

@@ -10,6 +10,7 @@ class Pagination extends Component {
             paginationPositionRight: 0,
             prevProps: props
         };
+        console.log(props)
     }
 
     slideToNextPagination = (nextPage, type, shouldBlockSlide, slideToTheLeft) => {
@@ -29,10 +30,12 @@ class Pagination extends Component {
     };
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const { filterType } = prevState;
+        const { filterType } = prevState.prevProps;
+
         if (nextProps.filterType !== filterType) {
             return {
-                paginationPositionRight: nextProps.paginationPositionRight
+                paginationPositionRight: 0,
+                prevProps: nextProps,
             }
         }
 

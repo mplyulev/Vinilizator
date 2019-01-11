@@ -103,9 +103,9 @@ class SearchPage extends Component {
                     <Input onChange={this.onChange} placeholder={searchQueryString} />
                 </InputGroup>
                 {queryResult.pagination.pages > 1 && <Pagination getNextPageResult={getNextPageResult}
-                            filterType={filterType}
-                            isVisible={!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1}
-                            data={queryResult.pagination} />
+                                                                 filterType={filterType}
+                                                                 isVisible={!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1}
+                                                                 data={queryResult.pagination} />
                 }
                 <Fragment>
                     {!_.isEmpty(queryResult.results) && queryResult.results.length >= 1 ?
@@ -115,27 +115,32 @@ class SearchPage extends Component {
                                 <span onClick={() => this.requestByFilter(searchQueryString)}
                                       className={`result-filter${!filterType ? ' selected' : ''}`}>All</span>
                                     {(searchResultRelease && searchResultRelease.length > 0) || isAllSearch
-                                        ? <span onClick={() => this.requestByFilter(searchQueryString, DATA_TYPE_RELEASE)}
-                                                className={`result-filter${filterType === DATA_TYPE_RELEASE ? ' selected' : ''}`}>Releases</span>
+                                        ?
+                                        <span onClick={() => this.requestByFilter(searchQueryString, DATA_TYPE_RELEASE)}
+                                              className={`result-filter${filterType === DATA_TYPE_RELEASE ? ' selected' : ''}`}>Releases</span>
                                         : null}
                                     {(searchResultLabel && searchResultLabel.length > 0) || isAllSearch
                                         ? <span onClick={() => this.requestByFilter(searchQueryString, DATA_TYPE_LABEL)}
                                                 className={`result-filter${filterType === DATA_TYPE_LABEL ? ' selected' : ''}`}>Labels</span>
                                         : null}
                                     {(searchResultArtist && searchResultArtist.length > 0) || isAllSearch
-                                        ? <span onClick={() => this.requestByFilter(searchQueryString, DATA_TYPE_ARTIST)}
-                                                className={`result-filter${filterType === DATA_TYPE_ARTIST ? ' selected' : ''}`}>Artists</span>
+                                        ?
+                                        <span onClick={() => this.requestByFilter(searchQueryString, DATA_TYPE_ARTIST)}
+                                              className={`result-filter${filterType === DATA_TYPE_ARTIST ? ' selected' : ''}`}>Artists</span>
                                         : null}
                                     {(searchResultMaster && searchResultMaster.length > 0) || isAllSearch
-                                        ? <span onClick={() => this.requestByFilter(searchQueryString, DATA_TYPE_MASTER)}
-                                                className={`result-filter${filterType === DATA_TYPE_MASTER ? ' selected' : ''}`}>Master</span>
+                                        ?
+                                        <span onClick={() => this.requestByFilter(searchQueryString, DATA_TYPE_MASTER)}
+                                              className={`result-filter${filterType === DATA_TYPE_MASTER ? ' selected' : ''}`}>Master</span>
                                         : null}
                                     <span
                                         className="result-filter no-pointer">Results: {queryResult.pagination.items} of {allFilterQueryResult.pagination.items}</span>
                                 </div>
-                                : <div className='filter-container '><div className="loading"></div><span>Loading...</span></div>}
-                            <div className="results-container"> {
-                                !_.isEmpty(queryResult.results) && queryResult.results.map(result => {
+                                : <div className='filter-container '>
+                                    <div className="loading"></div>
+                                    <span>Loading...</span></div>}
+                            <div className="results-container">
+                                {!_.isEmpty(queryResult.results) && queryResult.results.map(result => {
                                     return (
                                         <SearchItem history={history}
                                                     release={result}
@@ -145,7 +150,7 @@ class SearchPage extends Component {
                                         </SearchItem>
                                     );
                                 })
-                            }
+                                }
                             </div>
                             <Pagination getNextPageResult={getNextPageResult}
                                         filterType={filterType}

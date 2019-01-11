@@ -26,17 +26,17 @@ class ReleaseFull extends Component {
     render () {
         const {release, openLightbox} = this.props;
         const { title, year, country, released, formats, num_for_sale, lowest_price, tracklist } = release;
-        const artists = release.artists.map((artist) => {
+        const artists = release.artists && release.artists.map((artist) => {
             return (
                 <span key={artist}>{artist.name}{ artist.join}</span>
             )
         });
 
-        const images = release.images.map(img => {
+        const images = release.images && release.images.map(img => {
             return img.resource_url;
         });
 
-        const genres = release.genres
+        const genres = release.genres && release.genres
             ? release.genres.map((genre, index) => {
                 return (
                     <span key={genre}>{genre}{index !== release.genres.length - 1 ? ', ' : ''}</span>
@@ -44,14 +44,14 @@ class ReleaseFull extends Component {
             })
             : '';
 
-        const labels = release.labels
+        const labels = release.labels && release.labels
             ? release.labels.map((label, index) => {
                 return (
                     <span key={label.name}>{label.name}{index !== release.labels.length - 1 ? ', ' : ''}</span>
                 )
             })
             : '';
-        console.log('asd',release.formats);
+
         const formatDescription = formats[0] && formats[0].descriptions
             ? formats[0].descriptions.map((description) => {
                 return (

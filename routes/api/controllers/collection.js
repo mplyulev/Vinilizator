@@ -39,7 +39,7 @@ router.post('/addToWishlist', function(req, res) {
                 user.wishlist.push(req.body.release);
                 user.save(function(err) {
                     if (err) {
-                        res.send({ success: false, msg: "Could't add item to wishlist. Please try again later" });
+                        res.send({ success: false, msg: "Could't add item to wishlist. Please try again later"});
                     } else {
                         res.send({
                             success: true,
