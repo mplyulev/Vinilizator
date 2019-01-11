@@ -23,6 +23,11 @@ export const ROUTE_ARTIST = '/artist';
 export const PAGINATION_WIDTH = 324;
 export const PAGINATION_PAGES_PER_SLIDE = 6;
 
+//SNACKBAR TYPES
+export const SNACKBAR_TYPE_SUCCESS = 'success';
+export const SNACKBAR_TYPE_FAIL = 'fail';
+export const SNACKBAR_CLOSE_TIMEOUT = 5000;
+
 //URLS
 export const DOGS_SEARCH_URL = 'https://api.discogs.com/database/search';
 export const DOGS_SPACE_GIF_URL = 'https://img.discogs.com/images/spacer.gif';

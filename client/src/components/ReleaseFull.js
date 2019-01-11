@@ -1,6 +1,20 @@
 import React, { Component, Fragment } from 'react';
+import { Button } from 'reactstrap/dist/reactstrap.es'
+import axios from 'axios';
+import { RESPONSE_STATUS_SUCCESS, SNACKBAR_TYPE_FAIL, SNACKBAR_TYPE_SUCCESS } from '../constants';
 
 class ReleaseFull extends Component {
+
+    test = (release) => {
+        axios.post('/api/controllers/collection/add', { release })
+            .then((res) => {
+                if (res.status === RESPONSE_STATUS_SUCCESS) {
+                    console.log(res);
+                    console.log('asdasdasd', res);
+                    this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
+                }
+            });
+    };
 
     render () {
         const {release, openLightbox} = this.props;
@@ -55,7 +69,7 @@ class ReleaseFull extends Component {
                     <span>{track.duration}</span>
                 </div>
             );
-        })
+        });
 
         return (
             <Fragment>
@@ -74,6 +88,7 @@ class ReleaseFull extends Component {
                         {num_for_sale ? <p>{num_for_sale} <span>for sale on Discogs</span></p> : null}
                         {lowest_price ? <p>Lowest Price on Discogs: <span>{lowest_price} &euro;</span></p> : null}
                     </div>
+                    <Button onClick={() => this.test(release)}>Add to collection</Button>
                 </div>
                 <div className="tracklist-wrapper">
                     <h3 className="title">Tracklist</h3>

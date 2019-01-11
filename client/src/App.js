@@ -18,6 +18,7 @@ import ReleaseFull from './components/ReleaseFull';
 import MasterFull from './components/MasterFull';
 import LabelFull from './components/LabelFull';
 import ArtistFull from './components/ArtistFull';
+import Snackbar from './components/common/Snackbar';
 
 
 import {
@@ -58,7 +59,12 @@ class App extends Component {
             requestPending: false,
             currentRelease: {},
             isLightboxOpened: false,
-            lightboxImages: []
+            lightboxImages: [],
+            snackbarOptions: {
+                isOpened: false,
+                msg: '',
+                type: ''
+            }
         };
 
         this.searchQuery = _.debounce(this.searchQuery, DEBOUNCE_TIME);
@@ -70,6 +76,26 @@ class App extends Component {
         } else {
             this.setState({ currentQueryResult: {}, searchQuery: '' })
         }
+    };
+
+    openSnackbar = (type, msg) => {
+        console.log('opening snackbar');
+        this.setState({
+            snackbarOptions: {
+                isOpened: true,
+                msg,
+                type
+            }
+        });
+    };
+
+    closeSnackbar = () => {
+        this.setState(prevState => ({
+            snackbarOptions: {
+                ...prevState.snackbarOptions,
+                isOpened: false
+            }
+        }));
     };
 
     makeSearchRequest = (searchQuery, type) => {
@@ -186,7 +212,8 @@ class App extends Component {
             filterType,
             currentRelease,
             isLightboxOpened,
-            lightboxImages
+            lightboxImages,
+            snackbarOptions
         } = this.state;
         const { location } = this.props;
 
@@ -215,6 +242,7 @@ class App extends Component {
                             <Route path={ROUTE_RELEASE}
                                    render={() => <ReleaseFull openLightbox={this.openLightbox}
                                                               closeLightbox={this.closeLightbox}
+                                                              openSnackbar={this.openSnackbar}
                                                               release={currentRelease} />}/>
                             <Route path={ROUTE_MASTER}
                                    render={() => <MasterFull release={currentRelease} />}/>
@@ -238,6 +266,7 @@ class App extends Component {
                             <Route exact path="/404" render={() => null}/>
                             <Redirect to="/404"/>
                         </Switch>
+                        <Snackbar snackbarOptions={snackbarOptions} closeSnackbar={this.closeSnackbar}/>
                     </div>
                 </div>
             </AppContext.Provider>

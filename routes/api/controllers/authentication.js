@@ -1,8 +1,5 @@
-const mongoose = require('mongoose');
-const passport = require('passport');
-require('../config/passport');
 const express = require('express');
-const jwt = require('jsonwebtoken');
+const passport = require('passport');
 const router = express.Router();
 const User = require("../../../models/user");
 
@@ -17,7 +14,7 @@ router.post('/register', function(req, res) {
             username
         });
 
-        const encryptedPassword = newUser.setPassword(password)
+        const encryptedPassword = newUser.setPassword(password);
 
         newUser.hash = encryptedPassword.hash;
         newUser.salt = encryptedPassword.salt;
@@ -45,7 +42,7 @@ router.post('/register', function(req, res) {
     }
 });
 
-router.post('/login', function(req, res) {
+router.post('/login',function(req, res) {
     User.findOne( {
         $or: [
             { email : req.body.email },
@@ -64,6 +61,7 @@ router.post('/login', function(req, res) {
 
             if (isPasswordValid) {
                 res.json({success: true, token: userModel.generateJwt()});
+                passport.session.sessionID = user._id;
             } else {
                 res.json({success: false, msg: 'Wrong username/email or password'});
             }
