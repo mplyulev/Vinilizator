@@ -23,12 +23,13 @@ import Snackbar from './components/common/Snackbar';
 
 
 import {
+    COLLECTION_TYPE_COLLECTION, COLLECTION_TYPE_WISHLIST,
     DATA_TYPE_RELEASE,
     DEBOUNCE_TIME,
     DISCOGS_KEY,
     DISCOGS_SECRET,
     DOGS_GET_ITEM_URL,
-    DOGS_SEARCH_URL, ROUTE_ARTIST,
+    DOGS_SEARCH_URL, RESPONSE_STATUS_SUCCESS, ROUTE_ARTIST,
     ROUTE_COLLECTION,
     ROUTE_HOME,
     ROUTE_LABEL,
@@ -36,7 +37,7 @@ import {
     ROUTE_RELEASE,
     ROUTE_SEARCH,
     ROUTE_SIGN_IN,
-    ROUTE_SIGN_UP, ROUTE_WISHLIST
+    ROUTE_SIGN_UP, ROUTE_WISHLIST, SNACKBAR_TYPE_FAIL, SNACKBAR_TYPE_SUCCESS
 } from './constants';
 import Authentication from "./components/Authentication";
 import LightboxWrapper from './components/common/LightboxWrapper';
@@ -103,19 +104,16 @@ class App extends Component {
 
     makeSearchRequest = (searchQuery, type) => {
         this.setState({requestPending: true});
-        console.log('request');
-        console.log(type);
-        console.log(this.state.allFilterQueryResult, this.state.currentQueryResult);
-            axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${type || 'all'}${type === DATA_TYPE_RELEASE ? '&format=Vinyl' : ''}&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
+        axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${type || 'all'}${type === DATA_TYPE_RELEASE ? '&format=Vinyl' : ''}&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
                 type
-                    ? this.setState({ currentQueryResult: response.data, filterType: type})
-                    : this.setState({ allFilterQueryResult: response.data, filterType: type});
+                    ? this.setState({ currentQueryResult: response.data, filterType: type })
+                    : this.setState({ allFilterQueryResult: response.data, filterType: type });
 
-                this.setState({requestPending: false});
+                this.setState({ requestPending: false });
             })
             .catch(error => {
-                this.setState({requestPending: false});
+                this.setState({ requestPending: false });
             });
     };
 
@@ -169,6 +167,19 @@ class App extends Component {
                     prevPath: nextProps.location.pathname,
                     lastRequestedRoute: nextProps.location.pathname
                 };
+            }
+
+            if (nextPath === ROUTE_COLLECTION || nextPath === ROUTE_WISHLIST) {
+                axios.get('/api/controllers/collection/getCollection', {
+                    params: {
+                        collectionType: nextPath === ROUTE_COLLECTION ? COLLECTION_TYPE_COLLECTION : COLLECTION_TYPE_WISHLIST
+                    }
+                })
+                .then((res) => {
+                    if (res.status === RESPONSE_STATUS_SUCCESS) {
+                        console.log(res);
+                    }
+                });
             }
         }
 

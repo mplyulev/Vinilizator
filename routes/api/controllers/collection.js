@@ -4,6 +4,18 @@ const passport = require('passport');
 const router = express.Router();
 const User = require("../../../models/user");
 
+router.get('/getCollection?', function(req, res) {
+    console.log(req.query);
+    User.findById(passport.session.sessionID, function(err, user) {
+        if (user) {
+            console.log(user)
+            const collectionType = JSON.stringify(req.query.collectionType);
+            res.send({ success: true, collection: user[collectionType]});
+        }
+    });
+});
+
+// Add item to collection
 router.post('/addToCollection', function(req, res) {
     User.findById(passport.session.sessionID, function(err, user) {
         if (user) {
@@ -28,6 +40,7 @@ router.post('/addToCollection', function(req, res) {
     });
 });
 
+//Add item to wishlist
 router.post('/addToWishlist', function(req, res) {
     User.findById(passport.session.sessionID, function(err, user) {
         if (user) {

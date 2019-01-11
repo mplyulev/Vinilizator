@@ -7,6 +7,9 @@ export const DATA_TYPE_MASTER = 'master';
 export const DATA_TYPE_LABEL = 'label';
 export const DATA_TYPE_ARTIST = 'artist';
 
+export const COLLECTION_TYPE_COLLECTION = 'collection';
+export const COLLECTION_TYPE_WISHLIST = 'wishlist';
+
 //ROUTES
 
 export const ROUTE_HOME = '/';
