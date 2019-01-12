@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import _ from 'lodash';
 import { withRouter } from "react-router-dom";
 import axios from 'axios';
+import ReactTooltip from 'react-tooltip'
 
 import {
     Redirect,

@@ -5,11 +5,9 @@ const router = express.Router();
 const User = require("../../../models/user");
 
 router.get('/getCollection?', function(req, res) {
-    console.log(req.query);
     User.findById(passport.session.sessionID, function(err, user) {
         if (user) {
-            console.log(user)
-            const collectionType = JSON.stringify(req.query.collectionType);
+            const collectionType = req.query.collectionType;
             res.send({ success: true, collection: user[collectionType]});
         }
     });

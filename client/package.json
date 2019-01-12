@@ -49,6 +49,7 @@
     "react-icons": "^3.2.2",
     "react-image-lightbox": "^5.1.0",
     "react-router-dom": "^4.3.1",
+    "react-tooltip": "^3.9.2",
     "react-transition-group": "^2.5.1",
     "reactstrap": "^6.5.0",
     "resolve": "1.8.1",

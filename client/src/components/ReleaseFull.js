@@ -81,7 +81,7 @@ class ReleaseFull extends Component {
         return (
             <Fragment>
                 <div className="release-data-container">
-                    <img className="release-cover" onClick={() => openLightbox(images)} src={images[0]} />
+                    {images &&<img className="release-cover" onClick={() => openLightbox(images)} src={images[0]} />}
                     <div className="info-wrapper">
                         <span className="artists">{artists}</span> - <span className="release-title">{title}</span>
                         {labels && <p>Label: {labels}<span> - {release.labels[0].catno}</span></p>}

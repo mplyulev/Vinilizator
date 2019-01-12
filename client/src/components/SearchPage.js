@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { InputGroup, InputGroupAddon, Input } from 'reactstrap';
 import _ from 'lodash';
+import ReactTooltip from 'react-tooltip';
 
 import Pagination from './common/Pagination';
 
@@ -26,6 +27,10 @@ class SearchPage extends Component {
         };
 
         this.onChange = this.onChange.bind(this);
+    }
+
+    componentDidMount() {
+        ReactTooltip.rebuild();
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -67,7 +72,7 @@ class SearchPage extends Component {
 
     requestByFilter = (searchQueryString, type) => {
         if (type !== this.props.filterType) {
-            this.props.makeSearchRequest(searchQueryString, type)
+            this.props.makeSearchRequest(searchQueryString, type);
         }
     };
 
@@ -92,9 +97,9 @@ class SearchPage extends Component {
             searchResultMaster,
             searchResultRelease
         } = this.state;
-
         const queryResult = !filterType ? allFilterQueryResult : currentQueryResult;
         const isAllSearch = searchQueryString === '';
+        ReactTooltip.rebuild();
 
         return (
             <div>
@@ -140,6 +145,7 @@ class SearchPage extends Component {
                                     <div className="loading"></div>
                                     <span>Loading...</span></div>}
                             <div className="results-container">
+                                <ReactTooltip id="search-page" />
                                 {!_.isEmpty(queryResult.results) && queryResult.results.map(result => {
                                     return (
                                         <SearchItem history={history}

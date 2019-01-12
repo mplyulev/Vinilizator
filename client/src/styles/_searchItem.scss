@@ -24,7 +24,20 @@
   transform: translate(-50%, -50%);
 }
 
-.search-item-title {
-  font-weight: 1000;
-  cursor: pointer;
+.search-item-info-wrapper {
+  margin-top: -10px;
+  line-height: 15px;
+
+  .search-item-title, .search-item-info {
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .search-item-info {
+    font-weight: 500;
+  }
 }

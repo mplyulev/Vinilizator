@@ -2,7 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const passport = require('passport');
-let session = require('express-session');
 
 const authentication = require('./routes/api/controllers/authentication');
 const collection = require('./routes/api/controllers/collection');
@@ -10,7 +9,6 @@ const collection = require('./routes/api/controllers/collection');
 const app = express();
 
 app.use(bodyParser.json());
-app.use(session({ resave: true ,secret: '123456' , saveUninitialized: true}));
 let router = express.Router();
 app.use(router);
 
