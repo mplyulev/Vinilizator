@@ -10,7 +10,6 @@ class Pagination extends Component {
             paginationPositionRight: 0,
             prevProps: props
         };
-        console.log(props)
     }
 
     slideToNextPagination = (nextPage, type, shouldBlockSlide, slideToTheLeft) => {

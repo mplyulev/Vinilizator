@@ -1,6 +1,9 @@
 @import '../styles/variables';
 
 .navbar {
+  position: fixed;
+  z-index: 1000;
+  width: 100%;
   margin-bottom: 2rem;
   background-color: black !important;
   color: white !important;

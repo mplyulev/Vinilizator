@@ -30,7 +30,9 @@ import {
     DISCOGS_KEY,
     DISCOGS_SECRET,
     DOGS_GET_ITEM_URL,
-    DOGS_SEARCH_URL, RESPONSE_STATUS_SUCCESS, ROUTE_ARTIST,
+    DOGS_SEARCH_URL,
+    RESPONSE_STATUS_SUCCESS,
+    ROUTE_ARTIST,
     ROUTE_COLLECTION,
     ROUTE_HOME,
     ROUTE_LABEL,
@@ -38,7 +40,8 @@ import {
     ROUTE_RELEASE,
     ROUTE_SEARCH,
     ROUTE_SIGN_IN,
-    ROUTE_SIGN_UP, ROUTE_WISHLIST, SNACKBAR_TYPE_FAIL, SNACKBAR_TYPE_SUCCESS
+    ROUTE_SIGN_UP,
+    ROUTE_WISHLIST
 } from './constants';
 import Authentication from "./components/Authentication";
 import LightboxWrapper from './components/common/LightboxWrapper';
@@ -70,7 +73,9 @@ class App extends Component {
                 isOpened: false,
                 msg: '',
                 type: ''
-            }
+            },
+            vinylCollection: [],
+            wishlist: []
         };
 
         this.searchQuery = _.debounce(this.searchQuery, DEBOUNCE_TIME);
@@ -171,14 +176,17 @@ class App extends Component {
             }
 
             if (nextPath === ROUTE_COLLECTION || nextPath === ROUTE_WISHLIST) {
+                const collectionType = nextPath === ROUTE_COLLECTION ? COLLECTION_TYPE_COLLECTION : COLLECTION_TYPE_WISHLIST
                 axios.get('/api/controllers/collection/getCollection', {
                     params: {
-                        collectionType: nextPath === ROUTE_COLLECTION ? COLLECTION_TYPE_COLLECTION : COLLECTION_TYPE_WISHLIST
+                        collectionType
                     }
                 })
                 .then((res) => {
                     if (res.status === RESPONSE_STATUS_SUCCESS) {
-                        console.log(res);
+                        // return {
+                        //     vinylCollection: res.data.collection
+                        // };
                     }
                 });
             }
@@ -230,6 +238,10 @@ class App extends Component {
             lightboxImages,
             snackbarOptions
         } = this.state;
+
+        const vinylCollection = this.state[COLLECTION_TYPE_COLLECTION];
+        const wishlist = this.state[COLLECTION_TYPE_WISHLIST];
+        console.log(vinylCollection, wishlist);
         const { location } = this.props;
         const isOnAuthRoute = location.pathname === ROUTE_SIGN_IN || location.pathname === ROUTE_SIGN_UP;
         return (
@@ -277,9 +289,9 @@ class App extends Component {
                                                              searchQueryString={searchQuery}
                                                              searchQuery={this.searchQuery}/>}/>
                             <Route exact path={ROUTE_COLLECTION}
-                                   render={() => <Collection />}/>
+                                   render={() => <Collection data={vinylCollection}/>}/>
                             <Route exact path={ROUTE_WISHLIST}
-                                   render={() => <Wishlist />}/>
+                                   render={() => <Wishlist data={wishlist}/>}/>
                             <Route exact path="/404" render={() => null}/>
                             <Redirect to="/404"/>
                         </Switch>

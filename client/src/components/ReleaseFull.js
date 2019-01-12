@@ -28,7 +28,7 @@ class ReleaseFull extends Component {
         const { title, year, country, released, formats, num_for_sale, lowest_price, tracklist } = release;
         const artists = release.artists && release.artists.map((artist) => {
             return (
-                <span key={artist}>{artist.name}{ artist.join}</span>
+                <span key={artist.name}>{artist.name}{ artist.join}</span>
             )
         });
 
@@ -63,14 +63,14 @@ class ReleaseFull extends Component {
         const styles = release.styles ?
             release.styles.map((style, index) => {
                 return (
-                    <span key={style}>{style}{index > release.styles.length - 1 ? ', ' : ''}</span>
+                    <span key={style}>{style}{index !== release.styles.length - 1 ? ', ' : ''}</span>
                 )
             })
             : '';
 
         const tracklistTemplate = tracklist.map(track => {
             return (
-                <div className="track">
+                <div key={track.title} className="track">
                     <span>{track.position}</span>
                     <span>{track.title}</span>
                     <span>{track.duration}</span>
@@ -81,6 +81,7 @@ class ReleaseFull extends Component {
         return (
             <Fragment>
                 <div className="release-data-container">
+                    <Button color="success" className="add-button add-to-collection" onClick={() => this.addToCollection(release)}>Add to collection</Button>
                     {images &&<img className="release-cover" onClick={() => openLightbox(images)} src={images[0]} />}
                     <div className="info-wrapper">
                         <span className="artists">{artists}</span> - <span className="release-title">{title}</span>
@@ -90,18 +91,17 @@ class ReleaseFull extends Component {
                         {country && <p>Country: <span>{country}</span></p>}
                         {genres && <p>Genre: {genres}</p>}
                         {styles && <p>Style: <span>{styles}</span></p>}
-                        {released && year ? <p>Released: <span>{released}</span></p> : null}
+                            {released && year ? <p>Released: <span>{released}</span></p> : null}
                         {year && !released ? <p>Year: <span>{year}</span></p> : null}
                         {num_for_sale ? <p>{num_for_sale} <span>for sale on Discogs</span></p> : null}
                         {lowest_price ? <p>Lowest Price on Discogs: <span>{lowest_price} &euro;</span></p> : null}
                     </div>
+                    <div className="tracklist-wrapper">
+                        <h3 className="title">Tracklist</h3>
+                        {tracklistTemplate}
+                        <Button color="success" className="add-button add-to-wishlist" onClick={() => this.addToWishlist(release)}>Add to wishlist</Button>
+                    </div>
                 </div>
-                <div className="tracklist-wrapper">
-                    <h3 className="title">Tracklist</h3>
-                    {tracklistTemplate}
-                </div>
-                <Button color="success" className="add-button" onClick={() => this.addToCollection(release)}>Add to collection</Button>
-                <Button color="success" className="add-button add-to-wishlist" onClick={() => this.addToWishlist(release)}>Add to wishlist</Button>
             </Fragment>
         );
     }

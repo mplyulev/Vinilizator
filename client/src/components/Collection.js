@@ -2,21 +2,37 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import Pagination from './common/Pagination';
 import SearchItem from "./SearchItem";
+import {DATA_TYPE_ARTIST, DATA_TYPE_LABEL, DATA_TYPE_MASTER, DATA_TYPE_RELEASE} from "../constants";
 
 class Collection extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-
+            prevProps: props,
+            data: null
         };
 
     }
 
+    static getDerivedStateFromProps(nextProps, prevState) {
+        console.log(prevState.prevProps.data, nextProps.data);
+        if (prevState.prevProps.data === null && nextProps.data) {
+            console.log('asdas');
+            return {
+                prevProps: nextProps,
+                data: nextProps.data
+            };
+        }
+
+        return null;
+    }
+
+
 
     render () {
-        const { collection, history, getSpecificResult, filterType } = this.props;
-
+        const { collection, history, getSpecificResult, filterType, data } = this.props;
+        console.log(data);
         return (
             <div>
                 {/*<Pagination getNextPageResult={getNextPageResult}*/}

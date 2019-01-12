@@ -9,7 +9,7 @@ class SearchItem extends Component {
         const label = release.label && release.label
             ? release.label.map((label, index) => {
                 return (
-                    <span key={label}>{label}{index !== release.label.length - 1 ? ', ' : ''}</span>
+                    <span key={label + Math.random()}>{label}{index !== release.label.length - 1 ? ', ' : ''}</span>
                 )
             })
             : '';

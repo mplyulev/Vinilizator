@@ -64,8 +64,6 @@
 }
 
 .tracklist-wrapper {
-    padding: 30px;
-    margin-top: -60px;
     font-size: 16px;
     color: $font-color-dimgray;
 
@@ -75,6 +73,11 @@
 
     h3 {
         font-weight: 700;
+    }
+
+    .add-button {
+        top: 20px;
+        left: 0;
     }
 }
 
@@ -87,16 +90,23 @@
             margin: 0 auto;
             margin-bottom: 30px;
         }
+
+        .add-button {
+            top: -20px;
+
+            &.add-to-wishlist {
+                position: relative;
+                left: 0;
+            }
+
+            &.add-to-collection {
+                position: absolute;
+            }
+        }
     }
 
-    .add-button {
-        position: absolute;
-        top: -20px;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-    
     .tracklist-wrapper {
+        padding: 30px;
         text-align: center;
     }
 }
