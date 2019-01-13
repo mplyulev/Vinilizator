@@ -10,19 +10,30 @@
   text-align: center;
 }
 
-.search-item-cover {
-  position: relative;
-  left: 50%;
-  top: 50%;
-  display: block;
-  width: 200px;
-  height: 200px;
-  margin-top: -30px;
-  margin-bottom: 50px;
-  cursor: pointer;
-  transform: translate(-50%, -50%);
-}
+.cover-wrapper {
+  display: flex;
 
+  .half-vinyl {
+    height: 200px;
+    margin-left: -100px;
+
+
+  }
+
+  .search-item-cover {
+    position: relative;
+    left: 50%;
+    top: 100px;
+    display: block;
+    width: 200px;
+    height: 200px;
+    margin-bottom: 50px;
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+  }
+
+}
+ 
 .search-item-info-wrapper {
   margin-top: -10px;
   line-height: 15px;

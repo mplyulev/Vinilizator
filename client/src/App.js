@@ -79,6 +79,7 @@ class App extends Component {
         };
 
         this.searchQuery = _.debounce(this.searchQuery, DEBOUNCE_TIME);
+        this.releaseAnimationTimeout = null
     }
 
     searchQuery = (value) => {
@@ -203,7 +204,10 @@ class App extends Component {
         axios.get(`${DOGS_GET_ITEM_URL[type]}/${id}?key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
                 this.setState({currentRelease: response.data}, () => {
-                    this.props.history.push(`${type}/${id}`);
+                    this.releaseAnimationTimeout = setTimeout(() => {
+                        this.props.history.push(`${type}/${id}`);
+                    });
+                    clearTimeout(this.releaseAnimationTimeout);
                 });
             })
             .catch(error => {

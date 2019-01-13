@@ -96,11 +96,11 @@ class ReleaseFull extends Component {
                         {num_for_sale ? <p>{num_for_sale} <span>for sale on Discogs</span></p> : null}
                         {lowest_price ? <p>Lowest Price on Discogs: <span>{lowest_price} &euro;</span></p> : null}
                     </div>
-                    <div className="tracklist-wrapper">
-                        <h3 className="title">Tracklist</h3>
-                        {tracklistTemplate}
-                        <Button color="success" className="add-button add-to-wishlist" onClick={() => this.addToWishlist(release)}>Add to wishlist</Button>
-                    </div>
+                </div>
+                <div className="tracklist-wrapper">
+                    <h3 className="title">Tracklist</h3>
+                    {tracklistTemplate}
+                    <Button color="success" className="add-button add-to-wishlist" onClick={() => this.addToWishlist(release)}>Add to wishlist</Button>
                 </div>
             </Fragment>
         );

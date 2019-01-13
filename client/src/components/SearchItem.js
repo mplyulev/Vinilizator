@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import {DATA_TYPE_RELEASE, DOGS_SPACE_GIF_URL, TOOLTIP_DELAY_SHOW} from '../constants';
 import NoImagePlaceholder from '../assets/no-cover.png';
+import HalfVinyl from '../assets/half-vinyl.png';
 
 class SearchItem extends Component {
+    getRelease = (type, id) => {
+        this.props.getSpecificResult(type, id);
+    }
+
     render () {
-        const {release, getSpecificResult, filterType} = this.props;
+        const {release, filterType} = this.props;
         const title = release.title;
         const label = release.label && release.label
             ? release.label.map((label, index) => {
@@ -29,8 +34,11 @@ class SearchItem extends Component {
         const coverUrl = release.cover_image === DOGS_SPACE_GIF_URL ? NoImagePlaceholder : release.cover_image;
 
         return (
-            <div className="search-item-container" onClick={() => getSpecificResult(release.type, release.id)}>
-                <img className="search-item-cover" src={coverUrl} alt="Release cover"/>
+            <div className="search-item-container" onClick={() => this.getRelease(release.type, release.id)}>
+                <div className="cover-wrapper">
+                    <img className="search-item-cover" src={coverUrl} alt="Release cover"/>
+                    <img className="half-vinyl" src={HalfVinyl} alt="Release cover"/>
+                </div>
                 <div className="search-item-info-wrapper">
                     <div className="search-item-title"
                          data-for="search-page"
