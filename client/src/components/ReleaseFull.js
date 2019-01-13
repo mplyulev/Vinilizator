@@ -81,7 +81,6 @@ class ReleaseFull extends Component {
         return (
             <Fragment>
                 <div className="release-data-container">
-                    <Button color="success" className="add-button add-to-collection" onClick={() => this.addToCollection(release)}>Add to collection</Button>
                     {images &&<img className="release-cover" onClick={() => openLightbox(images)} src={images[0]} />}
                     <div className="info-wrapper">
                         <span className="artists">{artists}</span> - <span className="release-title">{title}</span>
@@ -96,11 +95,12 @@ class ReleaseFull extends Component {
                         {num_for_sale ? <p>{num_for_sale} <span>for sale on Discogs</span></p> : null}
                         {lowest_price ? <p>Lowest Price on Discogs: <span>{lowest_price} &euro;</span></p> : null}
                     </div>
-                </div>
-                <div className="tracklist-wrapper">
-                    <h3 className="title">Tracklist</h3>
-                    {tracklistTemplate}
-                    <Button color="success" className="add-button add-to-wishlist" onClick={() => this.addToWishlist(release)}>Add to wishlist</Button>
+                    <div className="tracklist-wrapper">
+                        <h3 className="title">Tracklist</h3>
+                        {tracklistTemplate}
+                        <Button color="success" className="add-button add-to-collection" onClick={() => this.addToCollection(release)}>Add to collection</Button>
+                        <Button color="success" className="add-button add-to-wishlist" onClick={() => this.addToWishlist(release)}>Add to wishlist</Button>
+                    </div>
                 </div>
             </Fragment>
         );

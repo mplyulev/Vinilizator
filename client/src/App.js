@@ -79,6 +79,7 @@ class App extends Component {
         };
 
         this.searchQuery = _.debounce(this.searchQuery, DEBOUNCE_TIME);
+        this.getSpecificResult = this.getSpecificResult.bind(this);
         this.releaseAnimationTimeout = null
     }
 
@@ -179,35 +180,19 @@ class App extends Component {
                     lastRequestedRoute: nextProps.location.pathname
                 };
             }
-
-            if (nextPath === ROUTE_COLLECTION || nextPath === ROUTE_WISHLIST) {
-                const collectionType = nextPath === ROUTE_COLLECTION ? COLLECTION_TYPE_COLLECTION : COLLECTION_TYPE_WISHLIST
-                axios.get('/api/controllers/collection/getCollection', {
-                    params: {
-                        collectionType
-                    }
-                })
-                .then((res) => {
-                    if (res.status === RESPONSE_STATUS_SUCCESS) {
-                        // return {
-                        //     vinylCollection: res.data.collection
-                        // };
-                    }
-                });
-            }
         }
 
         return null;
     }
 
-    getSpecificResult = (type, id) => {
+    async getSpecificResult(type, id) {
+        clearTimeout(this.releaseAnimationTimeout);
         axios.get(`${DOGS_GET_ITEM_URL[type]}/${id}?key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
                 this.setState({currentRelease: response.data}, () => {
                     this.releaseAnimationTimeout = setTimeout(() => {
                         this.props.history.push(`${type}/${id}`);
-                    });
-                    clearTimeout(this.releaseAnimationTimeout);
+                    }, 600);
                 });
             })
             .catch(error => {
@@ -216,6 +201,28 @@ class App extends Component {
     };
 
     componentDidUpdate(prevProps, prevState, snapshot) {
+        const prevPath = prevProps.location.pathname;
+        const nextPath = this.props.location.pathname;
+        if ((nextPath === ROUTE_COLLECTION || nextPath === ROUTE_WISHLIST) && nextPath !== prevPath) {
+            const collectionType = nextPath === ROUTE_COLLECTION ? COLLECTION_TYPE_COLLECTION : COLLECTION_TYPE_WISHLIST
+            console.log(collectionType);
+            axios.get('/api/controllers/collection/getCollection', {
+                params: {
+                    collectionType
+                }
+            })
+                .then((res) => {
+                    if (res.status === RESPONSE_STATUS_SUCCESS) {
+                        console.log('asdasd', res);
+                        console.log('bb', res.data.collection);
+                        console.log(collectionType === COLLECTION_TYPE_COLLECTION);
+                        this.setState({
+                            vinylCollection: collectionType === COLLECTION_TYPE_COLLECTION ? res.data.collection : [],
+                            wishlist: collectionType === COLLECTION_TYPE_WISHLIST ? res.data.collection : [],
+                        });
+                    }
+                });
+        }
         const { searchQuery, token, lastRequestedRoute } = this.state;
         if (prevState.token !== token && lastRequestedRoute !== ROUTE_SIGN_IN) {
             this.props.history.push(lastRequestedRoute || ROUTE_HOME);
@@ -244,12 +251,12 @@ class App extends Component {
             currentRelease,
             isLightboxOpened,
             lightboxImages,
-            snackbarOptions
+            snackbarOptions,
+            vinylCollection,
+            wishlist
         } = this.state;
 
-        const vinylCollection = this.state[COLLECTION_TYPE_COLLECTION];
-        const wishlist = this.state[COLLECTION_TYPE_WISHLIST];
-        const { location } = this.props;
+        const { location, history } = this.props;
         const isOnAuthRoute = location.pathname === ROUTE_SIGN_IN || location.pathname === ROUTE_SIGN_UP;
         return (
             <AppContext.Provider props={{
@@ -291,12 +298,14 @@ class App extends Component {
                                                              requestPending={requestPending}
                                                              getSpecificResult={this.getSpecificResult}
                                                              filterType={filterType}
-                                                             history={this.props.history}
+                                                             history={history}
                                                              makeSearchRequest={this.makeSearchRequest}
                                                              searchQueryString={searchQuery}
                                                              searchQuery={this.searchQuery}/>}/>
                             <Route exact path={ROUTE_COLLECTION}
-                                   render={() => <Collection data={vinylCollection}/>}/>
+                                   render={() => <Collection getSpecificResult={this.getSpecificResult}
+                                                             history={history}
+                                                             data={vinylCollection}/>}/>
                             <Route exact path={ROUTE_WISHLIST}
                                    render={() => <Wishlist data={wishlist}/>}/>
                             <Route exact path="/404" render={() => null}/>

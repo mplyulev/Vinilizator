@@ -4,9 +4,24 @@ import NoImagePlaceholder from '../assets/no-cover.png';
 import HalfVinyl from '../assets/half-vinyl.png';
 
 class SearchItem extends Component {
-    getRelease = (type, id) => {
-        this.props.getSpecificResult(type, id);
+    constructor(props) {
+        super(props);
+
+        this.item = null;
+        this.getRelease = this.getRelease.bind(this);
     }
+    async getRelease (type, id){
+        this.item.classList.add('opened');
+        if (!this.props.isInCollection) {
+            await this.props.getSpecificResult(type, id);
+            this.item.className ='search-item-container opened';
+        }
+
+        else {
+            this.props.redirectCollectionRelease
+        }
+
+    };
 
     render () {
         const {release, filterType} = this.props;
@@ -34,7 +49,9 @@ class SearchItem extends Component {
         const coverUrl = release.cover_image === DOGS_SPACE_GIF_URL ? NoImagePlaceholder : release.cover_image;
 
         return (
-            <div className="search-item-container" onClick={() => this.getRelease(release.type, release.id)}>
+            <div className="search-item-container"
+                 ref={node => this.item = node}
+                 onClick={() => this.getRelease(release.type, release.id)}>
                 <div className="cover-wrapper">
                     <img className="search-item-cover" src={coverUrl} alt="Release cover"/>
                     <img className="half-vinyl" src={HalfVinyl} alt="Release cover"/>
