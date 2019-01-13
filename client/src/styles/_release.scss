@@ -96,11 +96,14 @@
 
             &.add-to-wishlist {
                 position: relative;
+                top: 15px;
                 left: 0;
             }
 
             &.add-to-collection {
                 position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
             }
         }
     }

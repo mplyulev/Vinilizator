@@ -49,7 +49,7 @@ class SignUp extends Component {
         return (
             <div className="sign-up-wrapper authentication-wrapper">
                 <form className="sign-up-form" onSubmit={this.handleSubmit}>
-                    <FormGroup>
+                    <FormGroup className="username-form">
                         <Label for="username">Username</Label>
                         <Input
                             autoFocus
@@ -60,7 +60,7 @@ class SignUp extends Component {
                         />
                         <span className="error">{this.state.usernameError}</span>
                     </FormGroup>
-                    <FormGroup>
+                    <FormGroup className="email-form">
                         <Label for="email">Email</Label>
                         <Input
                             type="email"
@@ -70,7 +70,7 @@ class SignUp extends Component {
                         />
                         <span className="error">{this.state.emailError}</span>
                     </FormGroup>
-                    <FormGroup>
+                    <FormGroup className="password-form">
                         <Label for="password">Password</Label>
                         <Input
                             onChange={this.handleChange}

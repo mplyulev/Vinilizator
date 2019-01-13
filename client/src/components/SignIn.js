@@ -45,7 +45,7 @@ class SignIn extends Component {
         return (
             <div className="sign-in-wrapper authentication-wrapper">
                 <form className="sign-in-form" onSubmit={this.handleSubmit}>
-                    <FormGroup>
+                    <FormGroup className="email-form">
                         <Label for="email">Username or Email</Label>
                         <Input
                             type="text"
@@ -55,7 +55,7 @@ class SignIn extends Component {
                         />
                         <span className="error">{this.state.emailError}</span>
                     </FormGroup>
-                    <FormGroup>
+                    <FormGroup className="password-form">
                         <Label for="password">Password</Label>
                         <Input
                             onChange={this.handleChange}

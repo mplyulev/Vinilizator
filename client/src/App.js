@@ -90,6 +90,10 @@ class App extends Component {
     };
 
     openSnackbar = (type, msg) => {
+        if (this.state.snackbarOptions.isOpened) {
+            this.closeSnackbar();
+        }
+
         this.setState({
             snackbarOptions: {
                 isOpened: true,
@@ -241,7 +245,6 @@ class App extends Component {
 
         const vinylCollection = this.state[COLLECTION_TYPE_COLLECTION];
         const wishlist = this.state[COLLECTION_TYPE_WISHLIST];
-        console.log(vinylCollection, wishlist);
         const { location } = this.props;
         const isOnAuthRoute = location.pathname === ROUTE_SIGN_IN || location.pathname === ROUTE_SIGN_UP;
         return (

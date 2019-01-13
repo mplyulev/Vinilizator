@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import {DATA_TYPE_RELEASE, DOGS_SPACE_GIF_URL, TOOLTIP_DELAY_SHOW} from '../constants';
+import NoImagePlaceholder from '../assets/no-cover.png';
 
 class SearchItem extends Component {
     render () {
         const {release, getSpecificResult, filterType} = this.props;
         const title = release.title;
-        console.log(release.label);
         const label = release.label && release.label
             ? release.label.map((label, index) => {
                 return (
@@ -26,7 +26,7 @@ class SearchItem extends Component {
         const index = title && title.indexOf("-");
         const artist = title && title.substr(0, index); // Gets the first part
         const itemTitle = title && title.substr(index + 1);
-        const coverUrl = release.cover_image === DOGS_SPACE_GIF_URL ? '../assets/no-cover.png' : release.cover_image;
+        const coverUrl = release.cover_image === DOGS_SPACE_GIF_URL ? NoImagePlaceholder : release.cover_image;
 
         return (
             <div className="search-item-container" onClick={() => getSpecificResult(release.type, release.id)}>
@@ -46,10 +46,10 @@ class SearchItem extends Component {
                              data-for="search-page"
                              data-tip={labelTooltip}>{label} - {release.catno}</div> : null}
                     {filterType === DATA_TYPE_RELEASE && country ?
-                        <divx className="search-item-info"
+                        <div className="search-item-info"
                               data-for="search-page"
                               data-delay-show={TOOLTIP_DELAY_SHOW}
-                              data-tip={country}>{country}</divx> : null}
+                              data-tip={country}>{country}</div> : null}
                 </div>
             </div>
         );

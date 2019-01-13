@@ -71,7 +71,7 @@ class ReleaseFull extends Component {
         const tracklistTemplate = tracklist.map(track => {
             return (
                 <div key={track.title} className="track">
-                    <span>{track.position}</span>
+                    <span>{track.position}.</span>
                     <span>{track.title}</span>
                     <span>{track.duration}</span>
                 </div>

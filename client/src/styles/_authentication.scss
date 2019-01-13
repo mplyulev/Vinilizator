@@ -1,24 +1,33 @@
 @import './variables';
 
-.authentication-background {
+.authentication-background-wrapper {
   position: absolute;
   left: 50%;
-  opacity: 0;
-  width: 100vw;
-  height: 100vh;
-  background: url('../assets/authentication-background.png') no-repeat local center;
-  background-size: 1600px;
-  width: 10000px;
-  height: 2000px;
-  margin: -510px 0 0 -5000px;
-  text-align: center;
-  transition: opacity 2s ease-in;
+  top: 50%;
+  transform: translateY(-50%);
 
-  &.mounted {
-    opacity: 1;
-    animation:spin 5s linear infinite;
+  .authentication-background {
+    position: absolute;
+    left: 50%;
+    opacity: 0;
+    width: 100vw;
+    height: 100vh;
+    background: url('../assets/authentication-background.png') no-repeat local center;
+    background-size: 2000px;
+    width: 10000px;
+    height: 2000px;
+    margin: -1000px 0 0 -5000px;
+    text-align: center;
+    transition: opacity 2s ease-in;
+
+    &.mounted {
+      opacity: 1;
+      animation:spin 5s linear infinite;
+    }
   }
 }
+
+
 
 @keyframes spin{
 
@@ -49,16 +58,17 @@
 
 .authentication {
   position: relative;
-  width: 500px;
+  width: 460px;
   margin: 0 auto;
   height: 500px;
-  overflow: hidden;
   background-color: transparent !important;
   border: none;
   border-radius: 500px;
   transition: all 0.5s ease-in-out;
 
   h1 {
+    position: relative;
+    bottom: 40px;
     margin-top: 20px;
     margin-bottom: -30px;
     text-align: center;
@@ -71,7 +81,7 @@
   }
 
   .authentication-header {
-    margin-top: 30px;
+    margin-top: 20px;
     margin-bottom: -100px;
     text-align: center;
 
@@ -98,18 +108,41 @@
     }
 
     .sign-in-form {
+      .email-form {
+        bottom: 25px;
+      }
+
+      .password-form {
+        top: 35px;
+      }
+
       button {
         position: relative;
         top: 61px;
+      }
+    }
+
+    .sign-up-form {
+      .email-form {
+        top: 50px;
+      }
+
+      .password-form {
+        top: 40px;
+      }
+
+      button {
+        position: relative;
+        top: 50px;
       }
     }
   }
 }
 
 @media only screen and (max-width: 467px) {
-  .authentication-background {
+  .authentication-background-wrapper .authentication-background {
     height: 10000px;
-    margin: -500px 0 0 -5000px;
+    margin: -1000px 0 0 -5000px;
     background-size: contain;
     animation: spin 10s linear infinite;
   }
@@ -119,8 +152,19 @@
     height: 450px !important;
     background: url('../assets/paper-background2.jpg');
     border-radius: 50px !important;
+    color: $background-color-black;
+
+    .email-form,
+    .password-form {
+      top: 0 !important;
+    }
+
+    .sign-up-form button {
+      top: 0 !important;
+    }
 
     h1 {
+      bottom: 0;
       margin-top: 0px;
     }
   }
