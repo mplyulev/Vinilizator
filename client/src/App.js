@@ -185,6 +185,12 @@ class App extends Component {
         return null;
     }
 
+    navigateToCollectionItem  = release => {
+        this.setState({currentRelease: release}, () => {
+            this.props.history.push(`${DATA_TYPE_RELEASE}/${release.id}`);
+        });
+    }
+
     async getSpecificResult(type, id) {
         clearTimeout(this.releaseAnimationTimeout);
         axios.get(`${DOGS_GET_ITEM_URL[type]}/${id}?key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
@@ -199,6 +205,8 @@ class App extends Component {
                 console.error(error);
             });
     };
+
+
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         const prevPath = prevProps.location.pathname;

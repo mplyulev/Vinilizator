@@ -16,9 +16,8 @@ class SearchItem extends Component {
             await this.props.getSpecificResult(type, id);
             this.item.className ='search-item-container opened';
         }
-
         else {
-            this.props.redirectCollectionRelease
+           
         }
 
     };
