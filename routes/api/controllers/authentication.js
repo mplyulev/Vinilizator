@@ -43,6 +43,7 @@ router.post('/register', function(req, res) {
 });
 
 router.post('/login',function(req, res) {
+    console.log('asd');
     User.findOne( {
         $or: [
             { email : req.body.email },
@@ -50,7 +51,7 @@ router.post('/login',function(req, res) {
         ]
     }, function(err, user) {
         if (err) throw err;
-
+        console.log(user);
         if (!user) {
             res.json({success: false, msg: 'Wrong username/email or password'});
         } else {

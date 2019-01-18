@@ -14,7 +14,6 @@ class LightboxWrapper extends Component {
         const { photoIndex } = this.state;
         const { images, isLightboxOpened, closeLightbox } = this.props;
 
-        console.log(images)
         return (
             <div>
                 {isLightboxOpened && (

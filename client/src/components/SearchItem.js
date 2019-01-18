@@ -9,18 +9,31 @@ class SearchItem extends Component {
 
         this.item = null;
         this.getRelease = this.getRelease.bind(this);
+        this.timeout = null
     }
+
     async getRelease (type, id){
         this.item.classList.add('opened');
         if (!this.props.isInCollection) {
-            await this.props.getSpecificResult(type, id);
+            await this.props.getSpecificResult(type, id, this.props.isInCollection);
             this.item.className ='search-item-container opened';
+        } else {
+            this.props.setSpecificResult(this.props.release);
         }
-        else {
-           
-        }
-
     };
+
+    componentDidMount() {
+        if (this.props.currentRelease && this.props.currentRelease.id === this.props.release.id) { 
+            this.item.classList.add('opened');
+            this.timeout = setTimeout(() => {
+                this.item.classList.remove('opened');
+            }, 300);
+        }
+    }
+
+    componentWillUnmount() {
+        clearTimeout(this.timeout);
+    }
 
     render () {
         const {release, filterType} = this.props;
@@ -45,7 +58,11 @@ class SearchItem extends Component {
         const index = title && title.indexOf("-");
         const artist = title && title.substr(0, index); // Gets the first part
         const itemTitle = title && title.substr(index + 1);
-        const coverUrl = release.cover_image === DOGS_SPACE_GIF_URL ? NoImagePlaceholder : release.cover_image;
+        const collectionReleaseImage = release.images && release.images.length > 0 ? release.images[0].uri : ''
+        let coverUrl = release.cover_image === DOGS_SPACE_GIF_URL ? NoImagePlaceholder : release.cover_image || collectionReleaseImage;
+        if (!release.cover_image && !collectionReleaseImage) {
+            coverUrl = NoImagePlaceholder;
+        }
 
         return (
             <div className="search-item-container"
@@ -53,7 +70,7 @@ class SearchItem extends Component {
                  onClick={() => this.getRelease(release.type, release.id)}>
                 <div className="cover-wrapper">
                     <img className="search-item-cover" src={coverUrl} alt="Release cover"/>
-                    <img className="half-vinyl" src={HalfVinyl} alt="Release cover"/>
+                    {coverUrl !== NoImagePlaceholder && <img className="half-vinyl" src={HalfVinyl} alt="Release cover"/>}
                 </div>
                 <div className="search-item-info-wrapper">
                     <div className="search-item-title"

@@ -89,7 +89,8 @@ class SearchPage extends Component {
             currentQueryResult,
             requestPending,
             getSpecificResult,
-            history
+            history,
+            currentRelease
         } = this.props;
         const {
             searchResultArtist,
@@ -150,6 +151,7 @@ class SearchPage extends Component {
                                     return (
                                         <SearchItem history={history}
                                                     release={result}
+                                                    currentRelease={currentRelease}
                                                     filterType={filterType}
                                                     getSpecificResult={getSpecificResult}
                                                     key={result.id}>

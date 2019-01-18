@@ -14,6 +14,11 @@ class Collection extends Component {
 
     }
 
+    componentDidMount = () => {
+      console.log(this.props)
+    }
+    
+
     // static getDerivedStateFromProps(nextProps, prevState) {
     //     console.log(prevState.prevProps, nextProps.data);
     //     if (prevState.prevProps.data === null && nextProps.data) {
@@ -31,7 +36,7 @@ class Collection extends Component {
 
 
     render () {
-        const { collection, history, getSpecificResult, filterType, data } = this.props;
+        const { history, getSpecificResult, setSpecificResult, filterType, data } = this.props;
         console.log(data);
         console.log(this.props);
         return (
@@ -47,7 +52,8 @@ class Collection extends Component {
                                         release={result}
                                         isInCollection={true}
                                         filterType={filterType}
-                                        getSpecificResult={this.props.getSpecificResult}
+                                        getSpecificResult={getSpecificResult}
+                                        setSpecificResult={setSpecificResult}
                                         key={result.id}>
                             </SearchItem>
                         );
