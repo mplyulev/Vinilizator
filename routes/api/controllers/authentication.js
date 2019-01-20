@@ -43,7 +43,6 @@ router.post('/register', function(req, res) {
 });
 
 router.post('/login',function(req, res) {
-    console.log('asd');
     User.findOne( {
         $or: [
             { email : req.body.email },

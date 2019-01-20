@@ -34,7 +34,6 @@ class SearchPage extends Component {
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        const { filterType } = nextProps;
         const { allFilterQueryResult } = prevState.prevProps;
 
         if (nextProps.allFilterQueryResult && nextProps.allFilterQueryResult.pagination

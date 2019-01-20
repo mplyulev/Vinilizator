@@ -38,6 +38,36 @@ router.post('/addToCollection', function(req, res) {
     });
 });
 
+//Remove item from collection
+router.post('/removeFromCollection', function(req, res) {
+    console.log(req.body);
+    User.findById(passport.session.sessionID, function(err, user) {
+        console.log(user);
+        if (user) {
+            const newCollection = user.vinylCollection && user.vinylCollection.filter(vinyl => {
+                if (vinyl.id !== req.body.release.id) {
+                    return vinyl;
+                }
+            });
+
+            user.vinylCollection = newCollection;
+
+            user.save(function(err) {
+                if (err) {
+                    res.send({ success: false, msg: "Could't remove item from collection. Please try again later" });
+                } else {
+                    res.send({
+                        success: true,
+                        msg: req.body.release.artists_sort + ' - ' + req.body.release.title + ' successfully removed from your collection!'
+                    })
+                }
+            });
+        }
+
+
+    });
+});
+
 //Add item to wishlist
 router.post('/addToWishlist', function(req, res) {
     User.findById(passport.session.sessionID, function(err, user) {
@@ -59,33 +89,6 @@ router.post('/addToWishlist', function(req, res) {
                     }
                 });
             }
-        }
-    });
-});
-
-router.post('/remove', function(req, res) {
-    User.findOne( {
-        $or: [
-            { email : req.body.email },
-            { username: req.body.email }
-        ]
-    }, function(err, user) {
-        if (err) throw err;
-
-        if (!user) {
-            res.json({success: false, msg: 'Wrong username/email or password'});
-        } else {
-            const { password } = req.body;
-            const {hash, salt} = user;
-            const userModel = new User();
-            const isPasswordValid = userModel.validatePassword(password, hash, salt);
-
-            if (isPasswordValid) {
-                res.json({success: true, token: userModel.generateJwt()});
-            } else {
-                res.json({success: false, msg: 'Wrong username/email or password'});
-            }
-
         }
     });
 });

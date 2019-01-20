@@ -31,7 +31,7 @@ export const PAGINATION_PAGES_PER_SLIDE = 6;
 export const SNACKBAR_TYPE_SUCCESS = 'success';
 export const SNACKBAR_TYPE_FAIL = 'fail';
 export const SNACKBAR_CLOSE_TIMEOUT = 5000;
-export const TOOLTIP_DELAY_SHOW = 1000;
+export const TOOLTIP_DELAY_SHOW = 700;
 
 //URLS
 export const DOGS_SEARCH_URL = 'https://api.discogs.com/database/search';

@@ -23,7 +23,7 @@ class SearchItem extends Component {
     };
 
     componentDidMount() {
-        if (this.props.currentRelease && this.props.currentRelease.id === this.props.release.id) { 
+        if (this.props.currentRelease && this.props.currentRelease.id === this.props.release.id) {
             this.item.classList.add('opened');
             this.timeout = setTimeout(() => {
                 this.item.classList.remove('opened');
@@ -38,7 +38,7 @@ class SearchItem extends Component {
     render () {
         const {release, filterType} = this.props;
         const title = release.title;
-        const label = release.label && release.label
+        let label = release.label && release.label
             ? release.label.map((label, index) => {
                 return (
                     <span key={label + Math.random()}>{label}{index !== release.label.length - 1 ? ', ' : ''}</span>
@@ -53,10 +53,22 @@ class SearchItem extends Component {
             })
             : '';
 
+        if (!label) {
+            label = release.labels ? release.labels[0].name : '';
+        }
+
         labelTooltip += ' - ' + release.catno;
         const country = release.country;
         const index = title && title.indexOf("-");
-        const artist = title && title.substr(0, index); // Gets the first part
+        let artist = title && title.substr(0, index); // Gets the first part
+        if (!artist) {
+            artist = release.artists && release.artists.map((artist) => {
+                return (
+                    <span key={artist.name}>{artist.name}{artist.join}</span>
+                )
+            });
+        }
+
         const itemTitle = title && title.substr(index + 1);
         const collectionReleaseImage = release.images && release.images.length > 0 ? release.images[0].uri : ''
         let coverUrl = release.cover_image === DOGS_SPACE_GIF_URL ? NoImagePlaceholder : release.cover_image || collectionReleaseImage;
@@ -85,7 +97,7 @@ class SearchItem extends Component {
                         <div className="search-item-info"
                              data-delay-show={TOOLTIP_DELAY_SHOW}
                              data-for="search-page"
-                             data-tip={labelTooltip}>{label} - {release.catno}</div> : null}
+                             data-tip={labelTooltip}>{label} - {release.catno || release.labels[0].catno}</div> : null}
                     {filterType === DATA_TYPE_RELEASE && country ?
                         <div className="search-item-info"
                               data-for="search-page"

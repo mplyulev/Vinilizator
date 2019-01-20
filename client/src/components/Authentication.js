@@ -42,7 +42,7 @@ class Authentication extends Component {
 
     render() {
         const {isLoginFormActive} = this.state;
-        console.log('rendering');
+
         return (
             <Fragment>
                 <div className="authentication-background-wrapper">

@@ -24,7 +24,6 @@ passport.use(new LocalStrategy({
             }
 
             // If credentials are correct, return the user object
-            console.log('asd');
             return done(null, user);
         });
     }

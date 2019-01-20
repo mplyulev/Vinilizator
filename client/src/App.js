@@ -189,19 +189,13 @@ class App extends Component {
         return null;
     }
 
-    navigateToCollectionItem  = release => {
-        this.setState({currentRelease: release}, () => {
-            this.props.history.push(`${DATA_TYPE_RELEASE}/${release.id}`);
-        });
-    }
-
     setSpecificResult = (release) => {
-        this.setState({currentRelease: release}, () => {
+        this.setState({ currentRelease: release }, () => {
             this.releaseAnimationTimeout = setTimeout(() => {
                 this.props.history.push(`${ROUTE_COLLECTION}${ROUTE_RELEASE}/${release.id}`);
             }, 600);
         })
-    }
+    };
 
     async getSpecificResult(type, id) {
         clearTimeout(this.releaseAnimationTimeout);
@@ -219,7 +213,7 @@ class App extends Component {
     };
 
     getCollection = (collectionType) => {
-        console.log(collectionType)
+        console.log('getting');
         axios.get('/api/controllers/collection/getCollection', {
             params: {
                 collectionType
@@ -240,6 +234,7 @@ class App extends Component {
         const nextPath = this.props.location.pathname;
         if ((nextPath === ROUTE_COLLECTION || nextPath === ROUTE_WISHLIST) && nextPath !== prevPath) {
             const collectionType = nextPath === ROUTE_COLLECTION ? COLLECTION_TYPE_COLLECTION : COLLECTION_TYPE_WISHLIST;
+            console.log('getting2');
             this.getCollection(collectionType);
         }
         const { searchQuery, token, lastRequestedRoute } = this.state;
@@ -325,6 +320,7 @@ class App extends Component {
                             <Route exact path={ROUTE_COLLECTION}
                                    render={() => <Collection getSpecificResult={this.getSpecificResult}
                                                              history={history}
+                                                             currentRelease={currentRelease}
                                                              setSpecificResult={this.setSpecificResult}
                                                              data={vinylCollection}/>}/>
                             <Route path={`${ROUTE_COLLECTION}${ROUTE_RELEASE}`}
@@ -332,12 +328,14 @@ class App extends Component {
                                                               closeLightbox={this.closeLightbox}
                                                               openSnackbar={this.openSnackbar}
                                                               isInCollection={true}
+                                                              history={history}
                                                               release={currentRelease} />}/>
                             <Route path={ROUTE_WISHLIST}
                                 render={() => <Collection getSpecificResult={this.getSpecificResult}
-                                                            history={history}
-                                                            setSpecificResult={this.setSpecificResult}
-                                                            data={wishlist}/>}/>
+                                                          history={history}
+                                                          currentRelease={currentRelease}
+                                                          setSpecificResult={this.setSpecificResult}
+                                                          data={wishlist}/>}/>
                             <Route exact path="/404" render={() => null}/>
                             <Redirect to="/404"/>
                         </Switch>
