@@ -4,6 +4,7 @@ import Pagination from './common/Pagination';
 import SearchItem from "./SearchItem";
 import { DATA_TYPE_RELEASE } from '../constants';
 import ReactTooltip from 'react-tooltip';
+import { InputGroup, InputGroupAddon, Input } from 'reactstrap';
 
 class Collection extends Component {
     constructor(props) {
@@ -38,6 +39,10 @@ class Collection extends Component {
         return (
             <div>
                 <ReactTooltip id="search-page" />
+                <InputGroup className="search-bar">
+                    <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
+                    <Input onChange={this.onChange} />
+                </InputGroup>
                 {/*<Pagination getNextPageResult={getNextPageResult}*/}
                             {/*filterType={filterType}*/}
                             {/*isVisible={!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1}*/}

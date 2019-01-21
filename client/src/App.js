@@ -14,8 +14,8 @@ import './styles/App.scss';
 import AppNavBar from './components/AppNavBar';
 import SearchPage from './components/SearchPage';
 import Collection from './components/Collection';
-import Wishlist from './components/Wishlist';
 import ReleaseFull from './components/ReleaseFull';
+import Account from './components/Account';
 import MasterFull from './components/MasterFull';
 import LabelFull from './components/LabelFull';
 import ArtistFull from './components/ArtistFull';
@@ -40,7 +40,8 @@ import {
     ROUTE_SEARCH,
     ROUTE_SIGN_IN,
     ROUTE_SIGN_UP,
-    ROUTE_WISHLIST
+    ROUTE_WISHLIST,
+    ROUTE_ACCOUNT
 } from './constants';
 import Authentication from "./components/Authentication";
 import LightboxWrapper from './components/common/LightboxWrapper';
@@ -336,6 +337,9 @@ class App extends Component {
                                                           currentRelease={currentRelease}
                                                           setSpecificResult={this.setSpecificResult}
                                                           data={wishlist}/>}/>
+                            <Route path={ROUTE_ACCOUNT}
+                                   render={() => <Account />}/>
+>>>>>>> Stashed changes
                             <Route exact path="/404" render={() => null}/>
                             <Redirect to="/404"/>
                         </Switch>

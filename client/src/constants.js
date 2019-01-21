@@ -22,6 +22,7 @@ export const ROUTE_RELEASE = '/release';
 export const ROUTE_MASTER = '/master';
 export const ROUTE_LABEL = '/label';
 export const ROUTE_ARTIST = '/artist';
+export const ROUTE_ACCOUNT = '/account';
 
 //COMMON
 export const PAGINATION_WIDTH = 324;

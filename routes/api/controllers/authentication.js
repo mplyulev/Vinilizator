@@ -50,7 +50,7 @@ router.post('/login',function(req, res) {
         ]
     }, function(err, user) {
         if (err) throw err;
-        console.log(user);
+       
         if (!user) {
             res.json({success: false, msg: 'Wrong username/email or password'});
         } else {
@@ -65,8 +65,40 @@ router.post('/login',function(req, res) {
             } else {
                 res.json({success: false, msg: 'Wrong username/email or password'});
             }
-
         }
+    });
+});
+
+router.post('/changePassword',function(req, res) {
+    User.findOne({ _id : passport.session.sessionID }, function(err, user) {
+        if (err) throw err;
+       
+ 
+            const { oldPassword, newPassword, repeatPassword } = req.body;
+            const {hash, salt} = user;
+            const userModel = new User();
+            const isPasswordValid = userModel.validatePassword(oldPassword, hash, salt);
+
+            if (isPasswordValid) {
+                const encryptedPassword = newUser.setPassword(newPassword);
+                user.hash = encryptedPassword.hash;
+                user.salt = encryptedPassword.salt;
+
+                user.save(function(err) {
+                    if (err) {
+                        res.send({ success: false, msg: "Could't change password. Please try again later" });
+                    } else {
+                        res.send({
+                            success: true,
+                            msg: 'You have succesfully changed your password'
+                        })
+                    }
+                });
+            } else {
+                res.json({success: false, msg: 'Wrong password'});
+            }
+
+      
     });
 });
 
