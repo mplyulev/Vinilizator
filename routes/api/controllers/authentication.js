@@ -60,7 +60,7 @@ router.post('/login',function(req, res) {
             const isPasswordValid = userModel.validatePassword(password, hash, salt);
 
             if (isPasswordValid) {
-                res.json({success: true, token: userModel.generateJwt()});
+                res.json({success: true, token: userModel.generateJwt(), userId: user._id});
                 passport.session.sessionID = user._id;
             } else {
                 res.json({success: false, msg: 'Wrong username/email or password'});

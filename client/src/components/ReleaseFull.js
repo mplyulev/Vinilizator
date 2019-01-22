@@ -3,7 +3,7 @@ import { Button } from 'reactstrap/dist/reactstrap.es'
 import axios from 'axios';
 import {
     RESPONSE_STATUS_SUCCESS,
-    ROUTE_COLLECTION,
+    ROUTE_COLLECTION, ROUTE_FOR_SELL,
     ROUTE_WISHLIST,
     SNACKBAR_TYPE_FAIL,
     SNACKBAR_TYPE_SUCCESS
@@ -30,8 +30,22 @@ class ReleaseFull extends Component {
             });
     };
 
+    markAsSold = (release) => {
+        this.removeFromSell(release);
+        axios.post('/api/controllers/collection/removeFromCollection', { release });
+    };
+
     addToWishlist = (release) => {
         axios.post('/api/controllers/collection/addToWishlist', { release })
+            .then((res) => {
+                if (res.status === RESPONSE_STATUS_SUCCESS) {
+                    this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
+                }
+            });
+    };
+
+    addToSellList = (release) => {
+        axios.post('/api/controllers/collection/addToSellList', { release })
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
@@ -44,6 +58,16 @@ class ReleaseFull extends Component {
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.props.history.push(ROUTE_WISHLIST);
+                    this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
+                }
+            });
+    };
+
+    removeFromSell = (release) => {
+        axios.post('/api/controllers/collection/removeFromSell', { release })
+            .then((res) => {
+                if (res.status === RESPONSE_STATUS_SUCCESS) {
+                    this.props.history.push(ROUTE_FOR_SELL);
                     this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
                 }
             });
@@ -64,8 +88,7 @@ class ReleaseFull extends Component {
     };
 
     render () {
-        console.log('asd');
-        const {release, openLightbox, isInCollection, isInWishlist} = this.props;
+        const {release, openLightbox, isInCollection, isInWishlist, isForSell} = this.props;
         const { title, year, country, released, formats, num_for_sale, lowest_price, tracklist } = release;
         const artists = release.artists && release.artists.map((artist) => {
             return (
@@ -140,7 +163,7 @@ class ReleaseFull extends Component {
                     <div className="tracklist-wrapper">
                         <h3 className="title">Tracklist</h3>
                         {tracklistTemplate}
-                        {!isInCollection && !isInWishlist
+                        {!isInCollection && !isInWishlist && !isForSell
                             ? <Fragment>
                                 <Button color="success" className="add-button add-to-collection"
                                         onClick={() => this.addToCollection(release)}>
@@ -160,7 +183,7 @@ class ReleaseFull extends Component {
                                     Remove from collection
                                 </Button>
                                 <Button color="success" className="add-button add-to-wishlist"
-                                        onClick={() => this.addToWishlist(release)}>
+                                        onClick={() => this.addToSellList(release)}>
                                     Add to selling
                                 </Button>
                             </Fragment>
@@ -175,6 +198,19 @@ class ReleaseFull extends Component {
                                 <Button color="success" className="add-button add-to-collection"
                                         onClick={() => this.addToCollectionRemoveFromWishlist(release)}>
                                     Add to collection
+                                </Button>
+                            </Fragment>
+                            : null
+                        }
+                        {isForSell ?
+                            <Fragment>
+                                <Button color="success" className="add-button add-to-wishlist"
+                                        onClick={() => this.removeFromSell(release)}>
+                                    Remove from sell
+                                </Button>
+                                <Button color="success" className="add-button add-to-collection"
+                                        onClick={() => this.markAsSold(release)}>
+                                    Mark as sold
                                 </Button>
                             </Fragment>
                             : null

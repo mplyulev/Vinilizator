@@ -18,7 +18,7 @@ class Collection extends Component {
     }
 
     render () {
-        const { history, getSpecificResult, setSpecificResult, currentRelease, data } = this.props;
+        const { history, getSpecificResult, setSpecificResult, currentRelease, data, collectionType } = this.props;
 
         return (
             <div>
@@ -38,8 +38,7 @@ class Collection extends Component {
                             <SearchItem history={history}
                                         release={result}
                                         currentRelease={currentRelease}
-                                        isInCollection={this.props.isInCollection}
-                                        isInWishlist={this.props.isInWishlist}
+                                        collectionType={collectionType}
                                         filterType={DATA_TYPE_RELEASE}
                                         getSpecificResult={getSpecificResult}
                                         setSpecificResult={setSpecificResult}

@@ -49,6 +49,14 @@ router.post('/removeFromCollection', function(req, res) {
                 }
             });
 
+            const newSellList = user.forSale && user.forSale.filter(vinyl => {
+                if (vinyl.id !== req.body.release.id) {
+                    return vinyl;
+                }
+            });
+
+            user.forSale = newSellList;
+
             user.vinylCollection = newCollection;
 
             user.save(function(err) {
@@ -115,6 +123,58 @@ router.post('/addToWishlist', function(req, res) {
                     }
                 });
             }
+        }
+    });
+});
+
+//Add to sell list
+router.post('/addToSellList', function(req, res) {
+    User.findById(passport.session.sessionID, function(err, user) {
+        if (user) {
+            const isAlreadyInSellList = user.forSale && user.forSale.filter(vinyl => vinyl.id === req.body.release.id).length === 0 ? false : true;
+
+            if (isAlreadyInSellList) {
+                res.send({ success: false, msg: req.body.release.artists_sort + ' - ' + req.body.release.title + ' is already for sell!'});
+            } else {
+                user.forSale.push(req.body.release);
+                user.save(function(err) {
+                    if (err) {
+                        res.send({ success: false, msg: "Could't add item for sell. Please try again later"});
+                    } else {
+                        res.send({
+                            success: true,
+                            msg: req.body.release.artists_sort + ' - ' + req.body.release.title + ' successfully added for sell!'
+                        })
+                    }
+                });
+            }
+        }
+    });
+});
+
+//Remove from sell
+router.post('/removeFromSell', function(req, res) {
+    User.findById(passport.session.sessionID, function(err, user) {
+        if (user) {
+            const newSellList = user.forSale && user.forSale.filter(vinyl => {
+                if (vinyl.id !== req.body.release.id) {
+                    return vinyl;
+                }
+            });
+
+            user.forSale = newSellList;
+
+            user.save(function(err) {
+                if (err) {
+                    console.log(error);
+                    res.send({ success: false, msg: "Could't remove item from sell. Please try again later" });
+                } else {
+                    res.send({
+                        success: true,
+                        msg: req.body.release.artists_sort + ' - ' + req.body.release.title + ' successfully removed item from sell list!'
+                    })
+                }
+            });
         }
     });
 });

@@ -9,7 +9,7 @@ export const DATA_TYPE_ARTIST = 'artist';
 
 export const COLLECTION_TYPE_COLLECTION = 'vinylCollection';
 export const COLLECTION_TYPE_WISHLIST = 'wishlist';
-export const COLLECTION_TYPE_FOR_SELL = 'forSell';
+export const COLLECTION_TYPE_FOR_SELL = 'forSale';
 
 //ROUTES
 

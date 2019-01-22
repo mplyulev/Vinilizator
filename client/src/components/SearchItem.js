@@ -13,13 +13,13 @@ class SearchItem extends Component {
     }
 
     async getRelease (type, id){
-        const { isInCollection, isInWishlist } = this.props;
+        const {collectionType} = this.props;
         this.item.classList.add('opened');
-        if (!isInCollection && !isInWishlist) {
+        if (!collectionType) {
             await this.props.getSpecificResult(type, id);
             this.item.className ='search-item-container opened';
         } else {
-            this.props.setSpecificResult(this.props.release, isInCollection);
+            this.props.setSpecificResult(this.props.release, collectionType);
         }
     };
 

@@ -19,7 +19,7 @@ const userSchema = new Schema({
     wishlist: {
         type: Array
     },
-    sellList: {
+    forSale : {
         type: Array
     },
     hash: String,

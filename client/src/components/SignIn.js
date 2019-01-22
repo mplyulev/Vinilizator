@@ -34,7 +34,7 @@ class SignIn extends Component {
         axios.post('/api/controllers/authentication/login', { password, email })
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
-                    res.data.success ?  this.props.setToken(res.data.token) : this.setState({serverError: res.data.msg});
+                    res.data.success ?  this.props.setToken(res.data.token, res.data.userId) : this.setState({serverError: res.data.msg});
                 }
             });
     };
