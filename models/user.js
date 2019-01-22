@@ -19,6 +19,9 @@ const userSchema = new Schema({
     wishlist: {
         type: Array
     },
+    sellList: {
+        type: Array
+    },
     hash: String,
     salt: String
 });

@@ -81,6 +81,7 @@ router.post('/removeFromWishlist', function(req, res) {
 
             user.save(function(err) {
                 if (err) {
+                    console.log(error);
                     res.send({ success: false, msg: "Could't remove item from wishlist. Please try again later" });
                 } else {
                     res.send({

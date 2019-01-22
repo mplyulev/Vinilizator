@@ -41,7 +41,7 @@ import {
     ROUTE_SIGN_IN,
     ROUTE_SIGN_UP,
     ROUTE_WISHLIST,
-    ROUTE_ACCOUNT
+    ROUTE_ACCOUNT, ROUTE_SELL, ROUTE_FOR_SELL, COLLECTION_TYPE_FOR_SELL
 } from './constants';
 import Authentication from "./components/Authentication";
 import LightboxWrapper from './components/common/LightboxWrapper';
@@ -75,7 +75,8 @@ class App extends Component {
                 type: ''
             },
             vinylCollection: [],
-            wishlist: []
+            wishlist: [],
+            sellList: []
         };
 
         this.searchQuery = _.debounce(this.searchQuery, DEBOUNCE_TIME);
@@ -225,6 +226,7 @@ class App extends Component {
                     this.setState({
                         vinylCollection: collectionType === COLLECTION_TYPE_COLLECTION ? res.data.collection : [],
                         wishlist: collectionType === COLLECTION_TYPE_WISHLIST ? res.data.collection : [],
+                        sellList: collectionType === COLLECTION_TYPE_FOR_SELL ? res.data.collection : []
                     });
                 }
             });
@@ -235,7 +237,7 @@ class App extends Component {
         const nextPath = this.props.location.pathname;
         if ((nextPath === ROUTE_COLLECTION || nextPath === ROUTE_WISHLIST) && nextPath !== prevPath) {
             const collectionType = nextPath === ROUTE_COLLECTION ? COLLECTION_TYPE_COLLECTION : COLLECTION_TYPE_WISHLIST;
-            console.log('getting2');
+
             this.getCollection(collectionType);
         }
         const { searchQuery, token, lastRequestedRoute } = this.state;
@@ -268,7 +270,8 @@ class App extends Component {
             lightboxImages,
             snackbarOptions,
             vinylCollection,
-            wishlist
+            wishlist,
+            sellList
         } = this.state;
 
         const { location, history } = this.props;
@@ -346,6 +349,13 @@ class App extends Component {
                                                               isInWishlist={true}
                                                               history={history}
                                                               release={currentRelease} />}/>
+                            <Route exact path={ROUTE_FOR_SELL}
+                                   render={() => <Collection getSpecificResult={this.getSpecificResult}
+                                                             history={history}
+                                                             isInWishlist={true}
+                                                             currentRelease={currentRelease}
+                                                             setSpecificResult={this.setSpecificResult}
+                                                             data={sellList}/>}/>
                             <Route path={ROUTE_ACCOUNT}
                                    render={() => <Account openSnackbar={this.openSnackbar}/>}/>
                             <Route exact path="/404" render={() => null}/>

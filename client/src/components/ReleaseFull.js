@@ -49,6 +49,20 @@ class ReleaseFull extends Component {
             });
     };
 
+    addToCollectionRemoveFromWishlist = (release) => {
+        axios.post('/api/controllers/collection/addToCollection', { release })
+            .then((res) => {
+                if (res.status === RESPONSE_STATUS_SUCCESS) {
+                    this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
+                }
+            });
+
+        axios.post('/api/controllers/collection/removeFromWishlist', { release })
+            .then((res) => {
+                this.props.history.push(ROUTE_WISHLIST);
+            });
+    };
+
     render () {
         console.log('asd');
         const {release, openLightbox, isInCollection, isInWishlist} = this.props;
@@ -159,7 +173,7 @@ class ReleaseFull extends Component {
                                     Remove from wishlist
                                 </Button>
                                 <Button color="success" className="add-button add-to-collection"
-                                        onClick={() => this.addToCollection(release)}>
+                                        onClick={() => this.addToCollectionRemoveFromWishlist(release)}>
                                     Add to collection
                                 </Button>
                             </Fragment>
