@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button, FormGroup, Input, Label } from "reactstrap";
 import axios from 'axios';
-import {RESPONSE_STATUS_SUCCESS} from "../constants";
+import { RESPONSE_STATUS_SUCCESS, SNACKBAR_TYPE_FAIL, SNACKBAR_TYPE_SUCCESS } from "../constants";
 
 class Account extends Component {
     constructor(props) {
@@ -12,18 +12,19 @@ class Account extends Component {
             newPassword: '',
             repeatPassword: '',
             oldPasswordError: '',
-            newPasswordError: '',
-            repeatPasswordError: ''
+            repeatPasswordError: '',
+            serverError: ''
         };
     }
 
-    // validateForm() {
-    //     return this.state.oldPassword.length > 0 && this.state.newPassword.length > 0 && this.state.repeatPassword.length > 0;
-    // }
+    validateForm() {
+        return this.state.oldPassword.length > 0 && this.state.newPassword.length > 0 && this.state.repeatPassword.length > 0;
+    }
 
     handleChange = event => {
         this.setState({
-            [event.target.id]: event.target.value
+            [event.target.id]: event.target.value,
+            [`${event.target.id}Error`]: ''
         });
     };
 
@@ -32,22 +33,29 @@ class Account extends Component {
 
         const { oldPassword, newPassword, repeatPassword } = this.state;
 
+        if (newPassword !== repeatPassword) {
+            this.setState({ repeatPasswordError: "The passwords don't match" });
+            return;
+        }
+
         axios.post('/api/controllers/authentication/changePassword', { oldPassword, newPassword, repeatPassword })
             .then((res) => {
-                // if (res.status === RESPONSE_STATUS_SUCCESS) {
-                //     res.data.usernameError ? this.setState({usernameError: res.data.msg}) : this.setState({usernameError: ''});
-                //     res.data.emailError ? this.setState({emailError: res.data.msg}) : this.setState({emailError: ''});
+                if (res.status === RESPONSE_STATUS_SUCCESS) {
 
-                //     if (res.data.success) {
-                //         this.props.setToken(res.data.token);
-                //     }
-                // }
+                    res.data.success
+                        ? this.props.openSnackbar(SNACKBAR_TYPE_SUCCESS, res.data.msg)
+                        : this.setState({ oldPasswordError: res.data.msg });
+                } else {
+                    this.setState({ serverError: res.data.msg });
+                }
             });
     };
 
     render() {
+        const { oldPasswordError, repeatPasswordError, serverError } = this.state;
+
         return (
-            <div className="sign-up-wrapper authentication-wrapper">
+            <div className="sign-up-wrapper change-password-wrapper">
                 <form className="sign-up-form" onSubmit={this.handleSubmit}>
                     <FormGroup className="change-password-form">
                         <Label for="oldPassword">Old Password</Label>
@@ -58,7 +66,7 @@ class Account extends Component {
                             name="oldPassword"
                             onChange={this.handleChange}
                         />
-                        <span className="error">{this.state.usernameError}</span>
+                        <span className="error">{oldPasswordError}</span>
                     </FormGroup>
                     <FormGroup className="new-password-form">
                         <Label for="newPassword">New Password</Label>
@@ -68,7 +76,6 @@ class Account extends Component {
                             name="newPassword"
                             onChange={this.handleChange}
                         />
-                        <span className="error">{this.state.emailError}</span>
                     </FormGroup>
                     <FormGroup className="repeat-password-form">
                         <Label for="repeatPassword">Password</Label>
@@ -78,8 +85,9 @@ class Account extends Component {
                             name="repeatPassword"
                             id="repeatPassword"
                         />
-                        <span className="error">{this.state.passwordError}</span>
+                        <span className="error">{repeatPasswordError}</span>
                     </FormGroup>
+                    <span className="error">{serverError}</span>
                     <Button
                         block
                         disabled={!this.validateForm()}

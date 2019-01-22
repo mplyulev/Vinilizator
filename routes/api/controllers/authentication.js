@@ -70,17 +70,17 @@ router.post('/login',function(req, res) {
 });
 
 router.post('/changePassword',function(req, res) {
-    User.findOne({ _id : passport.session.sessionID }, function(err, user) {
+    User.findOne({ _id: passport.session.sessionID }, function(err, user) {
         if (err) throw err;
-       
- 
+
+        if (user) {
             const { oldPassword, newPassword, repeatPassword } = req.body;
-            const {hash, salt} = user;
+            const { hash, salt } = user;
             const userModel = new User();
-            const isPasswordValid = userModel.validatePassword(oldPassword, hash, salt);
+            const isPasswordValid = userModel.validatePassword(oldPassword, hash, salt) && newPassword === repeatPassword;
 
             if (isPasswordValid) {
-                const encryptedPassword = newUser.setPassword(newPassword);
+                const encryptedPassword = userModel.setPassword(newPassword);
                 user.hash = encryptedPassword.hash;
                 user.salt = encryptedPassword.salt;
 
@@ -90,15 +90,14 @@ router.post('/changePassword',function(req, res) {
                     } else {
                         res.send({
                             success: true,
-                            msg: 'You have succesfully changed your password'
+                            msg: 'You have successfully changed your password'
                         })
                     }
                 });
             } else {
-                res.json({success: false, msg: 'Wrong password'});
+                res.json({ success: false, msg: 'Wrong password' });
             }
-
-      
+        }
     });
 });
 

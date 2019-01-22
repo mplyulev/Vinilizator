@@ -1,7 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import { Button } from 'reactstrap/dist/reactstrap.es'
 import axios from 'axios';
-import { RESPONSE_STATUS_SUCCESS, ROUTE_COLLECTION, SNACKBAR_TYPE_FAIL, SNACKBAR_TYPE_SUCCESS } from '../constants';
+import {
+    RESPONSE_STATUS_SUCCESS,
+    ROUTE_COLLECTION,
+    ROUTE_WISHLIST,
+    SNACKBAR_TYPE_FAIL,
+    SNACKBAR_TYPE_SUCCESS
+} from '../constants';
 
 class ReleaseFull extends Component {
 
@@ -33,8 +39,19 @@ class ReleaseFull extends Component {
             });
     };
 
+    removeFromWishlist = (release) => {
+        axios.post('/api/controllers/collection/removeFromWishlist', { release })
+            .then((res) => {
+                if (res.status === RESPONSE_STATUS_SUCCESS) {
+                    this.props.history.push(ROUTE_WISHLIST);
+                    this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
+                }
+            });
+    };
+
     render () {
-        const {release, openLightbox, isInCollection} = this.props;
+        console.log('asd');
+        const {release, openLightbox, isInCollection, isInWishlist} = this.props;
         const { title, year, country, released, formats, num_for_sale, lowest_price, tracklist } = release;
         const artists = release.artists && release.artists.map((artist) => {
             return (
@@ -91,16 +108,17 @@ class ReleaseFull extends Component {
         return (
             <Fragment>
                 <div className="release-data-container">
-                    {images &&<img className="release-cover" onClick={() => openLightbox(images)} src={images[0]} />}
+                    {images && <img className="release-cover" onClick={() => openLightbox(images)} src={images[0]} />}
                     <div className="info-wrapper">
                         <span className="artists">{artists}</span> - <span className="release-title">{title}</span>
                         {labels && <p>Label: {labels}<span> - {release.labels[0].catno}</span></p>}
                         {formats.length && formats[0] &&
-                        <p>Format: {formats[0].qty > 1 ? formats[0].qty + ' x' : ''} <span>{formats[0].name}</span> {formatDescription} </p>}
+                        <p>Format: {formats[0].qty > 1 ? formats[0].qty + ' x' : ''}
+                            <span>{formats[0].name}</span> {formatDescription} </p>}
                         {country && <p>Country: <span>{country}</span></p>}
                         {genres && <p>Genre: {genres}</p>}
                         {styles && <p>Style: <span>{styles}</span></p>}
-                            {released && year ? <p>Released: <span>{released}</span></p> : null}
+                        {released && year ? <p>Released: <span>{released}</span></p> : null}
                         {year && !released ? <p>Year: <span>{year}</span></p> : null}
                         {num_for_sale ? <p>{num_for_sale} <span>for sale on Discogs</span></p> : null}
                         {lowest_price ? <p>Lowest Price on Discogs: <span>{lowest_price} &euro;</span></p> : null}
@@ -108,22 +126,44 @@ class ReleaseFull extends Component {
                     <div className="tracklist-wrapper">
                         <h3 className="title">Tracklist</h3>
                         {tracklistTemplate}
-                        {!isInCollection
-                            ? <Button color="success" className="add-button add-to-collection" onClick={() => this.addToCollection(release)}>
-                                Add to collection
-                        </Button>
-                            : <Button color="success" className="add-button add-to-collection" onClick={() => this.removeFromCollection(release)}>
-                                Remove from collection
-                            </Button>}
-                        {!isInCollection
-                            ? <Button color="success" className="add-button add-to-wishlist"
-                                      onClick={() => this.addToWishlist(release)}>
-                                Add to wishlist
-                            </Button>
-                            : <Button color="success" className="add-button add-to-wishlist"
-                                      onClick={() => this.addToSellList(release)}>
-                                Add to sell list
-                            </Button>
+                        {!isInCollection && !isInWishlist
+                            ? <Fragment>
+                                <Button color="success" className="add-button add-to-collection"
+                                        onClick={() => this.addToCollection(release)}>
+                                    Add to collection
+                                </Button>
+                                <Button color="success" className="add-button add-to-wishlist"
+                                        onClick={() => this.addToWishlist(release)}>
+                                    Add to wishlist
+                                </Button>
+                            </Fragment>
+                            : null
+                        }
+                        {isInCollection ?
+                            <Fragment>
+                                <Button color="success" className="add-button add-to-collection"
+                                        onClick={() => this.removeFromCollection(release)}>
+                                    Remove from collection
+                                </Button>
+                                <Button color="success" className="add-button add-to-wishlist"
+                                        onClick={() => this.addToWishlist(release)}>
+                                    Add to selling
+                                </Button>
+                            </Fragment>
+                            : null
+                        }
+                        {isInWishlist ?
+                            <Fragment>
+                                <Button color="success" className="add-button add-to-wishlist"
+                                        onClick={() => this.removeFromWishlist(release)}>
+                                    Remove from wishlist
+                                </Button>
+                                <Button color="success" className="add-button add-to-collection"
+                                        onClick={() => this.addToCollection(release)}>
+                                    Add to collection
+                                </Button>
+                            </Fragment>
+                            : null
                         }
                     </div>
                 </div>

@@ -45,7 +45,7 @@ class AppNavBar extends Component {
                             </NavLink>
                             <NavLink to={ROUTE_ACCOUNT}
                                      activeClassName="selected">
-                                Account
+                                ACCOUNT
                             </NavLink>
                             <a href={ROUTE_SIGN_IN} onClick={this.props.logout}>
                                 LOGOUT

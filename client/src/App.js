@@ -190,10 +190,10 @@ class App extends Component {
         return null;
     }
 
-    setSpecificResult = (release) => {
+    setSpecificResult = (release, isInCollection) => {
         this.setState({ currentRelease: release }, () => {
             this.releaseAnimationTimeout = setTimeout(() => {
-                this.props.history.push(`${ROUTE_COLLECTION}${ROUTE_RELEASE}/${release.id}`);
+                this.props.history.push(`${isInCollection ? ROUTE_COLLECTION : ROUTE_WISHLIST}${ROUTE_RELEASE}/${release.id}`);
             }, 600);
         })
     };
@@ -321,6 +321,7 @@ class App extends Component {
                             <Route exact path={ROUTE_COLLECTION}
                                    render={() => <Collection getSpecificResult={this.getSpecificResult}
                                                              history={history}
+                                                             isInCollection={true}
                                                              currentRelease={currentRelease}
                                                              setSpecificResult={this.setSpecificResult}
                                                              data={vinylCollection}/>}/>
@@ -331,15 +332,22 @@ class App extends Component {
                                                               isInCollection={true}
                                                               history={history}
                                                               release={currentRelease} />}/>
-                            <Route path={ROUTE_WISHLIST}
-                                render={() => <Collection getSpecificResult={this.getSpecificResult}
+                            <Route exact path={ROUTE_WISHLIST}
+                                   render={() => <Collection getSpecificResult={this.getSpecificResult}
                                                           history={history}
+                                                          isInWishlist={true}
                                                           currentRelease={currentRelease}
                                                           setSpecificResult={this.setSpecificResult}
                                                           data={wishlist}/>}/>
+                            <Route path={`${ROUTE_WISHLIST}${ROUTE_RELEASE}`}
+                                   render={() => <ReleaseFull openLightbox={this.openLightbox}
+                                                              closeLightbox={this.closeLightbox}
+                                                              openSnackbar={this.openSnackbar}
+                                                              isInWishlist={true}
+                                                              history={history}
+                                                              release={currentRelease} />}/>
                             <Route path={ROUTE_ACCOUNT}
-                                   render={() => <Account />}/>
->>>>>>> Stashed changes
+                                   render={() => <Account openSnackbar={this.openSnackbar}/>}/>
                             <Route exact path="/404" render={() => null}/>
                             <Redirect to="/404"/>
                         </Switch>

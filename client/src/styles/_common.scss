@@ -16,6 +16,13 @@
   }
 }
 
+.error {
+  position: relative;
+  bottom: 5px;
+  white-space: nowrap;
+  color: red;
+}
+
 .hidden {
   display: none;
 }

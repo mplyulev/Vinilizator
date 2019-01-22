@@ -40,7 +40,6 @@ router.post('/addToCollection', function(req, res) {
 
 //Remove item from collection
 router.post('/removeFromCollection', function(req, res) {
-    console.log(req.body);
     User.findById(passport.session.sessionID, function(err, user) {
         console.log(user);
         if (user) {
@@ -65,6 +64,32 @@ router.post('/removeFromCollection', function(req, res) {
         }
 
 
+    });
+});
+
+//Remove item from wishlist
+router.post('/removeFromWishlist', function(req, res) {
+    User.findById(passport.session.sessionID, function(err, user) {
+        if (user) {
+            const newWishlist = user.wishlist && user.wishlist.filter(vinyl => {
+                if (vinyl.id !== req.body.release.id) {
+                    return vinyl;
+                }
+            });
+
+            user.wishlist = newWishlist;
+
+            user.save(function(err) {
+                if (err) {
+                    res.send({ success: false, msg: "Could't remove item from wishlist. Please try again later" });
+                } else {
+                    res.send({
+                        success: true,
+                        msg: req.body.release.artists_sort + ' - ' + req.body.release.title + ' successfully removed from your wishlist!'
+                    })
+                }
+            });
+        }
     });
 });
 

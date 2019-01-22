@@ -17,22 +17,6 @@ class Collection extends Component {
 
     }
 
-    // static getDerivedStateFromProps(nextProps, prevState) {
-    //     console.log(prevState.prevProps, nextProps.data);
-    //     if (prevState.prevProps.data === null && nextProps.data) {
-    //         console.log('asdas');
-    //         console.log(nextProps.data);
-    //         return {
-    //             prevProps: nextProps,
-    //             data: nextProps.data
-    //         };
-    //     }
-    //
-    //     return null;
-    // }
-
-
-
     render () {
         const { history, getSpecificResult, setSpecificResult, currentRelease, data } = this.props;
 
@@ -54,7 +38,8 @@ class Collection extends Component {
                             <SearchItem history={history}
                                         release={result}
                                         currentRelease={currentRelease}
-                                        isInCollection={true}
+                                        isInCollection={this.props.isInCollection}
+                                        isInWishlist={this.props.isInWishlist}
                                         filterType={DATA_TYPE_RELEASE}
                                         getSpecificResult={getSpecificResult}
                                         setSpecificResult={setSpecificResult}
