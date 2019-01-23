@@ -76,13 +76,20 @@ class App extends Component {
             },
             vinylCollection: [],
             wishlist: [],
-            forSale: []
+            forSale: [],
+            isNavBarOpen: false
         };
 
         this.searchQuery = _.debounce(this.searchQuery, DEBOUNCE_TIME);
         this.getSpecificResult = this.getSpecificResult.bind(this);
         this.releaseAnimationTimeout = null
     }
+
+    toggleNavBar = () => {
+        this.setState({
+            isNavBarOpen: !this.state.isNavBarOpen
+        });
+    };
 
     searchQuery = (value) => {
         if (value.length > 0) {
@@ -294,7 +301,8 @@ class App extends Component {
             snackbarOptions,
             vinylCollection,
             wishlist,
-            forSale
+            forSale,
+            isNavBarOpen
         } = this.state;
 
         const { location, history } = this.props;
@@ -307,10 +315,10 @@ class App extends Component {
                 <div className="mega-wrapper">
                     {location.pathname !== ROUTE_SIGN_UP
                     && location.pathname !== ROUTE_SIGN_IN
-                        ? <AppNavBar logout={this.logout} />
+                        ? <AppNavBar isNavBarOpen={isNavBarOpen} toggleNavBar={this.toggleNavBar} logout={this.logout} />
                         : null
                     }
-                    <div className={`router-container${isOnAuthRoute ? ' auth' : ''}`}>
+                    <div className={`router-container${isOnAuthRoute ? ' auth' : ''}${isNavBarOpen ? ' opened-navbar' : ''}`}>
                         {isLightboxOpened && <LightboxWrapper closeLightbox={this.closeLightbox}
                                                               isLightboxOpened={isLightboxOpened}
                                                               images={lightboxImages} />}

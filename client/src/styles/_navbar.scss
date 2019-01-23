@@ -29,11 +29,11 @@
 
   a {
     margin: 0 15px;
-    color: $font-color-white;
+    color: $font-color-darkgray;
     text-decoration: none;
 
     &:hover {
-      color: $font-color-darkgray;
+      color: $font-color-white;
     }
 
     &.selected {

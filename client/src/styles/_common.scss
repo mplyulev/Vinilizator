@@ -1,6 +1,5 @@
 .router-container {
   position: absolute;
-  top: 20px;
   right: 0;
   width: calc(100% - 200px);
   height: 100%;
@@ -12,8 +11,10 @@
   }
 
   .search-bar {
+    position: relative;
+    top: 20px;
     width: 300px;
-    margin: 0 auto;
+    margin: 0 auto 20px;
   }
 }
 
@@ -78,7 +79,13 @@
 
 @media only screen and (max-width: 576px) {
   .router-container {
+    position: relative;
     top: 100px;
     width: 100%;
+    transition: top 0.2s linear;
+
+    &.opened-navbar {
+      top: 200px;
+    }
   }
 }

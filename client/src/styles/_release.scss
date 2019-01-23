@@ -57,7 +57,7 @@
     top: -20px;
     left: 0;
     display: block;
-    min-width: 150px;
+    min-width: 200px;
     margin: 10px 0;
 
     &.add-to-wishlist {
@@ -98,16 +98,16 @@
         }
 
         .add-button {
-            top: -20px;
-
             &.add-to-wishlist {
                 position: relative;
                 top: 15px;
                 left: 0;
+                right: 0;
+                margin: 0 auto;
             }
 
             &.add-to-collection {
-                position: absolute;
+                position: relative;
                 left: 50%;
                 transform: translateX(-50%);
             }

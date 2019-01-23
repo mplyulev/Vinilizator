@@ -7,16 +7,10 @@
     <list default="true" id="5b8da01a-7da7-42f1-97ac-40f37681adb4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Account.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Account.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Authentication.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Authentication.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/ReleaseFull.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/ReleaseFull.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/services/request.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/AppNavBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/AppNavBar.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/styles/_common.scss" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/styles/_common.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/styles/_navbar.scss" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/styles/_navbar.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/styles/_release.scss" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/styles/_release.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/styles/_searchItem.scss" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/styles/_searchItem.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/api/controllers/authentication.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api/controllers/authentication.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/api/controllers/collection.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api/controllers/collection.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -40,11 +34,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/src/components/ReleaseFull.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="164">
-              <caret line="167" column="117" lean-forward="true" selection-start-line="166" selection-start-column="23" selection-end-line="167" selection-end-column="117" />
+            <state relative-caret-position="50">
+              <caret line="159" column="84" lean-forward="true" selection-start-line="159" selection-start-column="84" selection-end-line="159" selection-end-column="84" />
               <folding>
                 <element signature="e#0#51#0" expanded="true" />
               </folding>
@@ -70,23 +64,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/src/styles/_common.scss">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="344">
-              <caret line="80" column="14" selection-start-line="80" selection-start-column="14" selection-end-line="80" selection-end-column="14" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/src/components/Account.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="40" column="149" selection-start-line="40" selection-start-column="149" selection-end-line="40" selection-end-column="149" />
-              <folding>
-                <element signature="e#0#41#0" expanded="true" />
-              </folding>
+              <caret line="84" column="23" selection-start-line="84" selection-start-column="23" selection-end-line="84" selection-end-column="23" />
             </state>
           </provider>
         </entry>
@@ -94,8 +76,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/src/App.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="306" column="44" selection-start-line="306" selection-start-column="44" selection-end-line="306" selection-end-column="44" />
+            <state relative-caret-position="200">
+              <caret line="320" column="116" lean-forward="true" selection-start-line="320" selection-start-column="103" selection-end-line="320" selection-end-column="116" />
             </state>
           </provider>
         </entry>
@@ -112,8 +94,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/src/components/AppNavBar.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="128">
-              <caret line="54" column="40" selection-start-line="54" selection-start-column="40" selection-end-line="54" selection-end-column="40" />
+            <state relative-caret-position="344">
+              <caret line="58" lean-forward="true" selection-start-line="58" selection-end-line="58" />
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
               </folding>
@@ -124,20 +106,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/src/styles/_authentication.scss">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="139" column="43" lean-forward="true" selection-start-line="139" selection-end-line="139" selection-end-column="43" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/src/components/SignIn.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="146">
-              <caret line="36" column="59" selection-start-line="36" selection-start-column="51" selection-end-line="36" selection-end-column="59" />
-              <folding>
-                <element signature="e#0#41#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="156">
+              <caret line="137" column="1" lean-forward="true" selection-start-line="137" selection-start-column="1" selection-end-line="137" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -146,15 +116,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>setResult</find>
-      <find>sellList</find>
-      <find>componentDidMOunt</find>
-      <find>removeFromColelction</find>
-      <find>isIncollection</find>
-      <find>removeFromSell</find>
-      <find>localStorage.getItem</find>
-      <find>passport.session.sessionID</find>
-      <find>User.findOne</find>
       <find>localS</find>
       <find>/login</find>
       <find>token</find>
@@ -170,12 +131,21 @@
       <find>remo</find>
       <find>timeout</find>
       <find>half-vinyl</find>
-      <find>setToken</find>
       <find>removeFromWishlist</find>
-      <find>mounted</find>
       <find>router-co</find>
-      <find>router-container</find>
       <find>navbar-nav</find>
+      <find>add-to-c</find>
+      <find>add-to-</find>
+      <find>add-button</find>
+      <find>discogs</find>
+      <find>router-container</find>
+      <find>toogle</find>
+      <find>setToken</find>
+      <find>props</find>
+      <find>a</find>
+      <find>mounted</find>
+      <find>searc</find>
+      <find>render</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -221,20 +191,20 @@
         <option value="$PROJECT_DIR$/models/user.js" />
         <option value="$PROJECT_DIR$/client/src/constants.js" />
         <option value="$PROJECT_DIR$/client/src/components/Collection.js" />
-        <option value="$PROJECT_DIR$/client/src/components/SearchItem.js" />
         <option value="$PROJECT_DIR$/client/src/components/SignIn.js" />
         <option value="$PROJECT_DIR$/routes/api/controllers/authentication.js" />
         <option value="$PROJECT_DIR$/client/src/components/Account.js" />
         <option value="$PROJECT_DIR$/routes/api/controllers/collection.js" />
-        <option value="$PROJECT_DIR$/client/src/components/AppNavBar.js" />
-        <option value="$PROJECT_DIR$/client/src/styles/_authentication.scss" />
         <option value="$PROJECT_DIR$/client/src/components/Authentication.js" />
         <option value="$PROJECT_DIR$/client/src/styles/_searchItem.scss" />
-        <option value="$PROJECT_DIR$/client/src/App.js" />
-        <option value="$PROJECT_DIR$/client/src/styles/_navbar.scss" />
-        <option value="$PROJECT_DIR$/client/src/styles/_release.scss" />
-        <option value="$PROJECT_DIR$/client/src/styles/_common.scss" />
         <option value="$PROJECT_DIR$/client/src/components/ReleaseFull.js" />
+        <option value="$PROJECT_DIR$/client/src/styles/_release.scss" />
+        <option value="$PROJECT_DIR$/client/src/components/SearchItem.js" />
+        <option value="$PROJECT_DIR$/client/src/components/AppNavBar.js" />
+        <option value="$PROJECT_DIR$/client/src/styles/_navbar.scss" />
+        <option value="$PROJECT_DIR$/client/src/styles/_authentication.scss" />
+        <option value="$PROJECT_DIR$/client/src/App.js" />
+        <option value="$PROJECT_DIR$/client/src/styles/_common.scss" />
       </list>
     </option>
   </component>
@@ -369,12 +339,12 @@
       <workItem from="1547319906605" duration="2773000" />
       <workItem from="1547323400420" duration="1732000" />
       <workItem from="1547362653280" duration="19263000" />
-      <workItem from="1548141924832" duration="24633000" />
+      <workItem from="1548141924832" duration="27515000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="280623000" />
+    <option name="totallyTimeSpent" value="283505000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="49" y="25" width="1871" height="1055" extended-state="6" />
@@ -432,13 +402,6 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/client/src/styles/_pagination.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="52">
-          <caret line="49" column="48" selection-start-line="49" selection-start-column="28" selection-end-line="49" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="414">
@@ -674,16 +637,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/components/SearchItem.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="146">
-          <caret line="21" column="27" selection-start-line="21" selection-start-column="27" selection-end-line="21" selection-end-column="27" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/models/user.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="164">
@@ -739,32 +692,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/components/SignIn.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="146">
-          <caret line="36" column="59" selection-start-line="36" selection-start-column="51" selection-end-line="36" selection-end-column="59" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/node_modules/reactstrap/src/Navbar.js">
       <provider selected="true" editor-type-id="text-editor">
         <state>
           <caret column="7" lean-forward="true" selection-start-column="7" selection-end-column="7" />
           <folding>
             <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/components/AppNavBar.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="128">
-          <caret line="54" column="40" selection-start-line="54" selection-start-column="40" selection-end-line="54" selection-end-column="40" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -776,24 +709,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/App.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="306" column="44" selection-start-line="306" selection-start-column="44" selection-end-line="306" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/api/controllers/collection.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="92">
           <caret line="77" column="32" selection-start-line="77" selection-start-column="14" selection-end-line="77" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/styles/_authentication.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="139" column="43" lean-forward="true" selection-start-line="139" selection-end-line="139" selection-end-column="43" />
         </state>
       </provider>
     </entry>
@@ -804,20 +723,71 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/styles/_common.scss">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="344">
-          <caret line="80" column="14" selection-start-line="80" selection-start-column="14" selection-end-line="80" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/src/components/ReleaseFull.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="164">
-          <caret line="167" column="117" lean-forward="true" selection-start-line="166" selection-start-column="23" selection-end-line="167" selection-end-column="117" />
+        <state relative-caret-position="50">
+          <caret line="159" column="84" lean-forward="true" selection-start-line="159" selection-start-column="84" selection-end-line="159" selection-end-column="84" />
           <folding>
             <element signature="e#0#51#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/node_modules/reactstrap/src/Collapse.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1224">
+          <caret line="105" column="44" selection-start-line="105" selection-start-column="44" selection-end-line="105" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/components/SignIn.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="470">
+          <caret line="36" column="59" selection-start-line="36" selection-start-column="51" selection-end-line="36" selection-end-column="59" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/components/SearchItem.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="72">
+          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/components/AppNavBar.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="344">
+          <caret line="58" lean-forward="true" selection-start-line="58" selection-end-line="58" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/styles/_authentication.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="156">
+          <caret line="137" column="1" lean-forward="true" selection-start-line="137" selection-start-column="1" selection-end-line="137" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/App.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="320" column="116" lean-forward="true" selection-start-line="320" selection-start-column="103" selection-end-line="320" selection-end-column="116" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/styles/_common.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="344">
+          <caret line="84" column="23" selection-start-line="84" selection-start-column="23" selection-end-line="84" selection-end-column="23" />
         </state>
       </provider>
     </entry>
