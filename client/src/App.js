@@ -85,7 +85,16 @@ class App extends Component {
         this.releaseAnimationTimeout = null
     }
 
-    toggleNavBar = () => {
+    toggleNavBar = (shouldClose) => {
+        console.log(shouldClose);
+        if (shouldClose) {
+            this.setState({
+                isNavBarOpen: false
+            });
+
+            return;
+        }
+
         this.setState({
             isNavBarOpen: !this.state.isNavBarOpen
         });
@@ -167,7 +176,15 @@ class App extends Component {
         localStorage.removeItem('userId');
     };
 
+    closeOnOutsideClick = (event) => {
+        const navbar = document.getElementsByClassName('navbar')[0];
+        if (!navbar.contains(event.target)) {
+            this.toggleNavBar(true);
+        }
+    };
+
     componentDidMount() {
+        document.addEventListener('click', this.closeOnOutsideClick);
         const {token} = this.state;
         if (!token && this.props.location.pathname !== ROUTE_SIGN_UP && this.props.location.pathname !== ROUTE_SIGN_IN) {
             this.setState({lastRequestedRoute: this.props.location.pathname});
@@ -252,7 +269,6 @@ class App extends Component {
     };
 
     componentDidUpdate(prevProps, prevState, snapshot) {
-
         const prevPath = prevProps.location.pathname;
         const nextPath = this.props.location.pathname;
         if ((nextPath === ROUTE_COLLECTION || nextPath === ROUTE_WISHLIST || nextPath === ROUTE_FOR_SELL) && nextPath !== prevPath) {
@@ -314,11 +330,10 @@ class App extends Component {
                 searchQuery: this.searchQuery
             }}>
                 <div className="mega-wrapper">
-                    {location.pathname !== ROUTE_SIGN_UP
-                    && location.pathname !== ROUTE_SIGN_IN
-                        ? <AppNavBar isNavBarOpen={isNavBarOpen} toggleNavBar={this.toggleNavBar} logout={this.logout} />
-                        : null
-                    }
+                    <AppNavBar isNavBarOpen={isNavBarOpen}
+                               isVisible={location.pathname !== ROUTE_SIGN_UP && location.pathname !== ROUTE_SIGN_IN}
+                               toggleNavBar={this.toggleNavBar}
+                               logout={this.logout} />
                     <div className={`router-container${isOnAuthRoute ? ' auth' : ''}${isNavBarOpen ? ' opened-navbar' : ''}`}>
                         {isLightboxOpened && <LightboxWrapper closeLightbox={this.closeLightbox}
                                                               isLightboxOpened={isLightboxOpened}

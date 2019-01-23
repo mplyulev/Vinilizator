@@ -1,5 +1,6 @@
 .router-container {
   position: absolute;
+  top: 20px;
   right: 0;
   width: calc(100% - 200px);
   height: 100%;
@@ -7,15 +8,25 @@
   &.auth {
     position: absolute;
     top: 0;
+    width: 100%;
     overflow: hidden;
   }
 
   .search-bar {
     position: relative;
-    top: 20px;
     width: 300px;
     margin: 0 auto 20px;
+
+    .input-group-text {
+      background: black;
+      color: white;
+      font-weight: bold;
+    }
   }
+}
+
+.form-control:focus {
+  box-shadow: 0 0 0 0.01rem rgba(0,123,255,.25)
 }
 
 .error {
@@ -87,7 +98,7 @@
     transition: top 0.21s linear;
 
     &.opened-navbar {
-      top: 200px;
+      top: 220px;
     }
   }
 

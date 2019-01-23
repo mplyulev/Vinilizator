@@ -22,9 +22,9 @@ function AppNavBar(props) {
         <div>
             <Navbar color="dark"
                     light expand="sm"
-                    className="mb-5 navbar">
+                    className={`mb-5 navbar${props.isVisible ? ' visible' : ''}`}>
                 <NavbarBrand href="/">VYNILIZATOR</NavbarBrand>
-                <NavbarToggler color="dark" onClick={props.toggleNavBar} />
+                <NavbarToggler color="dark" onClick={() => props.toggleNavBar(false)} />
                 <Collapse isOpen={props.isNavBarOpen} navbar>
                     <Nav className="ml-auto" navbar>
                         <NavLink to={ROUTE_SEARCH}
