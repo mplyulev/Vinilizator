@@ -229,7 +229,8 @@ class App extends Component {
     getCollection = (collectionType) => {
         axios.get('/api/controllers/collection/getCollection', {
             params: {
-                collectionType
+                collectionType,
+                userId: localStorage.getItem('userId')
             }
         })
             .then((res) => {
@@ -241,7 +242,7 @@ class App extends Component {
                     });
                 }
             });
-    }
+    };
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         const prevPath = prevProps.location.pathname;
@@ -303,7 +304,7 @@ class App extends Component {
                 state: this.state,
                 searchQuery: this.searchQuery
             }}>
-                <div>
+                <div className="mega-wrapper">
                     {location.pathname !== ROUTE_SIGN_UP
                     && location.pathname !== ROUTE_SIGN_IN
                         ? <AppNavBar logout={this.logout} />

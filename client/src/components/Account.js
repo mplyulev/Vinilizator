@@ -38,7 +38,7 @@ class Account extends Component {
             return;
         }
 
-        axios.post('/api/controllers/authentication/changePassword', { oldPassword, newPassword, repeatPassword })
+        axios.post('/api/controllers/authentication/changePassword', { oldPassword, newPassword, repeatPassword, userId: localStorage.getItem('userId') })
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
 

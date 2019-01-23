@@ -10,9 +10,9 @@ import {
 } from '../constants';
 
 class ReleaseFull extends Component {
-
     addToCollection = (release) => {
-        axios.post('/api/controllers/collection/addToCollection', { release })
+        const userId = localStorage.getItem('userId')
+        axios.post('/api/controllers/collection/addToCollection', { release, userId})
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
@@ -21,7 +21,8 @@ class ReleaseFull extends Component {
     };
 
     removeFromCollection = (release) => {
-        axios.post('/api/controllers/collection/removeFromCollection', { release })
+        const userId = localStorage.getItem('userId')
+        axios.post('/api/controllers/collection/removeFromCollection', { release, userId })
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.props.history.push(ROUTE_COLLECTION);
@@ -31,12 +32,14 @@ class ReleaseFull extends Component {
     };
 
     markAsSold = (release) => {
+        const userId = localStorage.getItem('userId');
         this.removeFromSell(release);
-        axios.post('/api/controllers/collection/removeFromCollection', { release });
+        axios.post('/api/controllers/collection/removeFromCollection', { release, userId });
     };
 
     addToWishlist = (release) => {
-        axios.post('/api/controllers/collection/addToWishlist', { release })
+        const userId = localStorage.getItem('userId');
+        axios.post('/api/controllers/collection/addToWishlist', { release, userId })
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
@@ -45,7 +48,8 @@ class ReleaseFull extends Component {
     };
 
     addToSellList = (release) => {
-        axios.post('/api/controllers/collection/addToSellList', { release })
+        const userId = localStorage.getItem('userId');
+        axios.post('/api/controllers/collection/addToSellList', { release, userId })
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
@@ -54,7 +58,8 @@ class ReleaseFull extends Component {
     };
 
     removeFromWishlist = (release) => {
-        axios.post('/api/controllers/collection/removeFromWishlist', { release })
+        const userId = localStorage.getItem('userId');
+        axios.post('/api/controllers/collection/removeFromWishlist', { release, userId })
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.props.history.push(ROUTE_WISHLIST);
@@ -64,7 +69,8 @@ class ReleaseFull extends Component {
     };
 
     removeFromSell = (release) => {
-        axios.post('/api/controllers/collection/removeFromSell', { release })
+        const userId = localStorage.getItem('userId');
+        axios.post('/api/controllers/collection/removeFromSell', { release, userId })
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.props.history.push(ROUTE_FOR_SELL);
@@ -74,14 +80,15 @@ class ReleaseFull extends Component {
     };
 
     addToCollectionRemoveFromWishlist = (release) => {
-        axios.post('/api/controllers/collection/addToCollection', { release })
+        const userId = localStorage.getItem('userId');
+        axios.post('/api/controllers/collection/addToCollection', { release, userId })
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
                 }
             });
 
-        axios.post('/api/controllers/collection/removeFromWishlist', { release })
+        axios.post('/api/controllers/collection/removeFromWishlist', { release, userId })
             .then((res) => {
                 this.props.history.push(ROUTE_WISHLIST);
             });
@@ -157,8 +164,8 @@ class ReleaseFull extends Component {
                         {styles && <p>Style: <span>{styles}</span></p>}
                         {released && year ? <p>Released: <span>{released}</span></p> : null}
                         {year && !released ? <p>Year: <span>{year}</span></p> : null}
-                        {num_for_sale ? <p>{num_for_sale} <span>for sale on Discogs</span></p> : null}
-                        {lowest_price ? <p>Lowest Price on Discogs: <span>{lowest_price} &euro;</span></p> : null}
+                        {/*{num_for_sale ? <p>{num_for_sale} <span>for sale on Discogs</span></p> : null}*/}
+                        {/*{lowest_price ? <p>Lowest Price on Discogs: <span>{lowest_price} &euro;</span></p> : null}*/}
                     </div>
                     <div className="tracklist-wrapper">
                         <h3 className="title">Tracklist</h3>

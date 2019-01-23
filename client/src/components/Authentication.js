@@ -23,11 +23,11 @@ class Authentication extends Component {
     componentDidMount() {
         this.timeout = setTimeout(() => {
             this.background.classList.add('mounted');
-        }, 1000);
+        }, 100);
 
         this.formTimeout = setTimeout(() => {
             this.form.classList.add('mounted');
-        }, 0)
+        }, 300)
     }
 
     componentWillUnmount() {

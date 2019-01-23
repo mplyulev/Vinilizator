@@ -5,7 +5,7 @@ const router = express.Router();
 const User = require("../../../models/user");
 
 router.get('/getCollection', function(req, res) {
-    User.findById(passport.session.sessionID, function(err, user) {
+    User.findById(req.query.userId, function(err, user) {
         if (user) {
             const collectionType = req.query.collectionType;
             res.send({ success: true, collection: user[collectionType]});
@@ -15,7 +15,7 @@ router.get('/getCollection', function(req, res) {
 
 // Add item to collection
 router.post('/addToCollection', function(req, res) {
-    User.findById(passport.session.sessionID, function(err, user) {
+    User.findById(req.body.userId, function(err, user) {
         if (user) {
             const isVinylAlreadyAdded = user.vinylCollection && user.vinylCollection.filter(vinyl => vinyl.id === req.body.release.id).length === 0 ? false : true;
 
@@ -40,8 +40,7 @@ router.post('/addToCollection', function(req, res) {
 
 //Remove item from collection
 router.post('/removeFromCollection', function(req, res) {
-    User.findById(passport.session.sessionID, function(err, user) {
-        console.log(user);
+    User.findById(req.body.userId, function(err, user) {
         if (user) {
             const newCollection = user.vinylCollection && user.vinylCollection.filter(vinyl => {
                 if (vinyl.id !== req.body.release.id) {
@@ -77,7 +76,7 @@ router.post('/removeFromCollection', function(req, res) {
 
 //Remove item from wishlist
 router.post('/removeFromWishlist', function(req, res) {
-    User.findById(passport.session.sessionID, function(err, user) {
+    User.findById(req.body.userId, function(err, user) {
         if (user) {
             const newWishlist = user.wishlist && user.wishlist.filter(vinyl => {
                 if (vinyl.id !== req.body.release.id) {
@@ -89,7 +88,6 @@ router.post('/removeFromWishlist', function(req, res) {
 
             user.save(function(err) {
                 if (err) {
-                    console.log(error);
                     res.send({ success: false, msg: "Could't remove item from wishlist. Please try again later" });
                 } else {
                     res.send({
@@ -104,7 +102,7 @@ router.post('/removeFromWishlist', function(req, res) {
 
 //Add item to wishlist
 router.post('/addToWishlist', function(req, res) {
-    User.findById(passport.session.sessionID, function(err, user) {
+    User.findById(req.body.userId, function(err, user) {
         if (user) {
             const isVinylAlreadyAdded = user.wishlist && user.wishlist.filter(vinyl => vinyl.id === req.body.release.id).length === 0 ? false : true;
 
@@ -129,7 +127,7 @@ router.post('/addToWishlist', function(req, res) {
 
 //Add to sell list
 router.post('/addToSellList', function(req, res) {
-    User.findById(passport.session.sessionID, function(err, user) {
+    User.findById(req.body.userId, function(err, user) {
         if (user) {
             const isAlreadyInSellList = user.forSale && user.forSale.filter(vinyl => vinyl.id === req.body.release.id).length === 0 ? false : true;
 
@@ -154,7 +152,7 @@ router.post('/addToSellList', function(req, res) {
 
 //Remove from sell
 router.post('/removeFromSell', function(req, res) {
-    User.findById(passport.session.sessionID, function(err, user) {
+    User.findById(req.body.userId, function(err, user) {
         if (user) {
             const newSellList = user.forSale && user.forSale.filter(vinyl => {
                 if (vinyl.id !== req.body.release.id) {
@@ -166,7 +164,6 @@ router.post('/removeFromSell', function(req, res) {
 
             user.save(function(err) {
                 if (err) {
-                    console.log(error);
                     res.send({ success: false, msg: "Could't remove item from sell. Please try again later" });
                 } else {
                     res.send({

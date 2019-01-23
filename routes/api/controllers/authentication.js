@@ -61,7 +61,6 @@ router.post('/login',function(req, res) {
 
             if (isPasswordValid) {
                 res.json({success: true, token: userModel.generateJwt(), userId: user._id});
-                passport.session.sessionID = user._id;
             } else {
                 res.json({success: false, msg: 'Wrong username/email or password'});
             }
@@ -70,7 +69,7 @@ router.post('/login',function(req, res) {
 });
 
 router.post('/changePassword',function(req, res) {
-    User.findOne({ _id: passport.session.sessionID }, function(err, user) {
+    User.findById(req.body.userId, function(err, user) {
         if (err) throw err;
 
         if (user) {

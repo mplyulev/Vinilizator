@@ -1,9 +1,10 @@
 .router-container {
-  position: relative;
-  top: 100px;
-  width: 100%;
+  position: absolute;
+  top: 20px;
+  right: 0;
+  width: calc(100% - 200px);
   height: 100%;
-  
+
   &.auth {
     position: absolute;
     top: 0;
@@ -72,5 +73,12 @@
 
   &:focus {
     box-shadow: none !important;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .router-container {
+    top: 100px;
+    width: 100%;
   }
 }
