@@ -8,13 +8,6 @@ class Snackbar extends Component {
         this.timeout = null;
     }
 
-    // componentDidMount() {
-    //     setTimeout(() => this.snackbar.classList.add('mounted'), 0);
-    //     this.timeout = setTimeout(() => {
-    //         this.props.closeSnackbar();
-    //     }, 3000);
-    // }
-
     componentWillReceiveProps(nextProps, nextContext) {
         if (nextProps.snackbarOptions.isOpened !== this.props.snackbarOptions.isOpened && nextProps.snackbarOptions.isOpened) {
             clearTimeout(this.timeout);

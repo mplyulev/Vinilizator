@@ -252,6 +252,7 @@ class App extends Component {
     };
 
     componentDidUpdate(prevProps, prevState, snapshot) {
+
         const prevPath = prevProps.location.pathname;
         const nextPath = this.props.location.pathname;
         if ((nextPath === ROUTE_COLLECTION || nextPath === ROUTE_WISHLIST || nextPath === ROUTE_FOR_SELL) && nextPath !== prevPath) {

@@ -32,12 +32,14 @@
 .snackbar {
   position: fixed;
   bottom: 0;
-  display: flex;
   align-items: center;
-  width: 100%;
+  width: calc(100% - 200px);
   min-height: 0;
   height: 0;
   padding: 0 1.25rem;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
   transition: min-height 0.5s ease-in;
 
   span {
@@ -48,7 +50,7 @@
   }
 
   &.opened {
-    min-height: 50px;
+    min-height: 30px;
     height: auto;
 
     span {
@@ -82,10 +84,14 @@
     position: relative;
     top: 100px;
     width: 100%;
-    transition: top 0.2s linear;
+    transition: top 0.21s linear;
 
     &.opened-navbar {
       top: 200px;
     }
+  }
+
+  .snackbar {
+    width: 100%;
   }
 }

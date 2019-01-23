@@ -18,7 +18,13 @@
 .cover-wrapper {
   display: flex;
 
+  .cover-fix-wrapper {
+    position: relative;
+    left: 35px;
+  }
+
   .half-vinyl {
+    display: block;
     height: 199px;
     margin-left: -65px;
     transition: margin 0.6s ease-in;
@@ -28,6 +34,7 @@
     position: relative;
     left: 50%;
     top: 100px;
+    z-index: 2;
     display: block;
     width: 200px;
     height: 200px;

@@ -39,7 +39,7 @@ class SignUp extends Component {
                     res.data.emailError ? this.setState({emailError: res.data.msg}) : this.setState({emailError: ''});
 
                     if (res.data.success) {
-                        this.props.setToken(res.data.token);
+                        this.props.setToken(res.data.token, res.data.userId);
                     }
                 }
             });

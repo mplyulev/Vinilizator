@@ -19,7 +19,7 @@ class Collection extends Component {
 
     render () {
         const { history, getSpecificResult, setSpecificResult, currentRelease, data, collectionType } = this.props;
-
+        ReactTooltip.rebuild();
         return (
             <div>
                 <ReactTooltip id="search-page" />

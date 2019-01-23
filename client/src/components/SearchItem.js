@@ -17,8 +17,7 @@ class SearchItem extends Component {
         this.item.classList.add('opened');
         if (!collectionType) {
             await this.props.getSpecificResult(type, id);
-            this.item.className ='search-item-container opened';
-        } else {
+            } else {
             this.props.setSpecificResult(this.props.release, collectionType);
         }
     };
@@ -46,6 +45,7 @@ class SearchItem extends Component {
                 )
             })
             : '';
+
         let labelTooltip = release.label && release.label
             ? release.label.map((label, index) => {
                 return (
@@ -54,11 +54,13 @@ class SearchItem extends Component {
             })
             : '';
 
+        labelTooltip += ' - ' + release.catno;
+
         if (!label) {
             label = release.labels ? release.labels[0].name : '';
+            labelTooltip = release.labels ? label + ' - ' + release.labels[0].catno : '';
+            console.log(release);
         }
-
-        labelTooltip += ' - ' + release.catno;
         const country = release.country;
         const index = title && title.indexOf("-");
         let artist = title && title.substr(0, index); // Gets the first part
@@ -82,7 +84,7 @@ class SearchItem extends Component {
                  ref={node => this.item = node}
                  onClick={() => this.getRelease(release.type, release.id)}>
                 <div className="cover-wrapper">
-                    <img className="search-item-cover" src={coverUrl} alt="Release cover"/>
+                    <div className="cover-fix-wrapper"><img className="search-item-cover" src={coverUrl} alt="Release cover"/></div>
                     {coverUrl !== NoImagePlaceholder && <img className="half-vinyl" src={HalfVinyl} alt="Release cover"/>}
                 </div>
                 <div className="search-item-info-wrapper">

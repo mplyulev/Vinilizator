@@ -34,8 +34,7 @@ router.post('/register', function(req, res) {
                     if (err) {
                         return res.json({success: false, msg: 'Problem with registration. Please try again later'});
                     }
-                    res.json({success: true, msg: 'Successfully created new user.', token: newUser.generateJwt()});
-                    newUser.generateJwt();
+                    res.json({success: true, msg: 'Successfully created new user.', token: newUser.generateJwt(), userId: newUser._id });
                 });
             }
         });
