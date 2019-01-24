@@ -16,12 +16,14 @@ import SearchPage from './components/SearchPage';
 import Collection from './components/Collection';
 import ReleaseFull from './components/ReleaseFull';
 import Account from './components/Account';
+import SellModal from './components/SellModal';
 import ArtistFull from './components/ArtistFull';
 import Snackbar from './components/common/Snackbar';
 
 
 import {
-    COLLECTION_TYPE_COLLECTION, COLLECTION_TYPE_WISHLIST,
+    COLLECTION_TYPE_COLLECTION,
+    COLLECTION_TYPE_WISHLIST,
     DATA_TYPE_RELEASE,
     DEBOUNCE_TIME,
     DISCOGS_KEY,
@@ -32,14 +34,18 @@ import {
     ROUTE_ARTIST,
     ROUTE_COLLECTION,
     ROUTE_HOME,
-    ROUTE_LABEL,
-    ROUTE_MASTER,
     ROUTE_RELEASE,
     ROUTE_SEARCH,
     ROUTE_SIGN_IN,
     ROUTE_SIGN_UP,
     ROUTE_WISHLIST,
-    ROUTE_ACCOUNT, ROUTE_SELL, ROUTE_FOR_SELL, COLLECTION_TYPE_FOR_SELL, ROUTE_MARKET, COLLECTION_TYPE_MARKET
+    ROUTE_ACCOUNT,
+    ROUTE_SELL,
+    ROUTE_FOR_SELL,
+    COLLECTION_TYPE_FOR_SELL,
+    ROUTE_MARKET,
+    COLLECTION_TYPE_MARKET,
+    SNACKBAR_TYPE_SUCCESS, SNACKBAR_TYPE_FAIL
 } from './constants';
 import Authentication from "./components/Authentication";
 import LightboxWrapper from './components/common/LightboxWrapper';
@@ -75,7 +81,8 @@ class App extends Component {
             wishlist: [],
             forSale: [],
             market: [],
-            isNavBarOpen: false
+            isNavBarOpened: false,
+            isSellModalOpened: false
         };
 
         this.searchQuery = _.debounce(this.searchQuery, DEBOUNCE_TIME);
@@ -86,15 +93,36 @@ class App extends Component {
     toggleNavBar = (shouldClose) => {
         if (shouldClose) {
             this.setState({
-                isNavBarOpen: false
+                isNavBarOpened: false
             });
 
             return;
         }
 
         this.setState({
-            isNavBarOpen: !this.state.isNavBarOpen
+            isNavBarOpened: !this.state.isNavBarOpened
         });
+    };
+
+
+    // TODO move all methods from ReleaseFull in helpers maybe because now it is inconsistent with
+    // TODO add to sell list method being here
+    addToSellList = (release) => {
+        const userId = localStorage.getItem('userId');
+        axios.post('/api/controllers/collection/addToSellList', { release, userId })
+            .then((res) => {
+                if (res.status === RESPONSE_STATUS_SUCCESS) {
+                    this.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
+                    this.toggleSellModal();
+                }
+            });
+    };
+
+    toggleSellModal = () => {
+        this.setState({
+            isSellModalOpened: !this.state.isSellModalOpened
+        });
+
     };
 
     searchQuery = (value) => {
@@ -352,7 +380,8 @@ class App extends Component {
             wishlist,
             forSale,
             market,
-            isNavBarOpen
+            isNavBarOpened,
+            isSellModalOpened
         } = this.state;
 
         const { location, history } = this.props;
@@ -363,11 +392,15 @@ class App extends Component {
                 searchQuery: this.searchQuery
             }}>
                 <div className="mega-wrapper">
-                    <AppNavBar isNavBarOpen={isNavBarOpen}
+                    {isSellModalOpened  && <SellModal toggleSellModal={this.toggleSellModal}
+                                                      addToSellList={this.addToSellList}
+                                                      currentRelease={currentRelease}
+                                                      isSellModalOpened={isSellModalOpened}/>}
+                    <AppNavBar isNavBarOpened={isNavBarOpened}
                                isVisible={location.pathname !== ROUTE_SIGN_UP && location.pathname !== ROUTE_SIGN_IN}
                                toggleNavBar={this.toggleNavBar}
                                logout={this.logout} />
-                    <div className={`router-container${isOnAuthRoute ? ' auth' : ''}${isNavBarOpen ? ' opened-navbar' : ''}`}>
+                    <div className={`router-container${isOnAuthRoute ? ' auth' : ''}${isNavBarOpened ? ' opened-navbar' : ''}`}>
                         {isLightboxOpened && <LightboxWrapper closeLightbox={this.closeLightbox}
                                                               isLightboxOpened={isLightboxOpened}
                                                               images={lightboxImages} />}
@@ -408,6 +441,7 @@ class App extends Component {
                                                               closeLightbox={this.closeLightbox}
                                                               openSnackbar={this.openSnackbar}
                                                               isInCollection={true}
+                                                              toggleSellModal={this.toggleSellModal}
                                                               history={history}
                                                               release={currentRelease} />}/>
                             <Route exact path={ROUTE_WISHLIST}

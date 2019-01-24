@@ -25,7 +25,7 @@ function AppNavBar(props) {
                     className={`mb-5 navbar${props.isVisible ? ' visible' : ''}`}>
                 <NavbarBrand href="/">VYNILIZATOR</NavbarBrand>
                 <NavbarToggler color="dark" onClick={() => props.toggleNavBar(false)} />
-                <Collapse isOpen={props.isNavBarOpen} navbar>
+                <Collapse isOpen={props.isNavBarOpened} navbar>
                     <Nav className="ml-auto" navbar>
                         <NavLink to={ROUTE_SEARCH}
                                  activeClassName="selected">

@@ -22,9 +22,7 @@ class Collection extends Component {
             const artistName = vinyl.artists[0].name.toLowerCase().split(' ').join('');
             const title = vinyl.title.toLowerCase().split(' ').join('');
             const searchQuery = event.target.value;
-            artistName.split(' ')
-
-            if (artistName.startsWith(searchQuery) || title.startsWith(searchQuery)) {
+            if (artistName.includes(searchQuery) || title.includes(searchQuery)) {
                 return vinyl
             }
         });

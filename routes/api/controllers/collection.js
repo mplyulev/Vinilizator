@@ -147,6 +147,7 @@ router.post('/addToSellList', function(req, res) {
                 res.send({ success: false, msg: req.body.release.artists_sort + ' - ' + req.body.release.title + ' is already for sell!'});
             } else {
                 user.forSale.push(req.body.release);
+                console.log(req.body.release)
                 user.save(function(err) {
                     if (err) {
                         res.send({ success: false, msg: "Could't add item for sell. Please try again later"});

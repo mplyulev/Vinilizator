@@ -47,16 +47,6 @@ class ReleaseFull extends Component {
             });
     };
 
-    addToSellList = (release) => {
-        const userId = localStorage.getItem('userId');
-        axios.post('/api/controllers/collection/addToSellList', { release, userId })
-            .then((res) => {
-                if (res.status === RESPONSE_STATUS_SUCCESS) {
-                    this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
-                }
-            });
-    };
-
     removeFromWishlist = (release) => {
         const userId = localStorage.getItem('userId');
         axios.post('/api/controllers/collection/removeFromWishlist', { release, userId })
@@ -190,7 +180,7 @@ class ReleaseFull extends Component {
                                     Remove from collection
                                 </Button>
                                 <Button color="success" className="add-button add-to-wishlist"
-                                        onClick={() => this.addToSellList(release)}>
+                                        onClick={() => this.props.toggleSellModal(release)}>
                                     Add to selling
                                 </Button>
                             </Fragment>

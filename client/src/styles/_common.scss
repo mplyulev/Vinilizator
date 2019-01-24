@@ -9,7 +9,15 @@
   }
 }
 
+.sell-modal {
+  height: 100vh;
+  margin: 0 auto;
 
+  .modal-content {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
 
 .router-container {
   position: absolute;
@@ -113,7 +121,7 @@
     transition: top 0.21s linear;
 
     &.opened-navbar {
-      top: 220px;
+      top: 260px;
     }
   }
 
