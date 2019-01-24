@@ -55,12 +55,11 @@ class App extends Component {
         this.state = {
             searchQuery: '',
             currentQueryResult: [],
-            allFilterQueryResult: {
+            queryResult: {
                 pagination: {
                     urls: {}
                 }
             },
-            filterType: '',
             lastRequestedRoute: '',
             token: localStorage.getItem('token') || '',
             prevProps: props,
@@ -132,12 +131,9 @@ class App extends Component {
 
     makeSearchRequest = (searchQuery, type) => {
         this.setState({requestPending: true});
-        axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${type || 'all'}${type === DATA_TYPE_RELEASE ? '&format=Vinyl' : ''}&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
+        axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${DATA_TYPE_RELEASE}&format=Vinyl&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
-                type
-                    ? this.setState({ currentQueryResult: response.data, filterType: type })
-                    : this.setState({ allFilterQueryResult: response.data, filterType: type });
-
+                this.setState({ queryResult: response.data });
                 this.setState({ requestPending: false });
             })
             .catch(error => {
@@ -149,11 +145,10 @@ class App extends Component {
         this.setState({requestPending: true});
         const {searchQuery} = this.state;
 
-        axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${type || 'all'}&page=${page}&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
+        axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${DATA_TYPE_RELEASE}&format=Vinyl&page=${page}&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
-                type
-                    ? this.setState({ currentQueryResult: response.data, filterType: type})
-                    : this.setState({ allFilterQueryResult: response.data, filterType: type});
+                console.log('nectPage', response.data);
+                this.setState({ queryResult: response.data });
 
                 this.setState({requestPending: false});
             })
@@ -309,8 +304,7 @@ class App extends Component {
             currentQueryResult,
             searchQuery,
             requestPending,
-            allFilterQueryResult,
-            filterType,
+            queryResult,
             currentRelease,
             isLightboxOpened,
             lightboxImages,
@@ -358,10 +352,9 @@ class App extends Component {
                             <Route exact path={ROUTE_SEARCH}
                                    render={() => <SearchPage getNextPageResult={this.getNextPageResult}
                                                              currentQueryResult={currentQueryResult}
-                                                             allFilterQueryResult={allFilterQueryResult}
+                                                             queryResult={queryResult}
                                                              requestPending={requestPending}
                                                              getSpecificResult={this.getSpecificResult}
-                                                             filterType={filterType}
                                                              currentRelease={currentRelease}
                                                              history={history}
                                                              makeSearchRequest={this.makeSearchRequest}

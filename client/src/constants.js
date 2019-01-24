@@ -27,8 +27,8 @@ export const ROUTE_ACCOUNT = '/account';
 export const ROUTE_FOR_SELL = '/sell';
 
 //COMMON
-export const PAGINATION_WIDTH = 324;
-export const PAGINATION_PAGES_PER_SLIDE = 6;
+export const PAGINATION_WIDTH = 215;
+export const PAGINATION_PAGES_PER_SLIDE = 4;
 
 //SNACKBAR TYPES
 export const SNACKBAR_TYPE_SUCCESS = 'success';

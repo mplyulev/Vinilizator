@@ -10,29 +10,33 @@ class Collection extends Component {
         super(props);
 
         this.state = {
-            prevProps: props,
+            searchQuery: '',
+            filteredCollection: null
         };
     }
 
     onChange = (event) => {
-        const {data} = this.props;
-
-        data.filter(vinyl => {
+        const { data } = this.props;
+        this.setState({ searchQuery: event.target.value });
+        const filteredCollection = data.filter(vinyl => {
             const artistName = vinyl.artists[0].name.toLowerCase();
             const title = vinyl.title.toLowerCase();
             const searchQuery = event.target.value;
-
-            console.log(vinyl.artists[0].name.toLowerCase().startsWith(event.target.value));
             if (artistName.startsWith(searchQuery) || title.startsWith(searchQuery)) {
-                console.log(vinyl);
                 return vinyl
-              }
+            }
         });
-    }
+
+        if (filteredCollection.length > 0) {
+            this.setState({ filteredCollection });
+        }
+    };
 
     render () {
         const { history, getSpecificResult, setSpecificResult, currentRelease, data, collectionType } = this.props;
+        const { filteredCollection } = this.state;
         ReactTooltip.rebuild();
+
         return (
             <div>
                 <ReactTooltip id="search-page" />
@@ -41,7 +45,7 @@ class Collection extends Component {
                     <Input onChange={this.onChange} />
                 </InputGroup>
                 <div className="results-container">
-                    {!_.isEmpty(data) && data.map(result => {
+                    {!_.isEmpty(data) && (filteredCollection || data).map(result => {
                         return (
                             <SearchItem history={history}
                                         release={result}

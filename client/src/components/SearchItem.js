@@ -36,15 +36,9 @@ class SearchItem extends Component {
     }
 
     render () {
-        const {release, filterType, collectionType} = this.props;
+        const {release, collectionType} = this.props;
         const title = release.title;
-        let label = release.label && release.label
-            ? release.label.map((label, index) => {
-                return (
-                    <span key={label + Math.random()}>{label}{index !== release.label.length - 1 ? ', ' : ''}</span>
-                )
-            })
-            : '';
+        let label = release.label ? <span key={release.label[0] + Math.random()}>{release.label[0]}</span> : null;
 
         let labelTooltip = release.label && release.label
             ? release.label.map((label, index) => {
@@ -95,12 +89,12 @@ class SearchItem extends Component {
                          data-for="search-page"
                          data-delay-show={TOOLTIP_DELAY_SHOW}
                          data-tip={artist}>{artist}</div>
-                    {filterType === DATA_TYPE_RELEASE && label ?
+                    {label ?
                         <div className="search-item-info"
                              data-delay-show={TOOLTIP_DELAY_SHOW}
                              data-for="search-page"
-                             data-tip={labelTooltip}>{label} - {release.catno || release.labels[0].catno}</div> : null}
-                    {filterType === DATA_TYPE_RELEASE && country ?
+                             data-tip={labelTooltip}>{label} - {release.catno}</div> : null}
+                    {country ?
                         <div className="search-item-info"
                               data-for="search-page"
                               data-delay-show={TOOLTIP_DELAY_SHOW}
