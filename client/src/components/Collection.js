@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import Pagination from './common/Pagination';
 import SearchItem from "./SearchItem";
 import { DATA_TYPE_RELEASE } from '../constants';
 import ReactTooltip from 'react-tooltip';
@@ -12,9 +11,23 @@ class Collection extends Component {
 
         this.state = {
             prevProps: props,
-            data: null
         };
+    }
 
+    onChange = (event) => {
+        const {data} = this.props;
+
+        data.filter(vinyl => {
+            const artistName = vinyl.artists[0].name.toLowerCase();
+            const title = vinyl.title.toLowerCase();
+            const searchQuery = event.target.value;
+
+            console.log(vinyl.artists[0].name.toLowerCase().startsWith(event.target.value));
+            if (artistName.startsWith(searchQuery) || title.startsWith(searchQuery)) {
+                console.log(vinyl);
+                return vinyl
+              }
+        });
     }
 
     render () {
@@ -27,13 +40,8 @@ class Collection extends Component {
                     <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
                     <Input onChange={this.onChange} />
                 </InputGroup>
-                {/*<Pagination getNextPageResult={getNextPageResult}*/}
-                            {/*filterType={filterType}*/}
-                            {/*isVisible={!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1}*/}
-                            {/*data={queryResult.pagination} />*/}
                 <div className="results-container">
                     {!_.isEmpty(data) && data.map(result => {
-                        console.log(result);
                         return (
                             <SearchItem history={history}
                                         release={result}
@@ -48,10 +56,6 @@ class Collection extends Component {
                     })
                     }
                 </div>
-                {/*<Pagination getNextPageResult={getNextPageResult}*/}
-                            {/*filterType={filterType}*/}
-                            {/*isVisible={!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1}*/}
-                            {/*data={queryResult.pagination} />*/}
             </div>
         );
     }

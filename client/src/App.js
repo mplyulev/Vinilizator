@@ -86,7 +86,6 @@ class App extends Component {
     }
 
     toggleNavBar = (shouldClose) => {
-        console.log(shouldClose);
         if (shouldClose) {
             this.setState({
                 isNavBarOpen: false

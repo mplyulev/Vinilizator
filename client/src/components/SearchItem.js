@@ -36,7 +36,7 @@ class SearchItem extends Component {
     }
 
     render () {
-        const {release, filterType} = this.props;
+        const {release, filterType, collectionType} = this.props;
         const title = release.title;
         let label = release.label && release.label
             ? release.label.map((label, index) => {
@@ -59,15 +59,14 @@ class SearchItem extends Component {
         if (!label) {
             label = release.labels ? release.labels[0].name : '';
             labelTooltip = release.labels ? label + ' - ' + release.labels[0].catno : '';
-            console.log(release);
         }
         const country = release.country;
         const index = title && title.indexOf("-");
         let artist = title && title.substr(0, index); // Gets the first part
-        if (!artist) {
+        if (collectionType) {
             artist = release.artists && release.artists.map((artist) => {
                 return (
-                    <span key={artist.name}>{artist.name}{artist.join}</span>
+                    <span key={artist.name}>{artist.name} {artist.join} </span>
                 )
             });
         }
