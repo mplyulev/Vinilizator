@@ -14,12 +14,14 @@ router.get('/getCollection', function(req, res) {
 });
 
 router.get('/getMarket', function(req, res) {
-    const db = require('../../../config/keys').mongoURI;
-    const usersCollection = db.getCollection('users');
-    console.log(usersCollection);
-    usersCollection.find('', function(err, result) {
-        console.log(result);
-        res.send({ success: true, collection: result});
+    let allSelling = [];
+    User.find({}, function(err, result) {
+        result.map(user => {
+            allSelling.push(user.forSale);
+        });
+
+        const mergedAllSelling = [].concat.apply([], allSelling);
+        res.send({ success: true, collection: mergedAllSelling});
     });
 });
 
