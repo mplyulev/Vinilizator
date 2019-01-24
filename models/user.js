@@ -22,6 +22,9 @@ const userSchema = new Schema({
     forSale : {
         type: Array
     },
+    market : {
+        type: Array
+    },
     hash: String,
     salt: String
 });

@@ -43,7 +43,8 @@ class SearchPage extends Component {
             getSpecificResult,
             history,
             currentRelease,
-            queryResult
+            queryResult,
+            clearCurrentRelease
         } = this.props;
 
         ReactTooltip.rebuild();
@@ -76,6 +77,7 @@ class SearchPage extends Component {
                                         <SearchItem history={history}
                                                     release={result}
                                                     currentRelease={currentRelease}
+                                                    clearCurrentRelease={clearCurrentRelease}
                                                     getSpecificResult={getSpecificResult}
                                                     key={result.id}>
                                         </SearchItem>

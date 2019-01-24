@@ -10,6 +10,7 @@ export const DATA_TYPE_ARTIST = 'artist';
 export const COLLECTION_TYPE_COLLECTION = 'vinylCollection';
 export const COLLECTION_TYPE_WISHLIST = 'wishlist';
 export const COLLECTION_TYPE_FOR_SELL = 'forSale';
+export const COLLECTION_TYPE_MARKET = 'market';
 
 //ROUTES
 
@@ -25,6 +26,7 @@ export const ROUTE_LABEL = '/label';
 export const ROUTE_ARTIST = '/artist';
 export const ROUTE_ACCOUNT = '/account';
 export const ROUTE_FOR_SELL = '/sell';
+export const ROUTE_MARKET = '/market';
 
 //COMMON
 export const PAGINATION_WIDTH = 215;

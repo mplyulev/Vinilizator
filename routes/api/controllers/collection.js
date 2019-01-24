@@ -13,6 +13,16 @@ router.get('/getCollection', function(req, res) {
     });
 });
 
+router.get('/getMarket', function(req, res) {
+    const db = require('../../../config/keys').mongoURI;
+    const usersCollection = db.getCollection('users');
+    console.log(usersCollection);
+    usersCollection.find('', function(err, result) {
+        console.log(result);
+        res.send({ success: true, collection: result});
+    });
+});
+
 // Add item to collection
 router.post('/addToCollection', function(req, res) {
     User.findById(req.body.userId, function(err, user) {

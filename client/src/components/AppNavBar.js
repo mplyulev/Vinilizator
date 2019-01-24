@@ -14,7 +14,7 @@ import {
     ROUTE_SEARCH,
     ROUTE_SIGN_IN,
     ROUTE_ACCOUNT,
-    ROUTE_FOR_SELL
+    ROUTE_FOR_SELL, ROUTE_MARKET
 } from '../constants';
 
 function AppNavBar(props) {
@@ -42,6 +42,10 @@ function AppNavBar(props) {
                         <NavLink to={ROUTE_FOR_SELL}
                                  activeClassName="selected">
                             FOR SELL
+                        </NavLink>
+                        <NavLink to={ROUTE_MARKET}
+                                 activeClassName="selected">
+                            MARKET
                         </NavLink>
                         <NavLink to={ROUTE_ACCOUNT}
                                  activeClassName="selected">

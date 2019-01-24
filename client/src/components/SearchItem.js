@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {DATA_TYPE_RELEASE, DOGS_SPACE_GIF_URL, TOOLTIP_DELAY_SHOW} from '../constants';
+import {DOGS_SPACE_GIF_URL, TOOLTIP_DELAY_SHOW} from '../constants';
 import NoImagePlaceholder from '../assets/no-cover.png';
 import HalfVinyl from '../assets/half-vinyl.png';
 
@@ -18,7 +18,9 @@ class SearchItem extends Component {
         if (!collectionType) {
             await this.props.getSpecificResult(type, id);
             } else {
-            this.props.setSpecificResult(this.props.release, collectionType);
+            this.timeout = setTimeout(() => {
+                this.props.setSpecificResult(this.props.release, collectionType);
+            }, 300);
         }
     };
 
@@ -27,6 +29,7 @@ class SearchItem extends Component {
             this.item.classList.add('opened');
             this.timeout = setTimeout(() => {
                 this.item.classList.remove('opened');
+                this.props.clearCurrentRelease();
             }, 300);
         }
     }
@@ -38,21 +41,13 @@ class SearchItem extends Component {
     render () {
         const {release, collectionType} = this.props;
         const title = release.title;
-        let label = release.label ? <span key={release.label[0] + Math.random()}>{release.label[0]}</span> : null;
+        let label = release.label ? <span key={release.label[0] + Math.random()}>{release.label[0] +  ' - ' + release.catno}</span> : null;
 
-        let labelTooltip = release.label && release.label
-            ? release.label.map((label, index) => {
-                return (
-                    label + (index !== release.label.length - 1 ? ', ' : '')
-                );
-            })
-            : '';
-
-        labelTooltip += ' - ' + release.catno;
+        let labelTooltip = release.label ? release.label[0] + ' - ' + release.catno : '';
 
         if (!label) {
-            label = release.labels ? release.labels[0].name : '';
-            labelTooltip = release.labels ? label + ' - ' + release.labels[0].catno : '';
+            label = release.labels ? release.labels[0].name + ' - ' + release.labels[0].catno : '';
+            labelTooltip = label;
         }
         const country = release.country;
         const index = title && title.indexOf("-");
@@ -78,7 +73,7 @@ class SearchItem extends Component {
                  onClick={() => this.getRelease(release.type, release.id)}>
                 <div className="cover-wrapper">
                     <div className="cover-fix-wrapper"><img className="search-item-cover" src={coverUrl} alt="Release cover"/></div>
-                    {coverUrl !== NoImagePlaceholder && <img className="half-vinyl" src={HalfVinyl} alt="Release cover"/>}
+                    <img className="half-vinyl" src={HalfVinyl} alt="Release cover"/>
                 </div>
                 <div className="search-item-info-wrapper">
                     <div className="search-item-title"
@@ -93,7 +88,7 @@ class SearchItem extends Component {
                         <div className="search-item-info"
                              data-delay-show={TOOLTIP_DELAY_SHOW}
                              data-for="search-page"
-                             data-tip={labelTooltip}>{label} - {release.catno}</div> : null}
+                             data-tip={labelTooltip}>{label}</div> : null}
                     {country ?
                         <div className="search-item-info"
                               data-for="search-page"

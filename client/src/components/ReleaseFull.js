@@ -154,10 +154,10 @@ class ReleaseFull extends Component {
                 <div className="release-data-container">
                     {images && <img className="release-cover" onClick={() => openLightbox(images)} src={images[0]} />}
                     <div className="info-wrapper">
-                        <span className="artists">{artists}</span> - <span className="release-title">{title}</span>
+                        <span className="`">{artists}</span> - <span className="release-title">{title}</span>
                         {labels && <p>Label: {labels}<span> - {release.labels[0].catno}</span></p>}
                         {formats.length && formats[0] &&
-                        <p>Format: {formats[0].qty > 1 ? formats[0].qty + ' x' : ''}
+                        <p>Format: {formats[0].qty > 1 ? formats[0].qty + ' x ' : ''}
                             <span>{formats[0].name}</span> {formatDescription} </p>}
                         {country && <p>Country: <span>{country}</span></p>}
                         {genres && <p>Genre: {genres}</p>}

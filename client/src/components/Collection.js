@@ -17,11 +17,13 @@ class Collection extends Component {
 
     onChange = (event) => {
         const { data } = this.props;
-        this.setState({ searchQuery: event.target.value });
+        this.setState({ searchQuery: event.target.value.split(' ').join('') });
         const filteredCollection = data.filter(vinyl => {
-            const artistName = vinyl.artists[0].name.toLowerCase();
-            const title = vinyl.title.toLowerCase();
+            const artistName = vinyl.artists[0].name.toLowerCase().split(' ').join('');
+            const title = vinyl.title.toLowerCase().split(' ').join('');
             const searchQuery = event.target.value;
+            artistName.split(' ')
+
             if (artistName.startsWith(searchQuery) || title.startsWith(searchQuery)) {
                 return vinyl
             }
@@ -33,7 +35,16 @@ class Collection extends Component {
     };
 
     render () {
-        const { history, getSpecificResult, setSpecificResult, currentRelease, data, collectionType } = this.props;
+        const {
+            history,
+            getSpecificResult,
+            setSpecificResult,
+            currentRelease,
+            data,
+            clearCurrentRelease,
+            collectionType
+        } = this.props;
+
         const { filteredCollection } = this.state;
         ReactTooltip.rebuild();
 
@@ -50,6 +61,7 @@ class Collection extends Component {
                             <SearchItem history={history}
                                         release={result}
                                         currentRelease={currentRelease}
+                                        clearCurrentRelease={clearCurrentRelease}
                                         collectionType={collectionType}
                                         filterType={DATA_TYPE_RELEASE}
                                         getSpecificResult={getSpecificResult}

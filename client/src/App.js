@@ -16,8 +16,6 @@ import SearchPage from './components/SearchPage';
 import Collection from './components/Collection';
 import ReleaseFull from './components/ReleaseFull';
 import Account from './components/Account';
-import MasterFull from './components/MasterFull';
-import LabelFull from './components/LabelFull';
 import ArtistFull from './components/ArtistFull';
 import Snackbar from './components/common/Snackbar';
 
@@ -41,7 +39,7 @@ import {
     ROUTE_SIGN_IN,
     ROUTE_SIGN_UP,
     ROUTE_WISHLIST,
-    ROUTE_ACCOUNT, ROUTE_SELL, ROUTE_FOR_SELL, COLLECTION_TYPE_FOR_SELL
+    ROUTE_ACCOUNT, ROUTE_SELL, ROUTE_FOR_SELL, COLLECTION_TYPE_FOR_SELL, ROUTE_MARKET, COLLECTION_TYPE_MARKET
 } from './constants';
 import Authentication from "./components/Authentication";
 import LightboxWrapper from './components/common/LightboxWrapper';
@@ -76,6 +74,7 @@ class App extends Component {
             vinylCollection: [],
             wishlist: [],
             forSale: [],
+            market: [],
             isNavBarOpen: false
         };
 
@@ -180,14 +179,31 @@ class App extends Component {
     componentDidMount() {
         document.addEventListener('click', this.closeOnOutsideClick);
         const {token} = this.state;
-        if (!token && this.props.location.pathname !== ROUTE_SIGN_UP && this.props.location.pathname !== ROUTE_SIGN_IN) {
+        const { location } = this.props;
+
+        if (!token && location.pathname !== ROUTE_SIGN_UP && location.pathname !== ROUTE_SIGN_IN) {
             this.setState({lastRequestedRoute: this.props.location.pathname});
             this.props.history.push(ROUTE_SIGN_IN);
         }
 
-        if (this.props.location.pathname === ROUTE_COLLECTION || this.props.location.pathname === ROUTE_WISHLIST) {
-            const collectionType = this.props.location.pathname === ROUTE_COLLECTION ? COLLECTION_TYPE_COLLECTION : COLLECTION_TYPE_WISHLIST;
+        if (location.pathname === ROUTE_COLLECTION || location.pathname === ROUTE_WISHLIST || location.pathname === ROUTE_FOR_SELL) {
+            let collectionType = '';
+            switch (location.pathname) {
+                case ROUTE_COLLECTION:
+                    collectionType = COLLECTION_TYPE_COLLECTION;
+                    break;
+                case ROUTE_WISHLIST:
+                    collectionType = COLLECTION_TYPE_WISHLIST;
+                    break;
+                case ROUTE_FOR_SELL:
+                    collectionType = COLLECTION_TYPE_FOR_SELL;
+                    break;
+            }
             this.getCollection(collectionType);
+        }
+
+        if (location.pathname === ROUTE_MARKET) {
+            this.getMarket();
         }
 
         this.makeSearchRequest('');
@@ -211,7 +227,19 @@ class App extends Component {
         return null;
     }
 
+    getMarket = () => {
+        axios.get('/api/controllers/collection/getMarket')
+            .then((res) => {
+                if (res.status === RESPONSE_STATUS_SUCCESS) {
+                    this.setState({
+                        market: res.data.collection
+                    });
+                }
+            });
+    };
+
     setSpecificResult = (release, collectionType) => {
+        this.clearCurrentRelease();
         this.setState({ currentRelease: release }, () => {
             this.releaseAnimationTimeout = setTimeout(() => {
                 switch (collectionType) {
@@ -230,6 +258,7 @@ class App extends Component {
     };
 
     async getSpecificResult(type, id) {
+        this.clearCurrentRelease();
         clearTimeout(this.releaseAnimationTimeout);
         axios.get(`${DOGS_GET_ITEM_URL[type]}/${id}?key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
@@ -256,7 +285,8 @@ class App extends Component {
                     this.setState({
                         vinylCollection: collectionType === COLLECTION_TYPE_COLLECTION ? res.data.collection : [],
                         wishlist: collectionType === COLLECTION_TYPE_WISHLIST ? res.data.collection : [],
-                        forSale: collectionType === COLLECTION_TYPE_FOR_SELL ? res.data.collection : []
+                        forSale: collectionType === COLLECTION_TYPE_FOR_SELL ? res.data.collection : [],
+                        market: collectionType === COLLECTION_TYPE_MARKET ? res.data.collection : []
                     });
                 }
             });
@@ -281,6 +311,11 @@ class App extends Component {
 
             this.getCollection(collectionType);
         }
+
+        if (nextPath === ROUTE_MARKET && prevPath !== nextPath) {
+            this.getMarket();
+        }
+
         const { searchQuery, token, lastRequestedRoute } = this.state;
         if (prevState.token !== token && lastRequestedRoute !== ROUTE_SIGN_IN) {
             this.props.history.push(lastRequestedRoute || ROUTE_HOME);
@@ -299,6 +334,10 @@ class App extends Component {
         this.setState({ isLightboxOpened: false, lightboxImages: [] });
     };
 
+    clearCurrentRelease = () => {
+        this.setState({ currentRelease: null });
+    };
+
     render() {
         const {
             currentQueryResult,
@@ -312,6 +351,7 @@ class App extends Component {
             vinylCollection,
             wishlist,
             forSale,
+            market,
             isNavBarOpen
         } = this.state;
 
@@ -343,12 +383,6 @@ class App extends Component {
                                                               closeLightbox={this.closeLightbox}
                                                               openSnackbar={this.openSnackbar}
                                                               release={currentRelease} />}/>
-                            <Route path={ROUTE_MASTER}
-                                   render={() => <MasterFull release={currentRelease} />}/>
-                            <Route path={ROUTE_ARTIST}
-                                   render={() => <ArtistFull release={currentRelease} />}/>
-                            <Route path={ROUTE_LABEL}
-                                   render={() => <LabelFull release={currentRelease} />}/>
                             <Route exact path={ROUTE_SEARCH}
                                    render={() => <SearchPage getNextPageResult={this.getNextPageResult}
                                                              currentQueryResult={currentQueryResult}
@@ -356,6 +390,7 @@ class App extends Component {
                                                              requestPending={requestPending}
                                                              getSpecificResult={this.getSpecificResult}
                                                              currentRelease={currentRelease}
+                                                             clearCurrentRelease={this.clearCurrentRelease}
                                                              history={history}
                                                              makeSearchRequest={this.makeSearchRequest}
                                                              searchQueryString={searchQuery}
@@ -364,6 +399,7 @@ class App extends Component {
                                    render={() => <Collection getSpecificResult={this.getSpecificResult}
                                                              history={history}
                                                              collectionType={COLLECTION_TYPE_COLLECTION}
+                                                             clearCurrentRelease={this.clearCurrentRelease}
                                                              currentRelease={currentRelease}
                                                              setSpecificResult={this.setSpecificResult}
                                                              data={vinylCollection}/>}/>
@@ -379,6 +415,7 @@ class App extends Component {
                                                           history={history}
                                                           collectionType={COLLECTION_TYPE_WISHLIST}
                                                           currentRelease={currentRelease}
+                                                          clearCurrentRelease={this.clearCurrentRelease}
                                                           setSpecificResult={this.setSpecificResult}
                                                           data={wishlist}/>}/>
                             <Route path={`${ROUTE_WISHLIST}${ROUTE_RELEASE}`}
@@ -393,6 +430,7 @@ class App extends Component {
                                                              history={history}
                                                              collectionType={COLLECTION_TYPE_FOR_SELL}
                                                              currentRelease={currentRelease}
+                                                             clearCurrentRelease={this.clearCurrentRelease}
                                                              setSpecificResult={this.setSpecificResult}
                                                              data={forSale}/>}/>
                             <Route path={`${ROUTE_FOR_SELL}${ROUTE_RELEASE}`}
@@ -400,6 +438,21 @@ class App extends Component {
                                                               closeLightbox={this.closeLightbox}
                                                               openSnackbar={this.openSnackbar}
                                                               isForSell={true}
+                                                              history={history}
+                                                              release={currentRelease} />}/>
+                            <Route exact path={ROUTE_MARKET}
+                                   render={() => <Collection getSpecificResult={this.getSpecificResult}
+                                                             history={history}
+                                                             collectionType={COLLECTION_TYPE_MARKET}
+                                                             currentRelease={currentRelease}
+                                                             clearCurrentRelease={this.clearCurrentRelease}
+                                                             setSpecificResult={this.setSpecificResult}
+                                                             data={market}/>}/>
+                            <Route path={`${ROUTE_MARKET}${ROUTE_RELEASE}`}
+                                   render={() => <ReleaseFull openLightbox={this.openLightbox}
+                                                              closeLightbox={this.closeLightbox}
+                                                              openSnackbar={this.openSnackbar}
+                                                              isInMarket={true}
                                                               history={history}
                                                               release={currentRelease} />}/>
                             <Route path={ROUTE_ACCOUNT}

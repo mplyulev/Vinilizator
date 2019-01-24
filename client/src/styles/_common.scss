@@ -1,11 +1,15 @@
-body {
-  -ms-overflow-style: none;
-  overflow: -moz-scrollbars-none;
+@media only screen and (max-width: 767px) {
+  body {
+    -ms-overflow-style: none;
+    overflow: -moz-scrollbars-none;
 
-  &::-webkit-scrollbar {
-    display: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }
+
+
 
 .router-container {
   position: absolute;

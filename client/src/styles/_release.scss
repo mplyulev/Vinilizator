@@ -31,14 +31,8 @@
 
         .artists {
             font-size: 24px;
-            color: $font-color-dimgray;
+            color: $font-color-black;
             font-weight: 700;
-            cursor: pointer;
-
-            &:hover {
-                color: $font-color-black;
-
-            }
         }
 
         span, p {
