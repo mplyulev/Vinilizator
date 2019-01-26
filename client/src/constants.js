@@ -13,7 +13,6 @@ export const COLLECTION_TYPE_FOR_SELL = 'forSale';
 export const COLLECTION_TYPE_MARKET = 'market';
 
 //ROUTES
-
 export const ROUTE_HOME = '/';
 export const ROUTE_SIGN_UP = '/register';
 export const ROUTE_SIGN_IN = '/login';
@@ -51,3 +50,5 @@ export const DOGS_GET_ITEM_URL = {
 
 // RESPONSE CODES
 export const RESPONSE_STATUS_SUCCESS = 200;
+
+//VINYL CONDITION - MEDIA

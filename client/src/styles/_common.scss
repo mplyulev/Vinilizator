@@ -17,6 +17,27 @@
     top: 50%;
     transform: translateY(-50%);
   }
+
+  .modal-header {
+    color: $font-color-white;
+    background: $background-color-black;
+    text-transform: uppercase;
+
+    .modal-title {
+      font-size: 17px;
+      font-weight: bold;
+    }
+  }
+
+  .dropdown-menu {
+    .dropdown-item:active {
+      background-color: $background-color-green;
+    }
+  }
+
+  .dropdown-toggle {
+    width: 200px;
+  }
 }
 
 .router-container {

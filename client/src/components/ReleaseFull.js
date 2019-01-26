@@ -11,7 +11,7 @@ import {
 
 class ReleaseFull extends Component {
     addToCollection = (release) => {
-        const userId = localStorage.getItem('userId')
+        const userId = localStorage.getItem('userId');
         axios.post('/api/controllers/collection/addToCollection', { release, userId})
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
@@ -21,7 +21,7 @@ class ReleaseFull extends Component {
     };
 
     removeFromCollection = (release) => {
-        const userId = localStorage.getItem('userId')
+        const userId = localStorage.getItem('userId');
         axios.post('/api/controllers/collection/removeFromCollection', { release, userId })
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
@@ -33,8 +33,9 @@ class ReleaseFull extends Component {
 
     markAsSold = (release) => {
         const userId = localStorage.getItem('userId');
-        this.removeFromSell(release);
-        axios.post('/api/controllers/collection/removeFromCollection', { release, userId });
+        axios.post('/api/controllers/collection/removeFromCollection', { release, userId }).then(() => {
+            this.props.history.push(ROUTE_FOR_SELL);
+        });
     };
 
     addToWishlist = (release) => {
@@ -154,8 +155,6 @@ class ReleaseFull extends Component {
                         {styles && <p>Style: <span>{styles}</span></p>}
                         {released && year ? <p>Released: <span>{released}</span></p> : null}
                         {year && !released ? <p>Year: <span>{year}</span></p> : null}
-                        {/*{num_for_sale ? <p>{num_for_sale} <span>for sale on Discogs</span></p> : null}*/}
-                        {/*{lowest_price ? <p>Lowest Price on Discogs: <span>{lowest_price} &euro;</span></p> : null}*/}
                     </div>
                     <div className="tracklist-wrapper">
                         <h3 className="title">Tracklist</h3>

@@ -13,15 +13,20 @@ router.get('/getCollection', function(req, res) {
     });
 });
 
+
+//Get all selling vinyls from all users
 router.get('/getMarket', function(req, res) {
     let allSelling = [];
     User.find({}, function(err, result) {
         result.map(user => {
-            allSelling.push(user.forSale);
+            user.vinylCollection.filter(vinyl => {
+                if (vinyl.forSale) {
+                    allSelling.push(vinyl);
+                };
+            });
         });
 
-        const mergedAllSelling = [].concat.apply([], allSelling);
-        res.send({ success: true, collection: mergedAllSelling});
+        res.send({ success: true, collection: allSelling});
     });
 });
 
@@ -141,24 +146,36 @@ router.post('/addToWishlist', function(req, res) {
 router.post('/addToSellList', function(req, res) {
     User.findById(req.body.userId, function(err, user) {
         if (user) {
-            const isAlreadyInSellList = user.forSale && user.forSale.filter(vinyl => vinyl.id === req.body.release.id).length === 0 ? false : true;
+            let isAlreadyInSellList;
+            user.vinylCollection.map((vinyl, index) => {
+                if (vinyl.id === req.body.release.id) {
+                    isAlreadyInSellList = vinyl.forSale ? true : false
 
-            if (isAlreadyInSellList) {
-                res.send({ success: false, msg: req.body.release.artists_sort + ' - ' + req.body.release.title + ' is already for sell!'});
-            } else {
-                user.forSale.push(req.body.release);
-                console.log(req.body.release)
-                user.save(function(err) {
-                    if (err) {
-                        res.send({ success: false, msg: "Could't add item for sell. Please try again later"});
-                    } else {
+                    if (isAlreadyInSellList) {
                         res.send({
-                            success: true,
-                            msg: req.body.release.artists_sort + ' - ' + req.body.release.title + ' successfully added for sell!'
-                        })
+                            success: false,
+                            msg: req.body.release.artists_sort + ' - ' + req.body.release.title + ' is already for sell!'
+                        });
+                    } else {
+                        vinyl.forSale = true;
+                        vinyl.soldBy = user.username;
+                        // vinyl.sleeveCondition = '';
+                        // vinyl.mediaCondition = ''
+                        user.vinylCollection.splice(index, 1, vinyl);
+                        user.save(function(err) {
+                            if (err) {
+                                res.send({ success: false, msg: "Could't add item for sell. Please try again later" });
+                            } else {
+                                res.send({
+                                    success: true,
+                                    msg: req.body.release.artists_sort + ' - ' + req.body.release.title + ' successfully added for sell!'
+                                })
+                            }
+                        });
                     }
-                });
-            }
+                    return;
+                }
+            });
         }
     });
 });
@@ -167,22 +184,20 @@ router.post('/addToSellList', function(req, res) {
 router.post('/removeFromSell', function(req, res) {
     User.findById(req.body.userId, function(err, user) {
         if (user) {
-            const newSellList = user.forSale && user.forSale.filter(vinyl => {
-                if (vinyl.id !== req.body.release.id) {
-                    return vinyl;
-                }
-            });
-
-            user.forSale = newSellList;
-
-            user.save(function(err) {
-                if (err) {
-                    res.send({ success: false, msg: "Could't remove item from sell. Please try again later" });
-                } else {
-                    res.send({
-                        success: true,
-                        msg: req.body.release.artists_sort + ' - ' + req.body.release.title + ' successfully removed item from sell list!'
-                    })
+            user.vinylCollection && user.vinylCollection.map((vinyl, index) => {
+                if (vinyl.id === req.body.release.id && vinyl.forSale) {
+                    vinyl.forSale = false;
+                    user.vinylCollection.splice(index, 1, vinyl);
+                    user.save(function(err) {
+                        if (err) {
+                            res.send({ success: false, msg: "Could't remove item from sell. Please try again later" });
+                        } else {
+                            res.send({
+                                success: true,
+                                msg: req.body.release.artists_sort + ' - ' + req.body.release.title + ' successfully removed item from sell list!'
+                            })
+                        }
+                    });
                 }
             });
         }

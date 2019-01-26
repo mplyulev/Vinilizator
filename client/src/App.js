@@ -24,6 +24,7 @@ import Snackbar from './components/common/Snackbar';
 import {
     COLLECTION_TYPE_COLLECTION,
     COLLECTION_TYPE_WISHLIST,
+    COLLECTION_TYPE_FOR_SELL,
     DATA_TYPE_RELEASE,
     DEBOUNCE_TIME,
     DISCOGS_KEY,
@@ -42,10 +43,10 @@ import {
     ROUTE_ACCOUNT,
     ROUTE_SELL,
     ROUTE_FOR_SELL,
-    COLLECTION_TYPE_FOR_SELL,
     ROUTE_MARKET,
     COLLECTION_TYPE_MARKET,
-    SNACKBAR_TYPE_SUCCESS, SNACKBAR_TYPE_FAIL
+    SNACKBAR_TYPE_SUCCESS,
+    SNACKBAR_TYPE_FAIL
 } from './constants';
 import Authentication from "./components/Authentication";
 import LightboxWrapper from './components/common/LightboxWrapper';
@@ -174,7 +175,6 @@ class App extends Component {
 
         axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${DATA_TYPE_RELEASE}&format=Vinyl&page=${page}&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
-                console.log('nectPage', response.data);
                 this.setState({ queryResult: response.data });
 
                 this.setState({requestPending: false});
@@ -199,7 +199,7 @@ class App extends Component {
 
     closeOnOutsideClick = (event) => {
         const navbar = document.getElementsByClassName('navbar')[0];
-        if (!navbar.contains(event.target)) {
+        if (this.state.isNavBarOpened && !navbar.contains(event.target)) {
             this.toggleNavBar(true);
         }
     };
@@ -224,7 +224,7 @@ class App extends Component {
                     collectionType = COLLECTION_TYPE_WISHLIST;
                     break;
                 case ROUTE_FOR_SELL:
-                    collectionType = COLLECTION_TYPE_FOR_SELL;
+                    collectionType = COLLECTION_TYPE_COLLECTION;
                     break;
             }
             this.getCollection(collectionType);
@@ -313,8 +313,6 @@ class App extends Component {
                     this.setState({
                         vinylCollection: collectionType === COLLECTION_TYPE_COLLECTION ? res.data.collection : [],
                         wishlist: collectionType === COLLECTION_TYPE_WISHLIST ? res.data.collection : [],
-                        forSale: collectionType === COLLECTION_TYPE_FOR_SELL ? res.data.collection : [],
-                        market: collectionType === COLLECTION_TYPE_MARKET ? res.data.collection : []
                     });
                 }
             });
@@ -323,7 +321,11 @@ class App extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         const prevPath = prevProps.location.pathname;
         const nextPath = this.props.location.pathname;
-        if ((nextPath === ROUTE_COLLECTION || nextPath === ROUTE_WISHLIST || nextPath === ROUTE_FOR_SELL) && nextPath !== prevPath) {
+        if ((nextPath === ROUTE_COLLECTION
+            || nextPath === ROUTE_WISHLIST
+            || nextPath === ROUTE_FOR_SELL
+            || nextPath === ROUTE_MARKET)
+            && nextPath !== prevPath) {
             let collectionType = '';
 
             switch (nextPath) {
@@ -334,7 +336,9 @@ class App extends Component {
                     collectionType = COLLECTION_TYPE_WISHLIST;
                     break;
                 case ROUTE_FOR_SELL:
-                    collectionType = COLLECTION_TYPE_FOR_SELL;
+                    collectionType = COLLECTION_TYPE_COLLECTION;
+                case ROUTE_MARKET:
+                    collectionType = COLLECTION_TYPE_COLLECTION;
             }
 
             this.getCollection(collectionType);
@@ -466,7 +470,7 @@ class App extends Component {
                                                              currentRelease={currentRelease}
                                                              clearCurrentRelease={this.clearCurrentRelease}
                                                              setSpecificResult={this.setSpecificResult}
-                                                             data={forSale}/>}/>
+                                                             data={vinylCollection.filter(vinyl => { return vinyl.forSale})}/>}/>
                             <Route path={`${ROUTE_FOR_SELL}${ROUTE_RELEASE}`}
                                    render={() => <ReleaseFull openLightbox={this.openLightbox}
                                                               closeLightbox={this.closeLightbox}
