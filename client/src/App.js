@@ -105,16 +105,15 @@ class App extends Component {
         });
     };
 
-
     // TODO move all methods from ReleaseFull in helpers maybe because now it is inconsistent with
     // TODO add to sell list method being here
-    addToSellList = (release) => {
+    addToSellList = (release, sellData) => {
         const userId = localStorage.getItem('userId');
-        axios.post('/api/controllers/collection/addToSellList', { release, userId })
+        this.toggleSellModal();
+        axios.post('/api/controllers/collection/addToSellList', { release, userId, sellData })
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
-                    this.toggleSellModal();
                 }
             });
     };
@@ -408,6 +407,7 @@ class App extends Component {
                         {isLightboxOpened && <LightboxWrapper closeLightbox={this.closeLightbox}
                                                               isLightboxOpened={isLightboxOpened}
                                                               images={lightboxImages} />}
+                        <div id="player"></div>
                         <Switch>
                             <Route exact path="/"
                                    render={() => <Redirect to={ROUTE_SEARCH}/>}/>

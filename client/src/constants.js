@@ -52,3 +52,44 @@ export const DOGS_GET_ITEM_URL = {
 export const RESPONSE_STATUS_SUCCESS = 200;
 
 //VINYL CONDITION - MEDIA
+export const condition = {
+    mint: 'Mint (M)',
+    mTooltip: `Absolutely perfect in every way. Certainly never been played, possibly even still sealed. 
+                    Should be used sparingly as a grade, if at all.`,
+    nearMind: 'Near Mint (NM or M-)',
+    nmTooltip: `A nearly perfect record. A NM- record has more than likely never been played,
+                 and the vinyl will play perfectly, with no imperfections during playback. 
+                 Many dealers won't give a grade higher than this implying (perhaps correctly) that no record is ever truly perfect.
+                  The record should show no obvious signs of wear. A 45 RPM or EP sleeve should have no more than the most minor defects,
+                   such as any sign of slight handling. An LP cover should have no creases, folds, seam splits, cut-out holes,
+                    or other noticeable similar defects. The same should be true of any other inserts, such as posters, 
+                    lyric sleeves, etc.`,
+    vgPlus: 'Very Good Plus (VG+)',
+    vgPlusTooltip: `A nearly perfect record. A NM- record has more than likely never been played, and the vinyl will play
+                 perfectly, with no imperfections during playback. Many dealers won't give a grade higher than this implying (perhaps correctly) 
+                 that no record is ever truly perfect. The record should show no obvious signs of wear. A 45 RPM or EP sleeve should have no more than the most
+                  minor defects, such as any sign of slight handling. An LP cover should have no creases,
+                 folds, seam splits, cut-out holes, or other noticeable similar defects. The same should be true of any other inserts, 
+                 such as posters, lyric sleeves, etc.  `
+
+//TO DO finish this
+};
+
+//GENRES
+export const GENRES = {
+    blues: 'Blues',
+    brass_military: 'Brass & Military',
+    children: "Children's",
+    classical: 'Classical',
+    electronic: 'Electronic',
+    funl_country_world: 'Folk, World, & Country',
+    funk_soul: 'Funk / Soul',
+    hip_hop: 'Hip-Hop',
+    jazz: 'Jazz',
+    latin: 'Latin',
+    non_music: 'Non-Music',
+    pop: 'Pop',
+    reggae: 'Reggae',
+    rock: 'Rock',
+    stage: 'Stage & Screen'
+};

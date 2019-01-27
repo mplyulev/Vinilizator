@@ -1,39 +1,40 @@
 import React, { Component, Fragment } from 'react';
-import { InputGroup, InputGroupAddon, Input } from 'reactstrap';
+import {
+    InputGroup,
+    InputGroupAddon,
+    Input,
+    Dropdown,
+    DropdownToggle ,
+    DropdownMenu,
+    DropdownItem
+} from 'reactstrap';
 import _ from 'lodash';
 import ReactTooltip from 'react-tooltip';
-
 import Pagination from './common/Pagination';
 import SearchItem from "./SearchItem";
+import { GENRES } from '../constants';
 
 class SearchPage extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            prevProps: props
+            prevProps: props,
+            dropdownOpen: false
         };
 
         this.onChange = this.onChange.bind(this);
     }
 
-    // static getDerivedStateFromProps(nextProps, prevState) {
-    //     const { allFilterQueryResult } = prevState.prevProps;
-    //
-    //     if (nextProps.allFilterQueryResult && nextProps.allFilterQueryResult.pagination
-    //         && nextProps.allFilterQueryResult.pagination.urls.last !== allFilterQueryResult.pagination.urls.last) {
-    //         return {
-    //             prevProps: nextProps,
-    //             allFilterQueryResult
-    //         };
-    //     }
-    //
-    //     return null;
-    // }
-
     onChange(event) {
         this.props.searchQuery(event.target.value);
     }
+
+    toggle = () => {
+        this.setState(prevState => ({
+            dropdownOpen: !prevState.dropdownOpen
+        }));
+    };
 
     render () {
         const {
@@ -49,12 +50,25 @@ class SearchPage extends Component {
 
         ReactTooltip.rebuild();
 
+        const dropdownOptions = Object.keys(GENRES).map(key =>
+            <DropdownItem value={key}>{GENRES[key]}</DropdownItem>
+        );
+
         return (
             <div>
                 <InputGroup className="search-bar">
                     <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
                     <Input onChange={this.onChange} placeholder={searchQueryString} />
                 </InputGroup>
+                <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                    <DropdownToggle caret>
+                        Dropdown
+                    </DropdownToggle>
+                    Filter by genre:
+                    <DropdownMenu>
+                        {dropdownOptions}
+                    </DropdownMenu>
+                </Dropdown>
                 {queryResult.pagination.pages > 1 && <Pagination getNextPageResult={getNextPageResult}
                                                                  isVisible={!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1}
                                                                  data={queryResult.pagination} />

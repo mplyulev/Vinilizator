@@ -18,6 +18,14 @@
     transform: translateY(-50%);
   }
 
+  .btn-success {
+    min-width: 75px;
+  }
+
+  .form-control:focus {
+    border-color: $background-color-green;
+  }
+
   .modal-header {
     color: $font-color-white;
     background: $background-color-black;
@@ -28,16 +36,19 @@
       font-weight: bold;
     }
   }
+}
 
-  .dropdown-menu {
-    .dropdown-item:active {
-      background-color: $background-color-green;
-    }
-  }
+.dropdown {
+  margin-bottom: 20px;
+}
 
-  .dropdown-toggle {
-    width: 200px;
-  }
+.dropdown-item:active {
+  background-color: $background-color-green;
+}
+
+
+.dropdown-toggle {
+  width: 200px;
 }
 
 .router-container {

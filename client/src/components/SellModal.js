@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Dropdown, DropdownToggle, FormGroup, Label, Input, DropdownMenu, DropdownItem } from 'reactstrap';
 
 class SellModal extends React.Component {
     constructor(props) {
@@ -26,7 +26,9 @@ class SellModal extends React.Component {
                  folds, seam splits, cut-out holes, or other noticeable similar defects. The same should be true of any other inserts, 
                  such as posters, lyric sleeves, etc.  `
             },
-            dropdownValue: ''
+            condition: null,
+            price: null,
+            notes: ''
         };
     }
 
@@ -37,22 +39,48 @@ class SellModal extends React.Component {
     };
 
     setSelected = (event) => {
-        this.setState({ dropdownValue: event.currentTarget.innerText });
+        this.setState({ condition: event.currentTarget.innerText });
+    };
+
+    validateAndAdd = (currentRelease) => {
+        const { condition, price, notes } = this.state;
+        console.log(condition);
+        if (condition === null || price === null) {
+            !condition && !price
+                ? this.setState({ dropdownError: 'Please enter vinyl condition', priceError: 'Please enter a price' })
+                : condition
+                    ? this.setState({dropdownError: 'Please enter vinyl condition'})
+                    : this.setState({priceError: 'Please enter a price'})
+        } else {
+            const sellData = {
+                price,
+                notes,
+                condition
+            };
+            this.props.addToSellList(currentRelease, sellData);
+        }
+    };
+
+    handleChange = (event) => {
+        this.setState({
+            [event.target.id]: event.target.value,
+            [`${event.target.id}Error`]: ''
+        });
     };
 
     render() {
-        const { isSellModalOpened, toggleSellModal, addToSellList, currentRelease } = this.props;
+        const { isSellModalOpened, toggleSellModal, currentRelease } = this.props;
+        const { condition, dropdownError, priceError } = this.state;
 
-        const { dropdownValue } = this.state;
-        console.log(dropdownValue);
         return (
             <div>
                 <Modal isOpen={isSellModalOpened} className="sell-modal">
                     <ModalHeader>Sell Information</ModalHeader>
                     <ModalBody>
+                        Vinyl Condition
                         <Dropdown isOpen={this.state.isDropdownOpen} toggle={this.toggle}>
                             <DropdownToggle caret>
-                                {dropdownValue}
+                                {condition || 'Choose condition'}
                             </DropdownToggle>
                             <DropdownMenu className="dropdown-menu">
                                 <DropdownItem className="dropdown-item"  onClick={(event) => this.setSelected(event)}>Mint (M)</DropdownItem>
@@ -63,10 +91,25 @@ class SellModal extends React.Component {
                                 <DropdownItem onClick={this.setSelected}>Poor (P)/Fair (F)</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
-
+                        {dropdownError ? <span className="error">{dropdownError}</span> : null}
+                        <FormGroup className="change-password-form">
+                            <Label for="oldPassword">Price</Label>
+                            <Input
+                                autoFocus
+                                type="number"
+                                id="price"
+                                name="price"
+                                onChange={this.handleChange}
+                            /> BGN
+                        </FormGroup>
+                        {priceError ? <span className="error">{priceError}</span> : null}
+                        <FormGroup>
+                            <Label for="exampleText">Text Area</Label>
+                            <Input onChange={this.handleChange} type="textarea" name="text" id="notes" />
+                        </FormGroup>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="success" onClick={() => addToSellList(currentRelease)}>Add</Button>{' '}
+                        <Button color="success" onClick={() => this.validateAndAdd(currentRelease)}>Add</Button>{' '}
                         <Button color="secondary" onClick={toggleSellModal}>Cancel</Button>
                     </ModalFooter>
                 </Modal>

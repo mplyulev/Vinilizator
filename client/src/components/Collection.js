@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import SearchItem from "./SearchItem";
-import { DATA_TYPE_RELEASE } from '../constants';
+import { DATA_TYPE_RELEASE, GENRES } from '../constants';
 import ReactTooltip from 'react-tooltip';
-import { InputGroup, InputGroupAddon, Input } from 'reactstrap';
+import { InputGroup, InputGroupAddon, Input, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 class Collection extends Component {
     constructor(props) {
@@ -11,7 +11,8 @@ class Collection extends Component {
 
         this.state = {
             searchQuery: '',
-            filteredCollection: null
+            filteredCollection: null,
+            dropdownOpen: false
         };
     }
 
@@ -32,6 +33,12 @@ class Collection extends Component {
         }
     };
 
+    toggle = () => {
+        this.setState(prevState => ({
+            dropdownOpen: !prevState.dropdownOpen
+        }));
+    };
+
     render () {
         const {
             history,
@@ -46,6 +53,10 @@ class Collection extends Component {
         const { filteredCollection } = this.state;
         ReactTooltip.rebuild();
 
+        const dropdownOptions = Object.keys(GENRES).map(key =>
+            <DropdownItem value={key}>{GENRES[key]}</DropdownItem>
+        );
+
         return (
             <div>
                 <ReactTooltip id="search-page" />
@@ -53,6 +64,15 @@ class Collection extends Component {
                     <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
                     <Input onChange={this.onChange} />
                 </InputGroup>
+                <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                    <DropdownToggle caret>
+                        Dropdown
+                    </DropdownToggle>
+                    Filter by genre:
+                    <DropdownMenu>
+                        {dropdownOptions}
+                    </DropdownMenu>
+                </Dropdown>
                 <div className="results-container">
                     {!_.isEmpty(data) && (filteredCollection || data).map(result => {
                         return (

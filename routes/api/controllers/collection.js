@@ -159,8 +159,9 @@ router.post('/addToSellList', function(req, res) {
                     } else {
                         vinyl.forSale = true;
                         vinyl.soldBy = user.username;
-                        // vinyl.sleeveCondition = '';
-                        // vinyl.mediaCondition = ''
+                        vinyl.notes = req.body.sellData.notes;
+                        vinyl.price = req.body.sellData.price;
+                        vinyl.condition = req.body.sellData.condition;
                         user.vinylCollection.splice(index, 1, vinyl);
                         user.save(function(err) {
                             if (err) {

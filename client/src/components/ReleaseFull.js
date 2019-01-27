@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { Button } from 'reactstrap/dist/reactstrap.es'
 import axios from 'axios';
+import YouTube from 'react-youtube';
+
 import {
     RESPONSE_STATUS_SUCCESS,
     ROUTE_COLLECTION, ROUTE_FOR_SELL,
@@ -84,6 +86,21 @@ class ReleaseFull extends Component {
                 this.props.history.push(ROUTE_WISHLIST);
             });
     };
+
+    _onReady = (event) => {
+        // access to player in all event handlers via event.target
+        console.log(event.target)
+        event.target.pauseVideo();
+    };
+    //
+    // componentWillMount() {
+    //     axios.get(`https://www.youtube.com/embed?listType=search&list=${this.props.release.artists[0].name}${this.props.release.title}`)
+    //         .then((res) => {
+    //             if (res.status === RESPONSE_STATUS_SUCCESS) {
+    //                 console.log(res);
+    //             }
+    //         });
+    // }
 
     render () {
         const {release, openLightbox, isInCollection, isInWishlist, isForSell} = this.props;
@@ -212,9 +229,12 @@ class ReleaseFull extends Component {
                             : null
                         }
                     </div>
+                    <iframe id="ytplayer" type="text/html" width="640" height="360"
+                            src={`https://www.youtube.com/embed?listType=search&list=${this.props.release.artists[0].name}${this.props.release.title}`}
+                            frameBorder="0"></iframe>
                 </div>
             </Fragment>
-        );
+        )
     }
 }
 
