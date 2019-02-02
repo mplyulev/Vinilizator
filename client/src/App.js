@@ -418,6 +418,7 @@ class App extends Component {
                             <Route path={ROUTE_RELEASE}
                                    render={() => <ReleaseFull openLightbox={this.openLightbox}
                                                               closeLightbox={this.closeLightbox}
+                                                              getCollection={this.getCollection}
                                                               openSnackbar={this.openSnackbar}
                                                               release={currentRelease} />}/>
                             <Route exact path={ROUTE_SEARCH}
@@ -445,6 +446,7 @@ class App extends Component {
                                                               closeLightbox={this.closeLightbox}
                                                               openSnackbar={this.openSnackbar}
                                                               isInCollection={true}
+                                                              getCollection={this.getCollection}
                                                               toggleSellModal={this.toggleSellModal}
                                                               history={history}
                                                               release={currentRelease} />}/>
@@ -459,6 +461,7 @@ class App extends Component {
                             <Route path={`${ROUTE_WISHLIST}${ROUTE_RELEASE}`}
                                    render={() => <ReleaseFull openLightbox={this.openLightbox}
                                                               closeLightbox={this.closeLightbox}
+                                                              getCollection={this.getCollection}
                                                               openSnackbar={this.openSnackbar}
                                                               isInWishlist={true}
                                                               history={history}
@@ -476,6 +479,7 @@ class App extends Component {
                                                               closeLightbox={this.closeLightbox}
                                                               openSnackbar={this.openSnackbar}
                                                               isForSell={true}
+                                                              getCollection={this.getCollection}
                                                               history={history}
                                                               release={currentRelease} />}/>
                             <Route exact path={ROUTE_MARKET}
@@ -492,6 +496,7 @@ class App extends Component {
                                                               openSnackbar={this.openSnackbar}
                                                               isInMarket={true}
                                                               history={history}
+                                                              getCollection={this.getCollection}
                                                               release={currentRelease} />}/>
                             <Route path={ROUTE_ACCOUNT}
                                    render={() => <Account openSnackbar={this.openSnackbar}/>}/>

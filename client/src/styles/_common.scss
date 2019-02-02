@@ -13,6 +13,10 @@
   height: 100vh;
   margin: 0 auto;
 
+  .dropdown {
+    text-align: initial;
+  }
+
   .modal-content {
     top: 50%;
     transform: translateY(-50%);
@@ -40,15 +44,19 @@
 
 .dropdown {
   margin-bottom: 20px;
+  text-align: center;
 }
 
-.dropdown-item:active {
-  background-color: $background-color-green;
-}
+.dropdown-item {
+  cursor: pointer;
 
+  &:active {
+    background-color: $background-color-green;
+  }
+}
 
 .dropdown-toggle {
-  width: 200px;
+  width: 215px;
 }
 
 .router-container {

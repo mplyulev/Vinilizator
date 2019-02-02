@@ -52,7 +52,7 @@ export const DOGS_GET_ITEM_URL = {
 export const RESPONSE_STATUS_SUCCESS = 200;
 
 //VINYL CONDITION - MEDIA
-export const condition = {
+export const CONDITION = {
     mint: 'Mint (M)',
     mTooltip: `Absolutely perfect in every way. Certainly never been played, possibly even still sealed. 
                     Should be used sparingly as a grade, if at all.`,
@@ -70,13 +70,33 @@ export const condition = {
                  that no record is ever truly perfect. The record should show no obvious signs of wear. A 45 RPM or EP sleeve should have no more than the most
                   minor defects, such as any sign of slight handling. An LP cover should have no creases,
                  folds, seam splits, cut-out holes, or other noticeable similar defects. The same should be true of any other inserts, 
-                 such as posters, lyric sleeves, etc.  `
+                 such as posters, lyric sleeves, etc.  `,
+    vg: 'Very Good (VG)',
+    vgTooltip: `Generally worth 25% of Near Mint value. Many of the defects found in a VG+ record will be 
+    more pronounced in a VG disc. Surface noise will be evident upon playing, especially in soft passages and 
+    during a song's intro and fade, but will not overpower the music otherwise. Groove wear will start to be 
+    noticeable, as with light scratches (deep enough to feel with a fingernail) that will affect the sound. 
+    Labels may be marred by writing, or have tape or stickers (or their residue) attached. The same will be true of picture sleeves or LP covers.
+     However, it will not have all of these problems at the same time. Goldmine price guides with more than 
+     one price will list Very Good as the lowest price.`,
+    good_gplus: `Good (G), Good Plus (G+)`,
+    gPlusTooltip: `Generally worth 10-15% of the Near Mint value. A record in Good or Good 
+    Plus condition can be played through without skipping. But it will have significant surface noise, 
+    scratches, and visible groove wear. A cover or sleeve will have seam splits, especially at the bottom or on the spine. 
+    Tape, writing, ring wear, or other defects will be present.
+    While the record will be playable without skipping, noticeable surface noise and 
+    "ticks" will almost certainly accompany the playback.`,
+    poor: 'Poor (P), Fair (F)',
+    poorTooltip: `Generally worth 0-5% of the Near Mint price. The record is cracked, badly warped, and 
+    won't play through without skipping or repeating. The picture sleeve is water damaged, split on all
+     three seams and heavily marred by wear and writing. 
+    The LP cover barely keeps the LP inside it. Inner sleeves are fully split, crinkled, and written upon.  `
 
-//TO DO finish this
 };
 
 //GENRES
 export const GENRES = {
+    all: 'All Genres',
     blues: 'Blues',
     brass_military: 'Brass & Military',
     children: "Children's",

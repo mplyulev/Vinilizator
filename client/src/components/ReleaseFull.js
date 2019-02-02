@@ -61,12 +61,15 @@ class ReleaseFull extends Component {
             });
     };
 
-    removeFromSell = (release) => {
+    removeFromSell = (release, shouldStayOnSamePage) => {
         const userId = localStorage.getItem('userId');
         axios.post('/api/controllers/collection/removeFromSell', { release, userId })
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
-                    this.props.history.push(ROUTE_FOR_SELL);
+                    if (!shouldStayOnSamePage) {
+                        this.props.history.push(ROUTE_FOR_SELL);
+                    }
+
                     this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
                 }
             });
@@ -104,7 +107,7 @@ class ReleaseFull extends Component {
 
     render () {
         const {release, openLightbox, isInCollection, isInWishlist, isForSell} = this.props;
-        const { title, year, country, released, formats, num_for_sale, lowest_price, tracklist } = release;
+        const { title, year, country, released, formats, tracklist } = release;
         const artists = release.artists && release.artists.map((artist) => {
             return (
                 <span key={artist.name}>{artist.name}{ artist.join}</span>
@@ -195,10 +198,16 @@ class ReleaseFull extends Component {
                                         onClick={() => this.removeFromCollection(release)}>
                                     Remove from collection
                                 </Button>
-                                <Button color="success" className="add-button add-to-wishlist"
-                                        onClick={() => this.props.toggleSellModal(release)}>
-                                    Add to selling
-                                </Button>
+                                {!release.forSale
+                                    ? <Button color="success" className="add-button add-to-wishlist"
+                                              onClick={() => this.props.toggleSellModal(release)}>
+                                        Add to selling
+                                    </Button>
+                                    :
+                                    <Button color="success" className="add-button add-to-wishlist"
+                                            onClick={() => this.removeFromSell(release, true)}>
+                                        Remove from sell
+                                    </Button>}
                             </Fragment>
                             : null
                         }
@@ -234,7 +243,7 @@ class ReleaseFull extends Component {
                             frameBorder="0"></iframe>
                 </div>
             </Fragment>
-        )
+        );
     }
 }
 

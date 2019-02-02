@@ -12,14 +12,18 @@ class Collection extends Component {
         this.state = {
             searchQuery: '',
             filteredCollection: null,
-            dropdownOpen: false
+            dropdownOpen: false,
+            selectedGenre: ''
         };
     }
 
     onChange = (event) => {
         const { data } = this.props;
-        this.setState({ searchQuery: event.target.value.split(' ').join('') });
-        const filteredCollection = data.filter(vinyl => {
+        const { filteredCollection, searchQuery, selectedGenre } = this.state;
+        this.setState({ searchQuery: event.target.value.split(' ').join('')});
+
+        const dataForFiltering = filteredCollection || data;
+        const newFiltered = dataForFiltering.filter(vinyl => {
             const artistName = vinyl.artists[0].name.toLowerCase().split(' ').join('');
             const title = vinyl.title.toLowerCase().split(' ').join('');
             const searchQuery = event.target.value;
@@ -28,8 +32,12 @@ class Collection extends Component {
             }
         });
 
-        if (filteredCollection.length > 0) {
-            this.setState({ filteredCollection });
+        if (newFiltered.length > 0) {
+            this.setState({ filteredCollection : newFiltered });
+        }
+
+        if (searchQuery.length === 1 && selectedGenre) {
+            this.setSelected(selectedGenre);
         }
     };
 
@@ -37,6 +45,16 @@ class Collection extends Component {
         this.setState(prevState => ({
             dropdownOpen: !prevState.dropdownOpen
         }));
+    };
+
+    setSelected = (genre) => {
+        const { data } = this.props;
+        this.setState({ selectedGenre: genre });
+        const filteredCollection = data.filter(vinyl =>
+            vinyl.genres.includes(genre)
+        );
+
+        this.setState({ filteredCollection: genre === GENRES.all ? data : filteredCollection });
     };
 
     render () {
@@ -50,11 +68,11 @@ class Collection extends Component {
             collectionType
         } = this.props;
 
-        const { filteredCollection } = this.state;
+        const { filteredCollection, selectedGenre } = this.state;
         ReactTooltip.rebuild();
-
+        console.log(filteredCollection);
         const dropdownOptions = Object.keys(GENRES).map(key =>
-            <DropdownItem value={key}>{GENRES[key]}</DropdownItem>
+            <DropdownItem onClick={(event) => this.setSelected(event.target.innerText)} value={key}>{GENRES[key]}</DropdownItem>
         );
 
         return (
@@ -64,11 +82,11 @@ class Collection extends Component {
                     <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
                     <Input onChange={this.onChange} />
                 </InputGroup>
-                <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                <Dropdown isOpen={this.state.dropdownOpen}
+                          toggle={this.toggle}>
                     <DropdownToggle caret>
-                        Dropdown
+                        {selectedGenre || 'Filter by genre'}
                     </DropdownToggle>
-                    Filter by genre:
                     <DropdownMenu>
                         {dropdownOptions}
                     </DropdownMenu>

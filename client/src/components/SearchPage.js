@@ -62,9 +62,8 @@ class SearchPage extends Component {
                 </InputGroup>
                 <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                     <DropdownToggle caret>
-                        Dropdown
+                        Filter by genre
                     </DropdownToggle>
-                    Filter by genre:
                     <DropdownMenu>
                         {dropdownOptions}
                     </DropdownMenu>

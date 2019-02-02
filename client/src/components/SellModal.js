@@ -1,6 +1,9 @@
 import React from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Dropdown, DropdownToggle, FormGroup, Label, Input, DropdownMenu, DropdownItem } from 'reactstrap';
+import ReactTooltip from 'react-tooltip';
+
+import { CONDITION } from '../constants';
 
 class SellModal extends React.Component {
     constructor(props) {
@@ -9,23 +12,6 @@ class SellModal extends React.Component {
         this.state = {
             isDropdownOpen: false,
             selectedItem : null,
-            mediaCondition: {
-                mTooltip: `Absolutely perfect in every way. Certainly never been played, possibly even still sealed. 
-                    Should be used sparingly as a grade, if at all.`,
-                nmTooltip: `A nearly perfect record. A NM- record has more than likely never been played,
-                 and the vinyl will play perfectly, with no imperfections during playback. 
-                 Many dealers won't give a grade higher than this implying (perhaps correctly) that no record is ever truly perfect.
-                  The record should show no obvious signs of wear. A 45 RPM or EP sleeve should have no more than the most minor defects,
-                   such as any sign of slight handling. An LP cover should have no creases, folds, seam splits, cut-out holes,
-                    or other noticeable similar defects. The same should be true of any other inserts, such as posters, 
-                    lyric sleeves, etc.`,
-                vgPlusTooltip: `A nearly perfect record. A NM- record has more than likely never been played, and the vinyl will play
-                 perfectly, with no imperfections during playback. Many dealers won't give a grade higher than this implying (perhaps correctly) 
-                 that no record is ever truly perfect. The record should show no obvious signs of wear. A 45 RPM or EP sleeve should have no more than the most
-                  minor defects, such as any sign of slight handling. An LP cover should have no creases,
-                 folds, seam splits, cut-out holes, or other noticeable similar defects. The same should be true of any other inserts, 
-                 such as posters, lyric sleeves, etc.  `
-            },
             condition: null,
             price: null,
             notes: ''
@@ -39,16 +25,16 @@ class SellModal extends React.Component {
     };
 
     setSelected = (event) => {
-        this.setState({ condition: event.currentTarget.innerText });
+        this.setState({ condition: event.currentTarget.innerText, dropdownError: '' });
     };
 
     validateAndAdd = (currentRelease) => {
         const { condition, price, notes } = this.state;
-        console.log(condition);
+        console.log(price);
         if (condition === null || price === null) {
             !condition && !price
                 ? this.setState({ dropdownError: 'Please enter vinyl condition', priceError: 'Please enter a price' })
-                : condition
+                : !condition
                     ? this.setState({dropdownError: 'Please enter vinyl condition'})
                     : this.setState({priceError: 'Please enter a price'})
         } else {
@@ -57,6 +43,7 @@ class SellModal extends React.Component {
                 notes,
                 condition
             };
+
             this.props.addToSellList(currentRelease, sellData);
         }
     };
@@ -68,12 +55,18 @@ class SellModal extends React.Component {
         });
     };
 
+    componentDidMount() {
+        ReactTooltip.rebuild();
+    }
+
     render() {
         const { isSellModalOpened, toggleSellModal, currentRelease } = this.props;
         const { condition, dropdownError, priceError } = this.state;
+        ReactTooltip.rebuild();
 
         return (
             <div>
+                <ReactTooltip id="sell-modal" />
                 <Modal isOpen={isSellModalOpened} className="sell-modal">
                     <ModalHeader>Sell Information</ModalHeader>
                     <ModalBody>
@@ -83,12 +76,23 @@ class SellModal extends React.Component {
                                 {condition || 'Choose condition'}
                             </DropdownToggle>
                             <DropdownMenu className="dropdown-menu">
-                                <DropdownItem className="dropdown-item"  onClick={(event) => this.setSelected(event)}>Mint (M)</DropdownItem>
-                                <DropdownItem onClick={this.setSelected}>Near Mint (NM or M-)</DropdownItem>
-                                <DropdownItem onClick={this.setSelected}>Very Good Plus (VG+)</DropdownItem>
-                                <DropdownItem onClick={this.setSelected}>Very Good (VG)</DropdownItem>
-                                <DropdownItem onClick={this.setSelected}>Good (G)/Good Plus (G+)</DropdownItem>
-                                <DropdownItem onClick={this.setSelected}>Poor (P)/Fair (F)</DropdownItem>
+
+                                <DropdownItem data-for="sell-modal"
+                                              data-tip={CONDITION.mTooltip}
+                                              onClick={(event) => this.setSelected(event)}> <span data-for="sell-modal"
+                                                                                                   data-tip={CONDITION.mTooltip}>{CONDITION.mint}</span></DropdownItem>
+                                <DropdownItem data-for="sell-modal"
+                                              data-tip={CONDITION.vgPlusTooltip}
+                                              onClick={(event) => this.setSelected(event)}>{CONDITION.vgPlus}</DropdownItem>
+                                <DropdownItem data-for="sell-modal"
+                                              data-tip={CONDITION.vgTooltip}
+                                              onClick={(event) => this.setSelected(event)}>{CONDITION.vg}</DropdownItem>
+                                <DropdownItem data-for="sell-modal"
+                                              data-tip={CONDITION.gPlusTooltip}
+                                              onClick={(event) => this.setSelected(event)}>{CONDITION.good_gplus}</DropdownItem>
+                                <DropdownItem data-for="sell-modal"
+                                              data-tip={CONDITION.poorTooltip}
+                                              onClick={(event) => this.setSelected(event)}>{CONDITION.poor}</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
                         {dropdownError ? <span className="error">{dropdownError}</span> : null}
@@ -116,6 +120,7 @@ class SellModal extends React.Component {
             </div>
         );
     }
+
 }
 
 export default SellModal;
