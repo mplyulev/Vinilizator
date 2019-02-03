@@ -7,9 +7,9 @@
     color: $font-color-gray;
 
     .release-cover {
-        float: left;
         width: 250px;
         height: 250px;
+        float: left;
         margin: 0 30px 30px 0;
         box-shadow: 6px 6px 16px rgba($background-color-black, 0.8);
         cursor: pointer;
@@ -47,24 +47,16 @@
 }
 
 .add-button {
-    position: relative;
-    top: -20px;
-    left: 0;
     display: block;
     min-width: 200px;
-    margin: 10px 0;
-
-    &.add-to-wishlist {
-        position: relative;
-    }
 }
 
 .tracklist-wrapper {
     position: relative;
     left: 0;
     right: 0;
-    margin: 0 auto;
-    clear: both;
+    margin: 20px auto;
+    float: left;
     font-size: 16px;
     color: $font-color-dimgray;
 
@@ -75,43 +67,48 @@
     h3 {
         font-weight: 700;
     }
+}
 
-    .add-button {
-        top: 20px;
-        left: 0;
+.tracklist-youtube-wrapper {
+    position: relative;
+    width: 100%;
+    clear: both;
+
+    #ytplayer {
+        width: 100%;
     }
 }
+
+.buttons-wrapper {
+    position: relative;
+    top: 50px;
+    margin-bottom: 10px;
+    clear: both;
+
+    button {
+        float: left;
+    }
+}
+
+
 
 @media only screen and (max-width: 767px) {
     .release-data-container {
         display: block;
         text-align: center;
+        padding: 30px 0;
 
         .release-cover {
+            float: none;
             margin: 0 auto;
             margin-bottom: 30px;
-        }
-
-        .add-button {
-            &.add-to-wishlist {
-                position: relative;
-                top: 15px;
-                left: 0;
-                right: 0;
-                margin: 0 auto;
-            }
-
-            &.add-to-collection {
-                position: relative;
-                left: 50%;
-                transform: translateX(-50%);
-            }
         }
     }
 
     .tracklist-wrapper {
         margin-left: 0;
         padding: 30px;
+        float: none;
         text-align: center;
     }
 }

@@ -149,7 +149,7 @@ router.post('/addToSellList', function(req, res) {
             let isAlreadyInSellList;
             user.vinylCollection.map((vinyl, index) => {
                 if (vinyl.id === req.body.release.id) {
-                    isAlreadyInSellList = vinyl.forSale ? true : false
+                    isAlreadyInSellList = vinyl.forSale && !req.body.isEditing ? true : false
 
                     if (isAlreadyInSellList) {
                         res.send({
@@ -169,7 +169,7 @@ router.post('/addToSellList', function(req, res) {
                             } else {
                                 res.send({
                                     success: true,
-                                    msg: req.body.release.artists_sort + ' - ' + req.body.release.title + ' successfully added for sell!'
+                                    msg: `${req.body.release.artists_sort} - ${req.body.release.title} successfully ${req.body.isEditing ? 'edited' : 'added for sell'}!`
                                 })
                             }
                         });

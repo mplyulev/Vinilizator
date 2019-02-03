@@ -107,13 +107,14 @@ class App extends Component {
 
     // TODO move all methods from ReleaseFull in helpers maybe because now it is inconsistent with
     // TODO add to sell list method being here
-    addToSellList = (release, sellData) => {
+    addToSellList = (release, sellData , isEditing) => {
         const userId = localStorage.getItem('userId');
         this.toggleSellModal();
-        axios.post('/api/controllers/collection/addToSellList', { release, userId, sellData })
+        axios.post('/api/controllers/collection/addToSellList', { release, userId, sellData, isEditing })
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
+                    this.getCollection(COLLECTION_TYPE_COLLECTION, true, release.id);
                 }
             });
     };
@@ -300,7 +301,16 @@ class App extends Component {
             });
     };
 
-    getCollection = (collectionType) => {
+    resetSpecificResult = (data, currentReleaseId) => {
+        data.map(release => {
+            if (release.id === currentReleaseId) {
+                this.setState({ currentRelease: release });
+            }
+        });
+    };
+
+
+    getCollection = (collectionType, shouldResetCurrentRelease, currentReleaseId) => {
         axios.get('/api/controllers/collection/getCollection', {
             params: {
                 collectionType,
@@ -313,6 +323,10 @@ class App extends Component {
                         vinylCollection: collectionType === COLLECTION_TYPE_COLLECTION ? res.data.collection : [],
                         wishlist: collectionType === COLLECTION_TYPE_WISHLIST ? res.data.collection : [],
                     });
+
+                    if (shouldResetCurrentRelease) {
+                        this.resetSpecificResult(res.data.collection, currentReleaseId)
+                    }
                 }
             });
     };

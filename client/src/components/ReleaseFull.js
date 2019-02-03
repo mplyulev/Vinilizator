@@ -4,6 +4,7 @@ import axios from 'axios';
 import YouTube from 'react-youtube';
 
 import {
+    COLLECTION_TYPE_COLLECTION,
     RESPONSE_STATUS_SUCCESS,
     ROUTE_COLLECTION, ROUTE_FOR_SELL,
     ROUTE_WISHLIST,
@@ -69,7 +70,7 @@ class ReleaseFull extends Component {
                     if (!shouldStayOnSamePage) {
                         this.props.history.push(ROUTE_FOR_SELL);
                     }
-
+                    this.props.getCollection(COLLECTION_TYPE_COLLECTION, true, release.id);
                     this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
                 }
             });
@@ -92,7 +93,6 @@ class ReleaseFull extends Component {
 
     _onReady = (event) => {
         // access to player in all event handlers via event.target
-        console.log(event.target)
         event.target.pauseVideo();
     };
     //
@@ -110,7 +110,7 @@ class ReleaseFull extends Component {
         const { title, year, country, released, formats, tracklist } = release;
         const artists = release.artists && release.artists.map((artist) => {
             return (
-                <span key={artist.name}>{artist.name}{ artist.join}</span>
+                <span key={artist.name}>{` ${artist.name}  ${artist.join}`}</span>
             )
         });
 
@@ -165,7 +165,7 @@ class ReleaseFull extends Component {
                 <div className="release-data-container">
                     {images && <img className="release-cover" onClick={() => openLightbox(images)} src={images[0]} />}
                     <div className="info-wrapper">
-                        <span className="`">{artists}</span> - <span className="release-title">{title}</span>
+                        <span className="artists">{artists}</span> - <span className="release-title">{title}</span>
                         {labels && <p>Label: {labels}<span> - {release.labels[0].catno}</span></p>}
                         {formats.length && formats[0] &&
                         <p>Format: {formats[0].qty > 1 ? formats[0].qty + ' x ' : ''}
@@ -176,16 +176,25 @@ class ReleaseFull extends Component {
                         {released && year ? <p>Released: <span>{released}</span></p> : null}
                         {year && !released ? <p>Year: <span>{year}</span></p> : null}
                     </div>
-                    <div className="tracklist-wrapper">
-                        <h3 className="title">Tracklist</h3>
-                        {tracklistTemplate}
+                    <div className="tracklist-youtube-wrapper">
+                        <div className="tracklist-wrapper">
+                            <h3 className="title">Tracklist</h3>
+                            {tracklistTemplate}
+                        </div>
+                        <iframe id="ytplayer" type="text/html" width="640" height="360"
+                                src={`https://www.youtube.com/embed?listType=search&list=${this.props.release.artists[0].name}${this.props.release.title}`}
+                                frameBorder="0">
+
+                        </iframe>
+                    </div>
+                    <div className="buttons-wrapper">
                         {!isInCollection && !isInWishlist && !isForSell
                             ? <Fragment>
-                                <Button color="success" className="add-button add-to-collection"
+                                <Button color="success" className="add-button"
                                         onClick={() => this.addToCollection(release)}>
                                     Add to collection
                                 </Button>
-                                <Button color="success" className="add-button add-to-wishlist"
+                                <Button color="success" className="add-button"
                                         onClick={() => this.addToWishlist(release)}>
                                     Add to wishlist
                                 </Button>
@@ -194,30 +203,36 @@ class ReleaseFull extends Component {
                         }
                         {isInCollection ?
                             <Fragment>
-                                <Button color="success" className="add-button add-to-collection"
+                                <Button color="success" className="add-button"
                                         onClick={() => this.removeFromCollection(release)}>
                                     Remove from collection
                                 </Button>
                                 {!release.forSale
-                                    ? <Button color="success" className="add-button add-to-wishlist"
+                                    ? <Button color="success" className="add-button"
                                               onClick={() => this.props.toggleSellModal(release)}>
                                         Add to selling
                                     </Button>
                                     :
-                                    <Button color="success" className="add-button add-to-wishlist"
-                                            onClick={() => this.removeFromSell(release, true)}>
-                                        Remove from sell
-                                    </Button>}
+                                    <Fragment>
+                                        <Button color="success" className="add-button"
+                                                onClick={() => this.removeFromSell(release, true)}>
+                                            Remove from sell
+                                        </Button>
+                                        <Button color="success" className="add-button"
+                                                onClick={() => this.props.toggleSellModal(release)}>
+                                            Edit sell info
+                                        </Button>
+                                    </Fragment>}
                             </Fragment>
                             : null
                         }
                         {isInWishlist ?
                             <Fragment>
-                                <Button color="success" className="add-button add-to-wishlist"
+                                <Button color="success" className="add-button"
                                         onClick={() => this.removeFromWishlist(release)}>
                                     Remove from wishlist
                                 </Button>
-                                <Button color="success" className="add-button add-to-collection"
+                                <Button color="success" className="add-button"
                                         onClick={() => this.addToCollectionRemoveFromWishlist(release)}>
                                     Add to collection
                                 </Button>
@@ -226,11 +241,11 @@ class ReleaseFull extends Component {
                         }
                         {isForSell ?
                             <Fragment>
-                                <Button color="success" className="add-button add-to-wishlist"
+                                <Button color="success" className="add-button"
                                         onClick={() => this.removeFromSell(release)}>
                                     Remove from sell
                                 </Button>
-                                <Button color="success" className="add-button add-to-collection"
+                                <Button color="success" className="add-button"
                                         onClick={() => this.markAsSold(release)}>
                                     Mark as sold
                                 </Button>
@@ -238,9 +253,6 @@ class ReleaseFull extends Component {
                             : null
                         }
                     </div>
-                    <iframe id="ytplayer" type="text/html" width="640" height="360"
-                            src={`https://www.youtube.com/embed?listType=search&list=${this.props.release.artists[0].name}${this.props.release.title}`}
-                            frameBorder="0"></iframe>
                 </div>
             </Fragment>
         );

@@ -70,7 +70,7 @@ class Collection extends Component {
 
         const { filteredCollection, selectedGenre } = this.state;
         ReactTooltip.rebuild();
-        console.log(filteredCollection);
+
         const dropdownOptions = Object.keys(GENRES).map(key =>
             <DropdownItem onClick={(event) => this.setSelected(event.target.innerText)} value={key}>{GENRES[key]}</DropdownItem>
         );

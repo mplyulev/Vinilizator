@@ -8,13 +8,14 @@ import { CONDITION } from '../constants';
 class SellModal extends React.Component {
     constructor(props) {
         super(props);
+        const { currentRelease } = this.props;
 
         this.state = {
             isDropdownOpen: false,
             selectedItem : null,
-            condition: null,
-            price: null,
-            notes: ''
+            condition: currentRelease.forSale ? currentRelease.condition : null,
+            price: currentRelease.forSale ? currentRelease.price : null,
+            notes: currentRelease.forSale ? currentRelease.notes : ''
         };
     }
 
@@ -28,9 +29,8 @@ class SellModal extends React.Component {
         this.setState({ condition: event.currentTarget.innerText, dropdownError: '' });
     };
 
-    validateAndAdd = (currentRelease) => {
+    validateAndAdd = (currentRelease, isEditing) => {
         const { condition, price, notes } = this.state;
-        console.log(price);
         if (condition === null || price === null) {
             !condition && !price
                 ? this.setState({ dropdownError: 'Please enter vinyl condition', priceError: 'Please enter a price' })
@@ -44,7 +44,7 @@ class SellModal extends React.Component {
                 condition
             };
 
-            this.props.addToSellList(currentRelease, sellData);
+            this.props.addToSellList(currentRelease, sellData, isEditing);
         }
     };
 
@@ -61,7 +61,7 @@ class SellModal extends React.Component {
 
     render() {
         const { isSellModalOpened, toggleSellModal, currentRelease } = this.props;
-        const { condition, dropdownError, priceError } = this.state;
+        const { condition, dropdownError, priceError, price, notes } = this.state;
         ReactTooltip.rebuild();
 
         return (
@@ -103,17 +103,21 @@ class SellModal extends React.Component {
                                 type="number"
                                 id="price"
                                 name="price"
+                                value={price || null}
                                 onChange={this.handleChange}
                             /> BGN
                         </FormGroup>
                         {priceError ? <span className="error">{priceError}</span> : null}
                         <FormGroup>
                             <Label for="exampleText">Text Area</Label>
-                            <Input onChange={this.handleChange} type="textarea" name="text" id="notes" />
+                            <Input value={notes} onChange={this.handleChange} type="textarea" name="text" id="notes" />
                         </FormGroup>
                     </ModalBody>
                     <ModalFooter>
-                        <Button color="success" onClick={() => this.validateAndAdd(currentRelease)}>Add</Button>{' '}
+                        <Button color="success"
+                                onClick={() => this.validateAndAdd(currentRelease, currentRelease.forSale ? true : false)}>
+                            {currentRelease.forSale ? 'Edit' : 'Add'}
+                        </Button>
                         <Button color="secondary" onClick={toggleSellModal}>Cancel</Button>
                     </ModalFooter>
                 </Modal>

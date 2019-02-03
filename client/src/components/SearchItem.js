@@ -24,16 +24,6 @@ class SearchItem extends Component {
         }
     };
 
-    componentDidMount() {
-        if (this.props.currentRelease && this.props.currentRelease.id === this.props.release.id) {
-            this.item.classList.add('opened');
-            this.timeout = setTimeout(() => {
-                this.item.classList.remove('opened');
-                this.props.clearCurrentRelease();
-            }, 300);
-        }
-    }
-
     componentWillUnmount() {
         clearTimeout(this.timeout);
     }
