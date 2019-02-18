@@ -3,10 +3,13 @@
 .release-data-container {
     flex-wrap: wrap;
     width: 100%;
+    margin-bottom: 80px;
     padding: 30px;
     color: $font-color-gray;
 
     .release-cover {
+        position: relative;
+        z-index: 1;
         width: 250px;
         height: 250px;
         float: left;
@@ -83,14 +86,23 @@
     position: relative;
     top: 50px;
     margin-bottom: 10px;
-    clear: both;
+    text-align: center;
 
     button {
-        float: left;
+        display: inline-block;
+        margin: 0 5px;
     }
 }
 
-
+@media only screen and (max-width: 1024px) {
+    .buttons-wrapper button {
+        position: relative;
+        left: 0;
+        right: 0;
+        display: block;
+        margin: 10px auto;
+    }
+}
 
 @media only screen and (max-width: 767px) {
     .release-data-container {

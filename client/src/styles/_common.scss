@@ -47,15 +47,21 @@
   text-align: center;
 }
 
+.dropdown-menu {
+  top: -3px !important;
+}
+
 .dropdown-item {
   cursor: pointer;
 
-  &:active {
+  &:active, &.selected {
+    color: $font-color-white;
     background-color: $background-color-green;
   }
 }
 
-.dropdown-toggle {
+.dropdown-toggle,
+.dropdown-menu {
   width: 215px;
 }
 

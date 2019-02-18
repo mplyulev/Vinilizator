@@ -110,6 +110,8 @@ class App extends Component {
     addToSellList = (release, sellData , isEditing) => {
         const userId = localStorage.getItem('userId');
         this.toggleSellModal();
+        axios.post('/api/controllers/collection/addToCollection', {release, userId});
+
         axios.post('/api/controllers/collection/addToSellList', { release, userId, sellData, isEditing })
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
@@ -123,7 +125,6 @@ class App extends Component {
         this.setState({
             isSellModalOpened: !this.state.isSellModalOpened
         });
-
     };
 
     searchQuery = (value) => {
@@ -433,6 +434,7 @@ class App extends Component {
                                    render={() => <ReleaseFull openLightbox={this.openLightbox}
                                                               closeLightbox={this.closeLightbox}
                                                               getCollection={this.getCollection}
+                                                              toggleSellModal={this.toggleSellModal}
                                                               openSnackbar={this.openSnackbar}
                                                               release={currentRelease} />}/>
                             <Route exact path={ROUTE_SEARCH}
@@ -441,7 +443,7 @@ class App extends Component {
                                                              queryResult={queryResult}
                                                              requestPending={requestPending}
                                                              getSpecificResult={this.getSpecificResult}
-                                                             currentRelease={currentRelease}
+                                                             currentRelease={currentRelease}x
                                                              clearCurrentRelease={this.clearCurrentRelease}
                                                              history={history}
                                                              makeSearchRequest={this.makeSearchRequest}

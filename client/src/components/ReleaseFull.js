@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Button } from 'reactstrap/dist/reactstrap.es'
 import axios from 'axios';
-import YouTube from 'react-youtube';
 
 import {
     COLLECTION_TYPE_COLLECTION,
@@ -20,6 +19,8 @@ class ReleaseFull extends Component {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
                 }
+
+                axios.post('/api/controllers/collection/removeFromWishlist', {release, userId});
             });
     };
 
@@ -96,17 +97,10 @@ class ReleaseFull extends Component {
         event.target.pauseVideo();
     };
     //
-    // componentWillMount() {
-    //     axios.get(`https://www.youtube.com/embed?listType=search&list=${this.props.release.artists[0].name}${this.props.release.title}`)
-    //         .then((res) => {
-    //             if (res.status === RESPONSE_STATUS_SUCCESS) {
-    //                 console.log(res);
-    //             }
-    //         });
-    // }
+
 
     render () {
-        const {release, openLightbox, isInCollection, isInWishlist, isForSell} = this.props;
+        const {release, openLightbox, isInCollection, toggleSellModal, isInWishlist, isForSell} = this.props;
         const { title, year, country, released, formats, tracklist } = release;
         const artists = release.artists && release.artists.map((artist) => {
             return (
@@ -184,11 +178,12 @@ class ReleaseFull extends Component {
                         <iframe id="ytplayer" type="text/html" width="640" height="360"
                                 src={`https://www.youtube.com/embed?listType=search&list=${this.props.release.artists[0].name}${this.props.release.title}`}
                                 frameBorder="0">
-
                         </iframe>
+                        {/*when my site has an url add ?origin=http://mywebsite.com to src so i and remake it on component
+                               did mount and check respone to see if anything is loaded if not hide iframe */}
                     </div>
                     <div className="buttons-wrapper">
-                        {!isInCollection && !isInWishlist && !isForSell
+                        {!isInCollection
                             ? <Fragment>
                                 <Button color="success" className="add-button"
                                         onClick={() => this.addToCollection(release)}>
@@ -197,6 +192,10 @@ class ReleaseFull extends Component {
                                 <Button color="success" className="add-button"
                                         onClick={() => this.addToWishlist(release)}>
                                     Add to wishlist
+                                </Button>
+                                <Button color="success" className="add-button"
+                                        onClick={() => toggleSellModal(release)}>
+                                    Add to selling
                                 </Button>
                             </Fragment>
                             : null
@@ -209,7 +208,7 @@ class ReleaseFull extends Component {
                                 </Button>
                                 {!release.forSale
                                     ? <Button color="success" className="add-button"
-                                              onClick={() => this.props.toggleSellModal(release)}>
+                                              onClick={() => toggleSellModal(release)}>
                                         Add to selling
                                     </Button>
                                     :
@@ -219,7 +218,7 @@ class ReleaseFull extends Component {
                                             Remove from sell
                                         </Button>
                                         <Button color="success" className="add-button"
-                                                onClick={() => this.props.toggleSellModal(release)}>
+                                                onClick={() => toggleSellModal(release)}>
                                             Edit sell info
                                         </Button>
                                     </Fragment>}

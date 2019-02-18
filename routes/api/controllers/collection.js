@@ -147,8 +147,11 @@ router.post('/addToSellList', function(req, res) {
     User.findById(req.body.userId, function(err, user) {
         if (user) {
             let isAlreadyInSellList;
+            let isInCollection = false;
+
             user.vinylCollection.map((vinyl, index) => {
                 if (vinyl.id === req.body.release.id) {
+                    isInCollection = true;
                     isAlreadyInSellList = vinyl.forSale && !req.body.isEditing ? true : false
 
                     if (isAlreadyInSellList) {
@@ -177,6 +180,10 @@ router.post('/addToSellList', function(req, res) {
                     return;
                 }
             });
+
+            if (!isInCollection) {
+
+            }
         }
     });
 });

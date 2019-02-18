@@ -25,8 +25,8 @@ class SellModal extends React.Component {
         }));
     };
 
-    setSelected = (event) => {
-        this.setState({ condition: event.currentTarget.innerText, dropdownError: '' });
+    setSelected = (condition, abr) => {
+        this.setState({ condition: {full: condition, abr: abr}, dropdownError: '' });
     };
 
     validateAndAdd = (currentRelease, isEditing) => {
@@ -59,6 +59,15 @@ class SellModal extends React.Component {
         ReactTooltip.rebuild();
     }
 
+    renderDropdownItem = (condition, tooltip, abr) => {
+        return (
+            <DropdownItem data-for="sell-modal"
+                          data-tip={tooltip}
+                          className={this.state.condition === condition ? 'selected' : ''}
+                          onClick={(event) => this.setSelected(condition, abr)}>{condition}</DropdownItem>
+        );
+    };
+
     render() {
         const { isSellModalOpened, toggleSellModal, currentRelease } = this.props;
         const { condition, dropdownError, priceError, price, notes } = this.state;
@@ -66,33 +75,21 @@ class SellModal extends React.Component {
 
         return (
             <div>
-                <ReactTooltip id="sell-modal" />
                 <Modal isOpen={isSellModalOpened} className="sell-modal">
                     <ModalHeader>Sell Information</ModalHeader>
                     <ModalBody>
+                        <ReactTooltip id="sell-modal"/>
                         Vinyl Condition
                         <Dropdown isOpen={this.state.isDropdownOpen} toggle={this.toggle}>
                             <DropdownToggle caret>
                                 {condition || 'Choose condition'}
                             </DropdownToggle>
-                            <DropdownMenu className="dropdown-menu">
-
-                                <DropdownItem data-for="sell-modal"
-                                              data-tip={CONDITION.mTooltip}
-                                              onClick={(event) => this.setSelected(event)}> <span data-for="sell-modal"
-                                                                                                   data-tip={CONDITION.mTooltip}>{CONDITION.mint}</span></DropdownItem>
-                                <DropdownItem data-for="sell-modal"
-                                              data-tip={CONDITION.vgPlusTooltip}
-                                              onClick={(event) => this.setSelected(event)}>{CONDITION.vgPlus}</DropdownItem>
-                                <DropdownItem data-for="sell-modal"
-                                              data-tip={CONDITION.vgTooltip}
-                                              onClick={(event) => this.setSelected(event)}>{CONDITION.vg}</DropdownItem>
-                                <DropdownItem data-for="sell-modal"
-                                              data-tip={CONDITION.gPlusTooltip}
-                                              onClick={(event) => this.setSelected(event)}>{CONDITION.good_gplus}</DropdownItem>
-                                <DropdownItem data-for="sell-modal"
-                                              data-tip={CONDITION.poorTooltip}
-                                              onClick={(event) => this.setSelected(event)}>{CONDITION.poor}</DropdownItem>
+                            <DropdownMenu className="dropdown-menu sell-dropdown">
+                                {this.renderDropdownItem(CONDITION.mint, condition.tooltip.mint, condition.abr.mint)}
+                                {this.renderDropdownItem(CONDITION.vgPlus, condition.tooltip.vgPlus, condition.abr.vgPlus)}
+                                {this.renderDropdownItem(CONDITION.vg, condition.tooltip.vg, condition.abr.vg)}
+                                {this.renderDropdownItem(CONDITION.good_gplus, condition.tooltip.good_gplus, condition.abr.good_gplus)}
+                                {this.renderDropdownItem(CONDITION.poor, condition.tooltip.poor, condition.abr.poor)}
                             </DropdownMenu>
                         </Dropdown>
                         {dropdownError ? <span className="error">{dropdownError}</span> : null}
@@ -110,7 +107,7 @@ class SellModal extends React.Component {
                         {priceError ? <span className="error">{priceError}</span> : null}
                         <FormGroup>
                             <Label for="exampleText">Text Area</Label>
-                            <Input value={notes} onChange={this.handleChange} type="textarea" name="text" id="notes" />
+                            <Input value={notes} onChange={this.handleChange} type="textarea" name="text" id="notes"/>
                         </FormGroup>
                     </ModalBody>
                     <ModalFooter>

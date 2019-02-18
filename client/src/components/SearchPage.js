@@ -82,7 +82,7 @@ class SearchPage extends Component {
                                 </div>
                                 : <div className='filter-container '>
                                     <div className="loading"></div>
-                                    <span>Loading...</span></div>}
+                                    <span className="loading-text">LOADING...</span></div>}
                             <div className="results-container">
                                 <ReactTooltip id="search-page" />
                                 {!_.isEmpty(queryResult.results) && queryResult.results.map(result => {

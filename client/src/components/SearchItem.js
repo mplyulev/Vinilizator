@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {DOGS_SPACE_GIF_URL, TOOLTIP_DELAY_SHOW} from '../constants';
+import {COLLECTION_TYPE_MARKET, DOGS_SPACE_GIF_URL, TOOLTIP_DELAY_SHOW} from '../constants';
 import NoImagePlaceholder from '../assets/no-cover.png';
 import HalfVinyl from '../assets/half-vinyl.png';
 
@@ -14,6 +14,10 @@ class SearchItem extends Component {
 
     async getRelease (type, id){
         const {collectionType} = this.props;
+        document.querySelectorAll('.search-item-container').forEach(container => {
+            container.classList.remove('opened');
+        });
+
         this.item.classList.add('opened');
         if (!collectionType) {
             await this.props.getSpecificResult(type, id);
@@ -61,6 +65,16 @@ class SearchItem extends Component {
             <div className="search-item-container"
                  ref={node => this.item = node}
                  onClick={() => this.getRelease(release.type, release.id)}>
+                {collectionType === COLLECTION_TYPE_MARKET ? <span>Sold by: {release.soldBy}</span> : null}
+                {collectionType === COLLECTION_TYPE_MARKET
+                    ? <div className="price-tag">
+                        <span>
+                            {release.condition}
+                        </span>
+                        <span>
+                            {release.price}
+                        </span>
+                </div> : null}
                 <div className="cover-wrapper">
                     <div className="cover-fix-wrapper"><img className="search-item-cover" src={coverUrl} alt="Release cover"/></div>
                     <img className="half-vinyl" src={HalfVinyl} alt="Release cover"/>

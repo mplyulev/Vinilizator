@@ -70,10 +70,27 @@ class Collection extends Component {
 
         const { filteredCollection, selectedGenre } = this.state;
         ReactTooltip.rebuild();
+        let genres = [];
+        data.map(release => {
+            release.genres && release.genres.map(style => {
+                genres.push(style);
+            });
+        });
 
-        const dropdownOptions = Object.keys(GENRES).map(key =>
-            <DropdownItem onClick={(event) => this.setSelected(event.target.innerText)} value={key}>{GENRES[key]}</DropdownItem>
+        const representedGenres = [...new Set(genres)];
+        const dropdownOptions = representedGenres.map(genre =>
+            <DropdownItem className={selectedGenre === genre ? 'selected' : ''}
+                          onClick={(event) => this.setSelected(event.target.innerText)}
+                          value={genre}>
+                {genre}
+            </DropdownItem>
         );
+
+        dropdownOptions.unshift(<DropdownItem className={selectedGenre === GENRES.all ? 'selected' : ''}
+                                              onClick={(event) => this.setSelected(event.target.innerText)}
+                                              value={GENRES.all}>
+            {GENRES.all}
+        </DropdownItem>);
 
         return (
             <div>
