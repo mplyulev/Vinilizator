@@ -3,7 +3,7 @@ import { Button } from 'reactstrap/dist/reactstrap.es'
 import axios from 'axios';
 
 import {
-    COLLECTION_TYPE_COLLECTION,
+    COLLECTION_TYPE_COLLECTION, CONDITION,
     RESPONSE_STATUS_SUCCESS,
     ROUTE_COLLECTION, ROUTE_FOR_SELL,
     ROUTE_WISHLIST,
@@ -92,16 +92,26 @@ class ReleaseFull extends Component {
             });
     };
 
-    _onReady = (event) => {
-        // access to player in all event handlers via event.target
-        event.target.pauseVideo();
-    };
-    //
-
-
     render () {
-        const {release, openLightbox, isInCollection, toggleSellModal, isInWishlist, isForSell} = this.props;
-        const { title, year, country, released, formats, tracklist } = release;
+        const {
+            release,
+            openLightbox,
+            isInCollection,
+            toggleSellModal,
+            isInWishlist,
+            isInMarket,
+            isForSell
+        } = this.props;
+
+        const {
+            title,
+            year,
+            country,
+            released,
+            formats,
+            tracklist
+        } = release;
+
         const artists = release.artists && release.artists.map((artist) => {
             return (
                 <span key={artist.name}>{` ${artist.name}  ${artist.join}`}</span>
@@ -157,7 +167,17 @@ class ReleaseFull extends Component {
         return (
             <Fragment>
                 <div className="release-data-container">
-                    {images && <img className="release-cover" onClick={() => openLightbox(images)} src={images[0]} />}
+                    {isInMarket ?
+                        <div className="selling-info">
+                            <span className="seller">Sold by: {release.soldBy}</span>
+                            <span>Price: {release.price} BGN</span>
+                            <span data-for="search-item-tooltip"
+                                  data-tip={release.condition && CONDITION.tooltips[release.condition.type]}>
+                                Condition: {release.condition && release.condition.abr}
+                            </span>
+                        </div>
+                        : null}
+                    {images && <img className="release-cover" onClick={() => openLightbox(images)} src={images[0]}/>}
                     <div className="info-wrapper">
                         <span className="artists">{artists}</span> - <span className="release-title">{title}</span>
                         {labels && <p>Label: {labels}<span> - {release.labels[0].catno}</span></p>}
@@ -183,7 +203,7 @@ class ReleaseFull extends Component {
                                did mount and check respone to see if anything is loaded if not hide iframe */}
                     </div>
                     <div className="buttons-wrapper">
-                        {!isInCollection
+                        {!isInCollection && !isInMarket
                             ? <Fragment>
                                 <Button color="success" className="add-button"
                                         onClick={() => this.addToCollection(release)}>
@@ -247,6 +267,15 @@ class ReleaseFull extends Component {
                                 <Button color="success" className="add-button"
                                         onClick={() => this.markAsSold(release)}>
                                     Mark as sold
+                                </Button>
+                            </Fragment>
+                            : null
+                        }
+                        {isInMarket ?
+                            <Fragment>
+                                <Button color="success" className="add-button"
+                                        onClick={() => this.removeFromSell(release)}>
+                                    Message {release.soldBy}
                                 </Button>
                             </Fragment>
                             : null

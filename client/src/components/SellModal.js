@@ -13,7 +13,7 @@ class SellModal extends React.Component {
         this.state = {
             isDropdownOpen: false,
             selectedItem : null,
-            condition: currentRelease.forSale ? currentRelease.condition : null,
+            condition: currentRelease.forSale ? currentRelease.condition && currentRelease.condition.full : null,
             price: currentRelease.forSale ? currentRelease.price : null,
             notes: currentRelease.forSale ? currentRelease.notes : ''
         };
@@ -25,8 +25,8 @@ class SellModal extends React.Component {
         }));
     };
 
-    setSelected = (condition, abr) => {
-        this.setState({ condition: {full: condition, abr: abr}, dropdownError: '' });
+    setSelected = (condition) => {
+        this.setState({ condition: condition, dropdownError: '' });
     };
 
     validateAndAdd = (currentRelease, isEditing) => {
@@ -59,12 +59,13 @@ class SellModal extends React.Component {
         ReactTooltip.rebuild();
     }
 
-    renderDropdownItem = (condition, tooltip, abr) => {
+    renderDropdownItem = (condition) => {
+        console.log('asd', condition);
         return (
             <DropdownItem data-for="sell-modal"
-                          data-tip={tooltip}
-                          className={this.state.condition === condition ? 'selected' : ''}
-                          onClick={(event) => this.setSelected(condition, abr)}>{condition}</DropdownItem>
+                          // data-tip={tooltip}
+                          className={this.state.condition && this.state.condition.full === condition.full ? 'selected' : ''}
+                          onClick={() => this.setSelected(condition)}>{condition.full}</DropdownItem>
         );
     };
 
@@ -82,14 +83,14 @@ class SellModal extends React.Component {
                         Vinyl Condition
                         <Dropdown isOpen={this.state.isDropdownOpen} toggle={this.toggle}>
                             <DropdownToggle caret>
-                                {condition || 'Choose condition'}
+                                {condition && condition.full || 'Choose condition'}
                             </DropdownToggle>
                             <DropdownMenu className="dropdown-menu sell-dropdown">
-                                {this.renderDropdownItem(CONDITION.mint, condition.tooltip.mint, condition.abr.mint)}
-                                {this.renderDropdownItem(CONDITION.vgPlus, condition.tooltip.vgPlus, condition.abr.vgPlus)}
-                                {this.renderDropdownItem(CONDITION.vg, condition.tooltip.vg, condition.abr.vg)}
-                                {this.renderDropdownItem(CONDITION.good_gplus, condition.tooltip.good_gplus, condition.abr.good_gplus)}
-                                {this.renderDropdownItem(CONDITION.poor, condition.tooltip.poor, condition.abr.poor)}
+                                {this.renderDropdownItem(CONDITION.mint)}
+                                {this.renderDropdownItem(CONDITION.vgPlus)}
+                                {this.renderDropdownItem(CONDITION.vg)}
+                                {this.renderDropdownItem(CONDITION.good_gplus)}
+                                {this.renderDropdownItem(CONDITION.poor)}
                             </DropdownMenu>
                         </Dropdown>
                         {dropdownError ? <span className="error">{dropdownError}</span> : null}

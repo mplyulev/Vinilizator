@@ -53,14 +53,6 @@ export const RESPONSE_STATUS_SUCCESS = 200;
 
 //VINYL CONDITION - MEDIA
 export const CONDITION = {
-    abr: {
-      mint: 'M',
-      nearMint: 'NM',
-      vgPlus: 'VG+',
-      vg: 'VG',
-      good_gplus: 'G/G+',
-      poor: 'P',
-    },
     tooltips: {
         mint: `Absolutely perfect in every way. Certainly never been played, possibly even still sealed. 
                     Should be used sparingly as a grade, if at all.`,
@@ -71,12 +63,15 @@ export const CONDITION = {
                    such as any sign of slight handling. An LP cover should have no creases, folds, seam splits, cut-out holes,
                     or other noticeable similar defects. The same should be true of any other inserts, such as posters, 
                     lyric sleeves, etc.`,
-        vgPlus: `A nearly perfect record. A NM- record has more than likely never been played, and the vinyl will play
-                 perfectly, with no imperfections during playback. Many dealers won't give a grade higher than this implying (perhaps correctly) 
-                 that no record is ever truly perfect. The record should show no obvious signs of wear. A 45 RPM or EP sleeve should have no more than the most
-                  minor defects, such as any sign of slight handling. An LP cover should have no creases,
-                 folds, seam splits, cut-out holes, or other noticeable similar defects. The same should be true of any other inserts, 
-                 such as posters, lyric sleeves, etc.  `,
+        vgPlus: `Generally worth 50% of the Near Mint value. A Very Good Plus record will show some signs that it 
+        was played and otherwise handled by a previous owner who took good care of it. Defects should be more of a 
+        cosmetic nature, not affecting the actual playback as a whole. Record surfaces may show some signs of wear 
+        and may have slight scuffs or very light scratches that don't affect one's listening experiences. Slight warps
+         that do not affect the sound are "OK". The label may have some ring wear or discoloration, but it should be
+          barely noticeable. Spindle marks may be present. Picture sleeves and inner sleeves will have some slight wear,
+           slightly turned-up corners, or a slight seam split. An LP cover may have slight signs of wear, and may be marred 
+           by a cut-out hole, indentation, or cut corner. In general, if not for a couple of minor things wrong with it, 
+           this would be Near Mint.   `,
         vg: `Generally worth 25% of Near Mint value. Many of the defects found in a VG+ record will be 
     more pronounced in a VG disc. Surface noise will be evident upon playing, especially in soft passages and 
     during a song's intro and fade, but will not overpower the music otherwise. Groove wear will start to be 
@@ -95,12 +90,12 @@ export const CONDITION = {
      three seams and heavily marred by wear and writing. 
     The LP cover barely keeps the LP inside it. Inner sleeves are fully split, crinkled, and written upon.  `
     },
-    mint: 'Mint (M)',
-    nearMint: 'Near Mint (NM or M-)',
-    vgPlus: 'Very Good Plus (VG+)',
-    vg: 'Very Good (VG)',
-    good_gplus: `Good (G), Good Plus (G+)`,
-    poor: 'Poor (P), Fair (F)'
+    mint: {full: 'Mint (M)' , abr: 'M', type: 'mint'},
+    nearMint: {full: 'Near Mint (NM or M-)', abr: 'NM', type: 'nearMint'},
+    vgPlus: {full :'Very Good Plus (VG+)', abr: 'VG+', type: 'vgPlus'},
+    vg: {full: 'Very Good (VG)', abr: 'VG', type: 'vg'},
+    good_gplus: {full: 'Good (G), Good Plus (G+)', abr: 'G/G+', type: 'good_gplus'},
+    poor: {full: 'Poor (P), Fair (F)', abr: 'P/F', type: 'poor'}
 };
 
 //GENRES

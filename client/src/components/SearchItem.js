@@ -1,7 +1,14 @@
-import React, { Component } from 'react';
-import {COLLECTION_TYPE_MARKET, DOGS_SPACE_GIF_URL, TOOLTIP_DELAY_SHOW} from '../constants';
+import React, {Component, Fragment} from 'react';
+import {
+    COLLECTION_TYPE_FOR_SELL,
+    COLLECTION_TYPE_MARKET,
+    CONDITION,
+    DOGS_SPACE_GIF_URL,
+    TOOLTIP_DELAY_SHOW
+} from '../constants';
 import NoImagePlaceholder from '../assets/no-cover.png';
 import HalfVinyl from '../assets/half-vinyl.png';
+import ReactTooltip from 'react-tooltip';
 
 class SearchItem extends Component {
     constructor(props) {
@@ -32,6 +39,10 @@ class SearchItem extends Component {
         clearTimeout(this.timeout);
     }
 
+    componentDidMount() {
+        ReactTooltip.rebuild();
+    }
+
     render () {
         const {release, collectionType} = this.props;
         const title = release.title;
@@ -46,8 +57,10 @@ class SearchItem extends Component {
         const country = release.country;
         const index = title && title.indexOf("-");
         let artist = title && title.substr(0, index); // Gets the first part
+        let artistTooltip = ''
         if (collectionType) {
             artist = release.artists && release.artists.map((artist) => {
+                artistTooltip = artist.name + artist.join;
                 return (
                     <span key={artist.name}>{artist.name} {artist.join} </span>
                 )
@@ -62,44 +75,53 @@ class SearchItem extends Component {
         }
 
         return (
-            <div className="search-item-container"
-                 ref={node => this.item = node}
-                 onClick={() => this.getRelease(release.type, release.id)}>
-                {collectionType === COLLECTION_TYPE_MARKET ? <span>Sold by: {release.soldBy}</span> : null}
-                {collectionType === COLLECTION_TYPE_MARKET
-                    ? <div className="price-tag">
-                        <span>
-                            {release.condition}
-                        </span>
-                        <span>
-                            {release.price}
-                        </span>
-                </div> : null}
-                <div className="cover-wrapper">
-                    <div className="cover-fix-wrapper"><img className="search-item-cover" src={coverUrl} alt="Release cover"/></div>
-                    <img className="half-vinyl" src={HalfVinyl} alt="Release cover"/>
-                </div>
-                <div className="search-item-info-wrapper">
-                    <div className="search-item-title"
-                         data-for="search-page"
-                         data-delay-show={TOOLTIP_DELAY_SHOW}
-                         data-tip={itemTitle}>{itemTitle}</div>
-                    <div className="search-item-title"
-                         data-for="search-page"
-                         data-delay-show={TOOLTIP_DELAY_SHOW}
-                         data-tip={artist}>{artist}</div>
-                    {label ?
-                        <div className="search-item-info"
+            <Fragment>
+                <div className="search-item-container"
+                     ref={node => this.item = node}
+                     onClick={() => this.getRelease(release.type, release.id)}>
+                    {collectionType === COLLECTION_TYPE_MARKET
+                        ? <div className="selling-info">
+                            <span className="seller">Sold by: {release.soldBy}</span>
+                            <span>Price: {release.price} BGN</span>
+                            <span className="condition"
+                                  data-for="collection-page-tooltip"
+                                  data-delay-show={TOOLTIP_DELAY_SHOW}
+                                  data-tip={release.condition && CONDITION.tooltips[release.condition.type]}>
+                                Condition: {release.condition && release.condition.abr}
+                            </span>
+                            {(collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL) && release.notes
+                                ? <span className="notes">Info</span>
+                                : null}
+                        </div>
+                        : null}
+                    <div className="cover-wrapper">
+                        <div className="cover-fix-wrapper"><img className="search-item-cover" src={coverUrl}
+                                                                alt="Release cover"/></div>
+                        <img className="half-vinyl" src={HalfVinyl} alt="Release cover"/>
+                    </div>
+                    <div className="search-item-info-wrapper">
+                        <div className="search-item-title"
+                             data-for={!collectionType ? 'search-page-tooltip' : 'collection-page-tooltip'}
                              data-delay-show={TOOLTIP_DELAY_SHOW}
-                             data-for="search-page"
-                             data-tip={labelTooltip}>{label}</div> : null}
-                    {country ?
-                        <div className="search-item-info"
-                              data-for="search-page"
-                              data-delay-show={TOOLTIP_DELAY_SHOW}
-                              data-tip={country}>{country}</div> : null}
+                             data-tip={itemTitle}>{itemTitle}</div>
+                        <div className="search-item-title"
+                             data-for={!collectionType ? 'search-page-tooltip' : 'collection-page-tooltip'}
+                             data-delay-show={TOOLTIP_DELAY_SHOW}
+                             data-tip={!collectionType ? artist : artistTooltip}>{artist}</div>
+                        {label ?
+                            <div className="search-item-info"
+                                 data-delay-show={TOOLTIP_DELAY_SHOW}
+                                 data-for={!collectionType ? 'search-page-tooltip' : 'collection-page-tooltip'}
+                                 data-tip={labelTooltip}>{label}</div> : null}
+                        {country ?
+                            <div className="search-item-info"
+                                 data-for={!collectionType ? 'search-page-tooltip' : 'collection-page-tooltip'}
+                                 data-delay-show={TOOLTIP_DELAY_SHOW}
+                                 data-tip={country}>{country}</div> : null}
+                    </div>
+                    <hr className='divider'/>
                 </div>
-            </div>
+            </Fragment>
         );
     }
 }

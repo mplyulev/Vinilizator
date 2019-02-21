@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import SearchItem from "./SearchItem";
-import { DATA_TYPE_RELEASE, GENRES } from '../constants';
+import {COLLECTION_TYPE_MARKET, DATA_TYPE_RELEASE, GENRES} from '../constants';
 import ReactTooltip from 'react-tooltip';
 import { InputGroup, InputGroupAddon, Input, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
@@ -57,6 +57,10 @@ class Collection extends Component {
         this.setState({ filteredCollection: genre === GENRES.all ? data : filteredCollection });
     };
 
+    componentDidMount() {
+        ReactTooltip.rebuild();
+    }
+
     render () {
         const {
             history,
@@ -69,7 +73,7 @@ class Collection extends Component {
         } = this.props;
 
         const { filteredCollection, selectedGenre } = this.state;
-        ReactTooltip.rebuild();
+
         let genres = [];
         data.map(release => {
             release.genres && release.genres.map(style => {
@@ -94,7 +98,7 @@ class Collection extends Component {
 
         return (
             <div>
-                <ReactTooltip id="search-page" />
+                <ReactTooltip id="collection-page-tooltip" />
                 <InputGroup className="search-bar">
                     <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
                     <Input onChange={this.onChange} />
@@ -108,7 +112,7 @@ class Collection extends Component {
                         {dropdownOptions}
                     </DropdownMenu>
                 </Dropdown>
-                <div className="results-container">
+                <div className={`results-container${collectionType === COLLECTION_TYPE_MARKET ? ' market' : ''}`}>
                     {!_.isEmpty(data) && (filteredCollection || data).map(result => {
                         return (
                             <SearchItem history={history}

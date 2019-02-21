@@ -84,7 +84,7 @@ class SearchPage extends Component {
                                     <div className="loading"></div>
                                     <span className="loading-text">LOADING...</span></div>}
                             <div className="results-container">
-                                <ReactTooltip id="search-page" />
+                                <ReactTooltip id="search-page-tooltip" />
                                 {!_.isEmpty(queryResult.results) && queryResult.results.map(result => {
                                     return (
                                         <SearchItem history={history}

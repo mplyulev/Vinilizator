@@ -17,7 +17,6 @@ import Collection from './components/Collection';
 import ReleaseFull from './components/ReleaseFull';
 import Account from './components/Account';
 import SellModal from './components/SellModal';
-import ArtistFull from './components/ArtistFull';
 import Snackbar from './components/common/Snackbar';
 
 
@@ -32,7 +31,6 @@ import {
     DOGS_GET_ITEM_URL,
     DOGS_SEARCH_URL,
     RESPONSE_STATUS_SUCCESS,
-    ROUTE_ARTIST,
     ROUTE_COLLECTION,
     ROUTE_HOME,
     ROUTE_RELEASE,
@@ -215,7 +213,10 @@ class App extends Component {
             this.props.history.push(ROUTE_SIGN_IN);
         }
 
-        if (location.pathname === ROUTE_COLLECTION || location.pathname === ROUTE_WISHLIST || location.pathname === ROUTE_FOR_SELL) {
+        if (location.pathname === ROUTE_COLLECTION
+            || location.pathname === ROUTE_WISHLIST
+            || location.pathname === ROUTE_MARKET
+            || location.pathname === ROUTE_FOR_SELL) {
             let collectionType = '';
             switch (location.pathname) {
                 case ROUTE_COLLECTION:
@@ -223,6 +224,9 @@ class App extends Component {
                     break;
                 case ROUTE_WISHLIST:
                     collectionType = COLLECTION_TYPE_WISHLIST;
+                    break;
+                case ROUTE_MARKET:
+                    collectionType = COLLECTION_TYPE_MARKET;
                     break;
                 case ROUTE_FOR_SELL:
                     collectionType = COLLECTION_TYPE_COLLECTION;
@@ -280,6 +284,8 @@ class App extends Component {
                         break;
                     case COLLECTION_TYPE_FOR_SELL:
                         this.props.history.push(`${ROUTE_FOR_SELL}${ROUTE_RELEASE}/${release.id}`);
+                    case COLLECTION_TYPE_MARKET:
+                        this.props.history.push(`${ROUTE_MARKET}${ROUTE_RELEASE}/${release.id}`);
                         break;
                 }
             }, 600);

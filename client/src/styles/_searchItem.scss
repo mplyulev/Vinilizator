@@ -2,6 +2,7 @@
 
 // RELEASE
 .search-item-container {
+  position: relative;
   width: 300px;
   height: 300px;
   margin: 20px 0;
@@ -12,6 +13,47 @@
     .cover-wrapper .half-vinyl {
       margin-left: 0;
     }
+  }
+}
+
+
+.condition {
+  cursor: pointer;
+}
+
+#collection-page-tooltip {
+  max-width: 300px;
+}
+
+.divider {
+  color: black;
+}
+
+.market .search-item-container {
+  height: 350px;
+}
+
+.selling-info {
+  margin: 10px 0;
+
+  span {
+    display: block;
+    font-weight: 600;
+    line-height: 18px;
+  }
+}
+
+.price-tag {
+  position: absolute;
+  right: 100px;
+  z-index: 10;
+  width: 150px;
+  height: 150px;
+  color: white;
+
+  span {
+    font-weight: 600;
+    display: block;
   }
 }
 
