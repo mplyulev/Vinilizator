@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import SearchItem from "./SearchItem";
-import {COLLECTION_TYPE_MARKET, DATA_TYPE_RELEASE, GENRES} from '../constants';
+import {COLLECTION_TYPE_FOR_SELL, COLLECTION_TYPE_MARKET, DATA_TYPE_RELEASE, GENRES} from '../constants';
 import ReactTooltip from 'react-tooltip';
 import { InputGroup, InputGroupAddon, Input, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
@@ -112,7 +112,7 @@ class Collection extends Component {
                         {dropdownOptions}
                     </DropdownMenu>
                 </Dropdown>
-                <div className={`results-container${collectionType === COLLECTION_TYPE_MARKET ? ' market' : ''}`}>
+                <div className={`results-container${collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL ? ' bigger-height' : ''}`}>
                     {!_.isEmpty(data) && (filteredCollection || data).map(result => {
                         return (
                             <SearchItem history={history}

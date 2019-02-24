@@ -21,6 +21,12 @@
   cursor: pointer;
 }
 
+.info-icon {
+  position: relative;
+  left: 20px;
+  bottom: 2px;
+}
+
 #collection-page-tooltip {
   max-width: 300px;
 }
@@ -29,14 +35,14 @@
   color: black;
 }
 
-.market .search-item-container {
+.bigger-height .search-item-container {
   height: 350px;
 }
 
 .selling-info {
   margin: 10px 0;
 
-  span {
+  span, .condition {
     display: block;
     font-weight: 600;
     line-height: 18px;

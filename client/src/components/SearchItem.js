@@ -9,6 +9,7 @@ import {
 import NoImagePlaceholder from '../assets/no-cover.png';
 import HalfVinyl from '../assets/half-vinyl.png';
 import ReactTooltip from 'react-tooltip';
+import { FaInfoCircle } from 'react-icons/fa';
 
 class SearchItem extends Component {
     constructor(props) {
@@ -79,19 +80,22 @@ class SearchItem extends Component {
                 <div className="search-item-container"
                      ref={node => this.item = node}
                      onClick={() => this.getRelease(release.type, release.id)}>
-                    {collectionType === COLLECTION_TYPE_MARKET
+                    {collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL
                         ? <div className="selling-info">
-                            <span className="seller">Sold by: {release.soldBy}</span>
+                            { collectionType !== COLLECTION_TYPE_FOR_SELL && <span className="seller">Sold by: {release.soldBy}</span>}
                             <span>Price: {release.price} BGN</span>
-                            <span className="condition"
+                            <p className="condition"
                                   data-for="collection-page-tooltip"
                                   data-delay-show={TOOLTIP_DELAY_SHOW}
                                   data-tip={release.condition && CONDITION.tooltips[release.condition.type]}>
                                 Condition: {release.condition && release.condition.abr}
-                            </span>
-                            {(collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL) && release.notes
-                                ? <span className="notes">Info</span>
-                                : null}
+                                {(collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL) && release.notes
+                                    ? <FaInfoCircle className="info-icon"
+                                                    data-for="collection-page-tooltip"
+                                                    data-delay-show={TOOLTIP_DELAY_SHOW}
+                                                    data-tip={release.notes}></FaInfoCircle>
+                                    : null}
+                            </p>
                         </div>
                         : null}
                     <div className="cover-wrapper">
