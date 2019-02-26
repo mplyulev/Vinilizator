@@ -14,7 +14,7 @@ import {
     ROUTE_SEARCH,
     ROUTE_SIGN_IN,
     ROUTE_ACCOUNT,
-    ROUTE_FOR_SELL, ROUTE_MARKET
+    ROUTE_FOR_SELL, ROUTE_MARKET, ROUTE_USERS
 } from '../constants';
 
 function AppNavBar(props) {
@@ -50,6 +50,10 @@ function AppNavBar(props) {
                         <NavLink to={ROUTE_ACCOUNT}
                                  activeClassName="selected">
                             ACCOUNT
+                        </NavLink>
+                        <NavLink to={ROUTE_USERS}
+                                 activeClassName="selected">
+                            USERS
                         </NavLink>
                         <a href={ROUTE_SIGN_IN} onClick={props.logout}>
                             LOGOUT

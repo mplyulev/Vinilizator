@@ -1,0 +1,13 @@
+.users-wrapper {
+  padding: 30px;
+
+  .user {
+    font-weight: 900;
+    color: $font-color-black;
+    cursor: pointer;
+    
+    span {
+      display: block;
+    }
+  }
+}

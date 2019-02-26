@@ -3,13 +3,14 @@ import { Button } from 'reactstrap/dist/reactstrap.es'
 import axios from 'axios';
 
 import {
-    COLLECTION_TYPE_COLLECTION, CONDITION,
+    COLLECTION_TYPE_COLLECTION, COLLECTION_TYPE_FOR_SELL, COLLECTION_TYPE_MARKET, CONDITION,
     RESPONSE_STATUS_SUCCESS,
     ROUTE_COLLECTION, ROUTE_FOR_SELL,
     ROUTE_WISHLIST,
     SNACKBAR_TYPE_FAIL,
-    SNACKBAR_TYPE_SUCCESS
+    SNACKBAR_TYPE_SUCCESS, TOOLTIP_DELAY_SHOW
 } from '../constants';
+import {FaInfoCircle} from "react-icons/fa";
 
 class ReleaseFull extends Component {
     addToCollection = (release) => {
@@ -167,14 +168,19 @@ class ReleaseFull extends Component {
         return (
             <Fragment>
                 <div className="release-data-container">
-                    {isInMarket ?
+                    {isInMarket || isForSell ?
                         <div className="selling-info">
                             <span className="seller">Sold by: {release.soldBy}</span>
                             <span>Price: {release.price} BGN</span>
-                            <span data-for="search-item-tooltip"
-                                  data-tip={release.condition && CONDITION.tooltips[release.condition.type]}>
+                            <p className="condition"
+                               data-for="collection-page-tooltip"
+                               data-delay-show={TOOLTIP_DELAY_SHOW}
+                               data-tip={release.condition && CONDITION.tooltips[release.condition.type]}>
                                 Condition: {release.condition && release.condition.abr}
-                            </span>
+                                {(isForSell || isInMarket) && release.notes
+                                    ? <p>Item info: {release.notes}</p>
+                                    : null}
+                            </p>
                         </div>
                         : null}
                     {images && <img className="release-cover" onClick={() => openLightbox(images)} src={images[0]}/>}
@@ -274,7 +280,7 @@ class ReleaseFull extends Component {
                         {isInMarket ?
                             <Fragment>
                                 <Button color="success" className="add-button"
-                                        onClick={() => this.removeFromSell(release)}>
+                                        onClick={() => console.log('asd')}>
                                     Message {release.soldBy}
                                 </Button>
                             </Fragment>

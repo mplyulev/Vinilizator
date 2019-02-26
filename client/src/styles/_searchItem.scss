@@ -18,6 +18,7 @@
 
 
 .condition {
+  margin-bottom: 0rem;
   cursor: pointer;
 }
 
@@ -45,6 +46,7 @@
   span, .condition {
     display: block;
     font-weight: 600;
+    color: $font-color-black;
     line-height: 18px;
   }
 }

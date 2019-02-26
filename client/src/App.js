@@ -44,10 +44,11 @@ import {
     ROUTE_MARKET,
     COLLECTION_TYPE_MARKET,
     SNACKBAR_TYPE_SUCCESS,
-    SNACKBAR_TYPE_FAIL
+    SNACKBAR_TYPE_FAIL, ROUTE_USERS
 } from './constants';
 import Authentication from "./components/Authentication";
 import LightboxWrapper from './components/common/LightboxWrapper';
+import Users from "./components/Users";
 
 const AppContext = React.createContext();
 
@@ -213,6 +214,10 @@ class App extends Component {
             this.props.history.push(ROUTE_SIGN_IN);
         }
 
+        if (location.pathname === ROUTE_USERS) {
+            this.getUsers();
+        }
+
         if (location.pathname === ROUTE_COLLECTION
             || location.pathname === ROUTE_WISHLIST
             || location.pathname === ROUTE_MARKET
@@ -266,6 +271,17 @@ class App extends Component {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.setState({
                         market: res.data.collection
+                    });
+                }
+            });
+    };
+
+    getUsers = () => {
+        axios.get('/api/controllers/collection/getUsers')
+            .then((res) => {
+                if (res.status === RESPONSE_STATUS_SUCCESS) {
+                    this.setState({
+                        users: res.data.users
                     });
                 }
             });
@@ -368,6 +384,10 @@ class App extends Component {
             this.getMarket();
         }
 
+        if (nextPath === ROUTE_USERS && prevPath !== nextPath) {
+            this.getUsers();
+        }
+
         const { searchQuery, token, lastRequestedRoute } = this.state;
         if (prevState.token !== token && lastRequestedRoute !== ROUTE_SIGN_IN) {
             this.props.history.push(lastRequestedRoute || ROUTE_HOME);
@@ -402,7 +422,7 @@ class App extends Component {
             snackbarOptions,
             vinylCollection,
             wishlist,
-            forSale,
+            users,
             market,
             isNavBarOpened,
             isSellModalOpened
@@ -523,6 +543,8 @@ class App extends Component {
                             <Route path={ROUTE_ACCOUNT}
                                    render={() => <Account openSnackbar={this.openSnackbar}/>}/>
                             <Route exact path="/404" render={() => null}/>
+                            <Route path={`${ROUTE_USERS}`}
+                                   render={() => <Users users={users}/>}/>
                             <Redirect to="/404"/>
                         </Switch>
                         <Snackbar snackbarOptions={snackbarOptions} closeSnackbar={this.closeSnackbar}/>

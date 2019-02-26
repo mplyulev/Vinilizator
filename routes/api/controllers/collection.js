@@ -13,7 +13,6 @@ router.get('/getCollection', function(req, res) {
     });
 });
 
-
 //Get all selling vinyls from all users
 router.get('/getMarket', function(req, res) {
     let allSelling = [];
@@ -27,6 +26,13 @@ router.get('/getMarket', function(req, res) {
         });
 
         res.send({ success: true, collection: allSelling});
+    });
+});
+
+//Get all selling vinyls from all users
+router.get('/getUsers', function(req, res) {
+    User.find({}, function(err, result) {
+        res.send({ success: true, users: result});
     });
 });
 

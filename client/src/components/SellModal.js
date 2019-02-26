@@ -60,7 +60,6 @@ class SellModal extends React.Component {
     }
 
     renderDropdownItem = (condition) => {
-        console.log('asd', condition);
         return (
             <DropdownItem data-for="sell-modal"
                           // data-tip={tooltip}

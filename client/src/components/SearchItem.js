@@ -90,11 +90,11 @@ class SearchItem extends Component {
                                   data-tip={release.condition && CONDITION.tooltips[release.condition.type]}>
                                 Condition: {release.condition && release.condition.abr}
                                 {(collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL) && release.notes
-                                    ? <FaInfoCircle className="info-icon"
-                                                    data-for="collection-page-tooltip"
-                                                    data-delay-show={TOOLTIP_DELAY_SHOW}
-                                                    data-tip={release.notes}></FaInfoCircle>
-                                    : null}
+                                ? <FaInfoCircle className="info-icon"
+                                                data-for="collection-page-tooltip"
+                                                data-delay-show={TOOLTIP_DELAY_SHOW}
+                                                data-tip={release.notes}></FaInfoCircle>
+                                : null}
                             </p>
                         </div>
                         : null}

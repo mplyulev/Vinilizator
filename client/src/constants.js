@@ -20,12 +20,10 @@ export const ROUTE_SEARCH = '/search';
 export const ROUTE_COLLECTION = '/collection';
 export const ROUTE_WISHLIST = '/wishlist';
 export const ROUTE_RELEASE = '/release';
-export const ROUTE_MASTER = '/master';
-export const ROUTE_LABEL = '/label';
-export const ROUTE_ARTIST = '/artist';
 export const ROUTE_ACCOUNT = '/account';
 export const ROUTE_FOR_SELL = '/sell';
 export const ROUTE_MARKET = '/market';
+export const ROUTE_USERS = '/users';
 
 //COMMON
 export const PAGINATION_WIDTH = 215;
