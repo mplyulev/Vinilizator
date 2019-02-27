@@ -96,14 +96,41 @@ export const CONDITION = {
     poor: {full: 'Poor (P), Fair (F)', abr: 'P/F', type: 'poor'}
 };
 
+//DROPDOWN TYPES
+export const GENRE_DROPDOWN = 'genre';
+export const STYLE_DROPDOWN = 'style';
+
 //GENRES
 export const GENRES = {
     all: 'All Genres',
-    blues: 'Blues',
-    brass_military: 'Brass & Military',
-    children: "Children's",
-    classical: 'Classical',
-    electronic: 'Electronic',
+    blues: {name: 'Blues', styles:
+            ['Acid Rock', 'Boogie Woogie', 'Chicago Blues', 'Country Blues',
+            'Delta Blues', 'East Coast Blues', 'Electric Blues', 'Harmonica Blues',
+            'Jump Blues', 'Louisiana Blues', 'Modern Electric Blues', 'Piano Blues',
+            'Piedmont Blues', 'Texas Blues']},
+    brass_military: {name: 'Brass & Military', styles: ['Brass Band', 'Marches', 'Military', 'Pipe & Drum']},
+    children: {name: "Children's", styles: ['Educational', 'Nursery Rhymes', 'Story']},
+    classical: {name: 'Classical', styles:
+            ['Baroque', 'Classical', 'Contemporary', 'Early',
+            'Fusion', 'Gospel', 'Impressionists', 'Medieval',
+            'Modern', 'Neo-Classical', 'Neo-Romantic', 'Opera', 'Operetta',
+            'Post-Modern', 'Renaissance', 'Romantic', 'Serial', 'Twelve-tone']},
+    electronic: {name: 'Electronic', styles:
+            ['Abstract', 'Acid', 'Acid House', 'Acid Jazz', 'Ambient',
+            'Baltimore Club', 'Bass Music', 'Beatdown', 'Berlin-School',
+            'Big Beat', 'Breakbeat', 'Breakcore', 'Breaks', 'Broken Beat',
+            'Chiptune', 'Dance-pop', 'Dark Ambient', 'Deep House', 'Deep Techno',
+            'Donk', 'Doomcore', 'Downtepmo', 'Drone', 'Drum n Bass', 'Dub Techno',
+            'Dubstep', 'EBM', 'Electro House', 'Euro House', 'Euro-Disco', 'Eurodance',
+            'Freestyle', 'Future Jazz', 'Gabber', 'Garage House', 'Ghetto', 'Ghetto House',
+            'Ghettotech', 'Glitch', 'Goa Trance', 'Happy Hardcore', 'Hard House',
+            'Hard Techno', 'Hard Trance', 'Hardstyle', 'Hip Hop', 'Hip-House',
+            'House', 'IDM', 'Industrial', 'Italo House', 'Italodance', 'Italo-Disco',
+            'Jazzdance', 'Juke', 'Jumpstyle', 'Jungle', 'Latin', 'Leftfield', 'Makina',
+            'Minimal', 'Minimal Techno', 'Nerdcore Techno', 'New Age', 'New Beat',
+            'Noise', 'Power Electronics', 'Progressive House', 'Progressive Trance',
+            'Psy-Trance', 'Schranz', 'Speedcore', 'Synth-pop', 'Tech House',
+            'Techno', 'Trance', 'Tribal', 'Tribal House', 'Trip Hop', 'UK Garage', 'Witch House']},
     funl_country_world: 'Folk, World, & Country',
     funk_soul: 'Funk / Soul',
     hip_hop: 'Hip-Hop',

@@ -34,7 +34,7 @@ class Users extends Component {
 
     render () {
         const { users } = this.props;
-        console.log(users);
+
         return (
             <Fragment>
                 <div className="users-wrapper">

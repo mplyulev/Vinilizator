@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import SearchItem from "./SearchItem";
-import {COLLECTION_TYPE_FOR_SELL, COLLECTION_TYPE_MARKET, DATA_TYPE_RELEASE, GENRES} from '../constants';
+import {
+    COLLECTION_TYPE_FOR_SELL,
+    COLLECTION_TYPE_MARKET,
+    DATA_TYPE_RELEASE,
+    GENRE_DROPDOWN,
+    GENRES, STYLE_DROPDOWN
+} from '../constants';
 import ReactTooltip from 'react-tooltip';
 import { InputGroup, InputGroupAddon, Input, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
@@ -12,8 +18,10 @@ class Collection extends Component {
         this.state = {
             searchQuery: '',
             filteredCollection: null,
-            dropdownOpen: false,
-            selectedGenre: ''
+            isGenreDropdownOpen: false,
+            isStyleDropdownOpen: false,
+            selectedGenre: '',
+            selectedStyle: ''
         };
     }
 
@@ -37,17 +45,23 @@ class Collection extends Component {
         }
 
         if (searchQuery.length === 1 && selectedGenre) {
-            this.setSelected(selectedGenre);
+            this.setSelectedGenre(selectedGenre);
         }
     };
 
-    toggle = () => {
-        this.setState(prevState => ({
-            dropdownOpen: !prevState.dropdownOpen
-        }));
+    toggle = (type) => {
+        type === GENRE_DROPDOWN
+            ? this.setState(prevState => ({
+                isGenreDropdownOpen: !prevState.isGenreDropdownOpen,
+                isStyleDropdownOpen: false
+            }))
+            : this.setState(prevState => ({
+                isStyleDropdownOpen: !prevState.isStyleDropdownOpen,
+                isGenreDropdownOpen: false,
+            }));
     };
 
-    setSelected = (genre) => {
+    setSelectedGenre = (genre) => {
         const { data } = this.props;
         this.setState({ selectedGenre: genre });
         const filteredCollection = data.filter(vinyl =>
@@ -55,6 +69,16 @@ class Collection extends Component {
         );
 
         this.setState({ filteredCollection: genre === GENRES.all ? data : filteredCollection });
+    };
+
+    setSelectedStyle = (style) => {
+        const { data } = this.props;
+        this.setState({ selectedStyle: style });
+        const filteredCollection = data.filter(vinyl =>
+            vinyl.styles.includes(style)
+        );
+
+        // this.setState({ filteredCollection: genre === GENRES.all ? data : filteredCollection });
     };
 
     componentDidMount() {
@@ -72,7 +96,7 @@ class Collection extends Component {
             collectionType
         } = this.props;
 
-        const { filteredCollection, selectedGenre } = this.state;
+        const { filteredCollection, selectedGenre, selectedStyle } = this.state;
 
         let genres = [];
         data.map(release => {
@@ -82,19 +106,27 @@ class Collection extends Component {
         });
 
         const representedGenres = [...new Set(genres)];
-        const dropdownOptions = representedGenres.map(genre =>
+        const genreDropdownOptions = representedGenres.map(genre =>
             <DropdownItem className={selectedGenre === genre ? 'selected' : ''}
-                          onClick={(event) => this.setSelected(event.target.innerText)}
+                          onClick={(event) => this.setSelectedGenre(event.target.innerText)}
                           value={genre}>
                 {genre}
             </DropdownItem>
         );
 
-        dropdownOptions.unshift(<DropdownItem className={selectedGenre === GENRES.all ? 'selected' : ''}
-                                              onClick={(event) => this.setSelected(event.target.innerText)}
+        genreDropdownOptions.unshift(<DropdownItem className={selectedGenre === GENRES.all ? 'selected' : ''}
+                                              onClick={(event) => this.setSelectedGenre(event.target.innerText)}
                                               value={GENRES.all}>
             {GENRES.all}
         </DropdownItem>);
+        console.log(selectedGenre);
+        const styleDropdownOptions = selectedGenre && GENRES[selectedGenre.toLowerCase()].styles.map(style =>
+            <DropdownItem className={selectedStyle === style ? 'selected' : ''}
+                          onClick={(event) => this.setSelectedStyle(event.target.innerText)}
+                          value={style}>
+                {style}
+            </DropdownItem>
+        );
 
         return (
             <div>
@@ -103,13 +135,22 @@ class Collection extends Component {
                     <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
                     <Input onChange={this.onChange} />
                 </InputGroup>
-                <Dropdown isOpen={this.state.dropdownOpen}
-                          toggle={this.toggle}>
+                <Dropdown isOpen={this.state.isGenreDropdownOpen}
+                          toggle={() => this.toggle(GENRE_DROPDOWN)}>
                     <DropdownToggle caret>
                         {selectedGenre || 'Filter by genre'}
                     </DropdownToggle>
                     <DropdownMenu>
-                        {dropdownOptions}
+                        {genreDropdownOptions}
+                    </DropdownMenu>
+                </Dropdown>
+                <Dropdown isOpen={this.state.isStyleDropdownOpen}
+                          toggle={() => this.toggle(STYLE_DROPDOWN)}>
+                    <DropdownToggle caret>
+                        {selectedStyle || 'Filter by style'}
+                    </DropdownToggle>
+                    <DropdownMenu>
+                        {styleDropdownOptions}
                     </DropdownMenu>
                 </Dropdown>
                 <div className={`results-container${collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL ? ' bigger-height' : ''}`}>
