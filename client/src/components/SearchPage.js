@@ -50,8 +50,8 @@ class SearchPage extends Component {
 
         ReactTooltip.rebuild();
 
-        const dropdownOptions = Object.keys(GENRES).map(key =>
-            <DropdownItem value={key}>{GENRES[key]}</DropdownItem>
+        const dropdownOptions = Object.keys(GENRES).map(genre =>
+            <DropdownItem value={genre}>{GENRES.name}</DropdownItem>
         );
 
         return (

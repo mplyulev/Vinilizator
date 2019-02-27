@@ -7,7 +7,7 @@
     <list default="true" id="5b8da01a-7da7-42f1-97ac-40f37681adb4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/Collection.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Collection.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/Users.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Users.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/SearchPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/SearchPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/constants.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -53,32 +53,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/src/components/Account.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-4">
+            <state relative-caret-position="22">
               <caret line="70" column="61" lean-forward="true" selection-start-line="70" selection-start-column="61" selection-end-line="70" selection-end-column="61" />
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/src/components/Users.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="37" selection-start-line="37" selection-end-line="37" />
-              <folding>
-                <element signature="e#0#49#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/src/styles/_users.scss">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="220">
-              <caret line="10" column="5" lean-forward="true" selection-start-line="10" selection-start-column="5" selection-end-line="10" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -107,8 +86,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/src/constants.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="100" column="38" selection-start-line="100" selection-start-column="38" selection-end-line="100" selection-end-column="38" />
+            <state relative-caret-position="287">
+              <caret line="145" column="39" selection-start-line="145" selection-start-column="39" selection-end-line="145" selection-end-column="39" />
             </state>
           </provider>
         </entry>
@@ -116,20 +95,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client/src/components/Collection.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="147" column="66" selection-start-line="147" selection-start-column="66" selection-end-line="147" selection-end-column="66" />
+            <state relative-caret-position="177">
+              <caret line="70" column="125" selection-start-line="70" selection-start-column="125" selection-end-line="70" selection-end-column="125" />
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/routes/api/controllers/collection.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="397">
-              <caret line="33" selection-start-line="33" selection-end-line="33" />
             </state>
           </provider>
         </entry>
@@ -138,11 +108,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>!collectionType</find>
-      <find>reac</find>
-      <find>artist</find>
-      <find>icons</find>
-      <find>conditi</find>
       <find>span</find>
       <find>market</find>
       <find>Release</find>
@@ -158,16 +123,21 @@
       <find>renderDr</find>
       <find>.map</find>
       <find>push</find>
-      <find>componentDidMount</find>
       <find>get</find>
       <find>dr</find>
-      <find>GENRES</find>
       <find>gedropdownOptions</find>
       <find>dropdownOptions</find>
       <find>setSelected</find>
       <find>dropdownOpen</find>
-      <find>genres</find>
       <find>toggle</find>
+      <find>GENRES</find>
+      <find>dropd</find>
+      <find>componentDidMount</find>
+      <find>ALL</find>
+      <find>represen</find>
+      <find>genres</find>
+      <find>GENRE</find>
+      <find>GENRES.all</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -200,7 +170,6 @@
         <option value="$PROJECT_DIR$/routes/api/config/passport.js" />
         <option value="$PROJECT_DIR$/client/src/styles/account.scss" />
         <option value="$PROJECT_DIR$/client/src/components/SignIn.js" />
-        <option value="$PROJECT_DIR$/client/src/components/Account.js" />
         <option value="$PROJECT_DIR$/client/src/components/Authentication.js" />
         <option value="$PROJECT_DIR$/client/src/styles/_authentication.scss" />
         <option value="$PROJECT_DIR$/routes/api/controllers/authentication.js" />
@@ -214,7 +183,6 @@
         <option value="$PROJECT_DIR$/client/src/styles/_searchPage.scss" />
         <option value="$PROJECT_DIR$/client/src/styles/_release.scss" />
         <option value="$PROJECT_DIR$/client/src/styles/_common.scss" />
-        <option value="$PROJECT_DIR$/client/src/components/SearchPage.js" />
         <option value="$PROJECT_DIR$/client/src/styles/_searchItem.scss" />
         <option value="$PROJECT_DIR$/client/src/components/ReleaseFull.js" />
         <option value="$PROJECT_DIR$/client/src/components/SearchItem.js" />
@@ -225,6 +193,8 @@
         <option value="$PROJECT_DIR$/client/src/styles/App.scss" />
         <option value="$PROJECT_DIR$/client/src/styles/_users.scss" />
         <option value="$PROJECT_DIR$/client/src/components/Users.js" />
+        <option value="$PROJECT_DIR$/client/src/components/Account.js" />
+        <option value="$PROJECT_DIR$/client/src/components/SearchPage.js" />
         <option value="$PROJECT_DIR$/client/src/constants.js" />
         <option value="$PROJECT_DIR$/client/src/components/Collection.js" />
       </list>
@@ -346,12 +316,12 @@
       <workItem from="1548884412652" duration="19404000" />
       <workItem from="1551023175689" duration="2975000" />
       <workItem from="1551182043189" duration="603000" />
-      <workItem from="1551192366595" duration="8403000" />
+      <workItem from="1551192366595" duration="13922000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="405012000" />
+    <option name="totallyTimeSpent" value="410531000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -653,13 +623,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/components/SearchPage.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="451">
-          <caret line="89" column="45" selection-start-line="89" selection-start-column="45" selection-end-line="89" selection-end-column="45" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/client/src/components/SearchItem.js">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -674,16 +637,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="308">
           <caret line="55" column="33" selection-start-line="55" selection-start-column="33" selection-end-line="55" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/components/Account.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4">
-          <caret line="70" column="61" lean-forward="true" selection-start-line="70" selection-start-column="61" selection-end-line="70" selection-end-column="61" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -711,10 +664,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/styles/_users.scss">
+    <entry file="file://$PROJECT_DIR$/routes/api/controllers/collection.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="10" column="5" lean-forward="true" selection-start-line="10" selection-start-column="5" selection-end-line="10" selection-end-column="5" />
+        <state relative-caret-position="397">
+          <caret line="33" selection-start-line="33" selection-end-line="33" />
         </state>
       </provider>
     </entry>
@@ -728,24 +681,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/api/controllers/collection.js">
+    <entry file="file://$PROJECT_DIR$/client/src/components/Account.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="397">
-          <caret line="33" selection-start-line="33" selection-end-line="33" />
+        <state relative-caret-position="22">
+          <caret line="70" column="61" lean-forward="true" selection-start-line="70" selection-start-column="61" selection-end-line="70" selection-end-column="61" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/styles/_users.scss">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="10" column="5" lean-forward="true" selection-start-line="10" selection-start-column="5" selection-end-line="10" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/components/SearchPage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="51" lean-forward="true" selection-start-line="51" selection-end-line="51" />
+          <folding>
+            <element signature="e#0#51#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client/src/constants.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="100" column="38" selection-start-line="100" selection-start-column="38" selection-end-line="100" selection-end-column="38" />
+        <state relative-caret-position="287">
+          <caret line="145" column="39" selection-start-line="145" selection-start-column="39" selection-end-line="145" selection-end-column="39" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client/src/components/Collection.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="147" column="66" selection-start-line="147" selection-start-column="66" selection-end-line="147" selection-end-column="66" />
+        <state relative-caret-position="177">
+          <caret line="70" column="125" selection-start-line="70" selection-start-column="125" selection-end-line="70" selection-end-column="125" />
           <folding>
             <element signature="e#0#41#0" expanded="true" />
           </folding>

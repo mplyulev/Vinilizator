@@ -6,7 +6,7 @@ import {
     COLLECTION_TYPE_MARKET,
     DATA_TYPE_RELEASE,
     GENRE_DROPDOWN,
-    GENRES, STYLE_DROPDOWN
+    GENRES, STYLE_DROPDOWN, STYLES_ALL
 } from '../constants';
 import ReactTooltip from 'react-tooltip';
 import { InputGroup, InputGroupAddon, Input, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
@@ -68,17 +68,21 @@ class Collection extends Component {
             vinyl.genres.includes(genre)
         );
 
-        this.setState({ filteredCollection: genre === GENRES.all ? data : filteredCollection });
+        this.setState({ filteredCollection: genre === GENRES.all ? data : filteredCollection, selectedStyle: 'Filter by style' });
     };
 
     setSelectedStyle = (style) => {
         const { data } = this.props;
         this.setState({ selectedStyle: style });
-        const filteredCollection = data.filter(vinyl =>
+        const filteredCollection = (this.state.filteredCollection || data).filter(vinyl =>
             vinyl.styles.includes(style)
         );
 
-        // this.setState({ filteredCollection: genre === GENRES.all ? data : filteredCollection });
+        if (this.state.selectedGenre && this.state.selectedGenre !== GENRES.all && style === STYLES_ALL) {
+            this.setSelectedGenre(this.state.selectedGenre);
+        } else {
+            this.setState({ filteredCollection: style === STYLES_ALL ? data : filteredCollection });
+        }
     };
 
     componentDidMount() {
@@ -99,13 +103,23 @@ class Collection extends Component {
         const { filteredCollection, selectedGenre, selectedStyle } = this.state;
 
         let genres = [];
+        let styles = [];
+
         data.map(release => {
-            release.genres && release.genres.map(style => {
-                genres.push(style);
+            release.genres && release.genres.map(genre => {
+                genres.push(genre);
+            });
+        });
+
+        (filteredCollection || data).map(release => {
+            release.styles && release.styles.map(style => {
+                styles.push(style);
             });
         });
 
         const representedGenres = [...new Set(genres)];
+        const representedStyles = [...new Set(styles)];
+
         const genreDropdownOptions = representedGenres.map(genre =>
             <DropdownItem className={selectedGenre === genre ? 'selected' : ''}
                           onClick={(event) => this.setSelectedGenre(event.target.innerText)}
@@ -115,25 +129,48 @@ class Collection extends Component {
         );
 
         genreDropdownOptions.unshift(<DropdownItem className={selectedGenre === GENRES.all ? 'selected' : ''}
-                                              onClick={(event) => this.setSelectedGenre(event.target.innerText)}
-                                              value={GENRES.all}>
+                                                   key={GENRES.all}
+                                                   onClick={(event) => this.setSelectedGenre(event.target.innerText)}
+                                                   value={GENRES.all}>
             {GENRES.all}
         </DropdownItem>);
-        console.log(selectedGenre);
-        const styleDropdownOptions = selectedGenre && GENRES[selectedGenre.toLowerCase()].styles.map(style =>
+
+        const styleDropdownOptions = representedStyles.map(style =>
             <DropdownItem className={selectedStyle === style ? 'selected' : ''}
+                          key={style}
                           onClick={(event) => this.setSelectedStyle(event.target.innerText)}
                           value={style}>
                 {style}
             </DropdownItem>
         );
 
+        styleDropdownOptions.unshift(<DropdownItem className={selectedStyle === STYLES_ALL ? 'selected' : ''}
+                                                   onClick={(event) => this.setSelectedStyle(event.target.innerText)}
+                                                   key={STYLES_ALL}
+                                                   value={STYLES_ALL}>
+            {STYLES_ALL}
+        </DropdownItem>);
+
+
+        // styleDropdownOptions = selectedGenre && selectedGenre !== GENRES.all
+        //     && GENRES[selectedGenre.toLowerCase()].styles.map(style =>
+        //         <DropdownItem className={selectedStyle === style ? 'selected' : ''}
+        //                       onClick={(event) => this.setSelectedStyle(event.target.innerText)}
+        //                       value={style}>
+        //             {style}
+        //         </DropdownItem>
+        // );
+        //
+        // if (selectedGenre === GENRES.all) {
+        //
+        // }
+
         return (
             <div>
-                <ReactTooltip id="collection-page-tooltip" />
+                <ReactTooltip id="collection-page-tooltip"/>
                 <InputGroup className="search-bar">
                     <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
-                    <Input onChange={this.onChange} />
+                    <Input onChange={this.onChange}/>
                 </InputGroup>
                 <Dropdown isOpen={this.state.isGenreDropdownOpen}
                           toggle={() => this.toggle(GENRE_DROPDOWN)}>
@@ -153,7 +190,8 @@ class Collection extends Component {
                         {styleDropdownOptions}
                     </DropdownMenu>
                 </Dropdown>
-                <div className={`results-container${collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL ? ' bigger-height' : ''}`}>
+                <div
+                    className={`results-container${collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL ? ' bigger-height' : ''}`}>
                     {!_.isEmpty(data) && (filteredCollection || data).map(result => {
                         return (
                             <SearchItem history={history}

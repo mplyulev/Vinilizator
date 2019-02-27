@@ -142,3 +142,5 @@ export const GENRES = {
     rock: 'Rock',
     stage: 'Stage & Screen'
 };
+
+export const STYLES_ALL = 'All Styles';
