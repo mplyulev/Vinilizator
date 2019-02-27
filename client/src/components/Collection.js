@@ -20,6 +20,7 @@ class Collection extends Component {
             filteredCollection: null,
             isGenreDropdownOpen: false,
             isStyleDropdownOpen: false,
+            filteredByGenre: null,
             selectedGenre: '',
             selectedStyle: ''
         };
@@ -27,7 +28,7 @@ class Collection extends Component {
 
     onChange = (event) => {
         const { data } = this.props;
-        const { filteredCollection, searchQuery, selectedGenre } = this.state;
+        const { filteredCollection, searchQuery, selectedGenre, selectedStyle } = this.state;
         this.setState({ searchQuery: event.target.value.split(' ').join('')});
 
         const dataForFiltering = filteredCollection || data;
@@ -41,11 +42,17 @@ class Collection extends Component {
         });
 
         if (newFiltered.length > 0) {
+            console.log('mek');
             this.setState({ filteredCollection : newFiltered });
         }
 
-        if (searchQuery.length === 1 && selectedGenre) {
-            this.setSelectedGenre(selectedGenre);
+        if (searchQuery.length === 1 && (selectedGenre || selectedStyle)) {
+            selectedGenre ? this.setSelectedGenre(selectedGenre) : this.setSelectedStyle(selectedStyle);
+            console.log('sek');
+            if (selectedGenre && selectedStyle) {
+                this.setSelectedStyle(selectedGenre);
+                this.setSelectedStyle(selectedStyle);
+            }
         }
     };
 
@@ -68,13 +75,17 @@ class Collection extends Component {
             vinyl.genres.includes(genre)
         );
 
-        this.setState({ filteredCollection: genre === GENRES.all ? data : filteredCollection, selectedStyle: 'Filter by style' });
+        this.setState({
+            filteredCollection: genre === GENRES.all ? data : filteredCollection,
+            filteredByGenre: genre === GENRES.all ? data : filteredCollection,
+            selectedStyle: 'Filter by style'
+        });
     };
 
     setSelectedStyle = (style) => {
         const { data } = this.props;
         this.setState({ selectedStyle: style });
-        const filteredCollection = (this.state.filteredCollection || data).filter(vinyl =>
+        const filteredCollection = (this.state.filteredByGenre || data).filter(vinyl =>
             vinyl.styles.includes(style)
         );
 
@@ -100,7 +111,7 @@ class Collection extends Component {
             collectionType
         } = this.props;
 
-        const { filteredCollection, selectedGenre, selectedStyle } = this.state;
+        const { filteredCollection, selectedGenre, selectedStyle, filteredByGenre } = this.state;
 
         let genres = [];
         let styles = [];
@@ -111,7 +122,7 @@ class Collection extends Component {
             });
         });
 
-        (filteredCollection || data).map(release => {
+        (filteredByGenre || data).map(release => {
             release.styles && release.styles.map(style => {
                 styles.push(style);
             });
@@ -122,6 +133,7 @@ class Collection extends Component {
 
         const genreDropdownOptions = representedGenres.map(genre =>
             <DropdownItem className={selectedGenre === genre ? 'selected' : ''}
+                          key={genre}
                           onClick={(event) => this.setSelectedGenre(event.target.innerText)}
                           value={genre}>
                 {genre}
@@ -150,20 +162,6 @@ class Collection extends Component {
                                                    value={STYLES_ALL}>
             {STYLES_ALL}
         </DropdownItem>);
-
-
-        // styleDropdownOptions = selectedGenre && selectedGenre !== GENRES.all
-        //     && GENRES[selectedGenre.toLowerCase()].styles.map(style =>
-        //         <DropdownItem className={selectedStyle === style ? 'selected' : ''}
-        //                       onClick={(event) => this.setSelectedStyle(event.target.innerText)}
-        //                       value={style}>
-        //             {style}
-        //         </DropdownItem>
-        // );
-        //
-        // if (selectedGenre === GENRES.all) {
-        //
-        // }
 
         return (
             <div>
