@@ -58,7 +58,7 @@ class SearchPage extends Component {
             <div>
                 <InputGroup className="search-bar">
                     <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
-                    <Input onChange={this.onChange} placeholder={searchQueryString} />
+                    <Input onChange={this.onChange} placeholder={searchQueryString}/>
                 </InputGroup>
                 <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                     <DropdownToggle caret>
@@ -70,22 +70,25 @@ class SearchPage extends Component {
                 </Dropdown>
                 {queryResult.pagination.pages > 1 && <Pagination getNextPageResult={getNextPageResult}
                                                                  isVisible={!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1}
-                                                                 data={queryResult.pagination} />
+                                                                 data={queryResult.pagination}/>
                 }
                 <Fragment>
-                    {!_.isEmpty(queryResult.results) && queryResult.results.length >= 1 ?
                         <div className="search-result-container">
-                            {!requestPending
-                                ? <div className="filter-container">
-                                    <span
-                                        className="result-filter no-pointer">Results: {queryResult.pagination.items}</span>
-                                </div>
-                                : <div className='filter-container '>
-                                    <div className="loading"></div>
-                                    <span className="loading-text">LOADING...</span></div>}
+                            {!_.isEmpty(queryResult.results) && <div className="filter-container">
+                                <span className="result-filter no-pointer">
+                                    Results: {queryResult.pagination.items}
+                                </span>
+                            </div>}
                             <div className="results-container">
-                                <ReactTooltip id="search-page-tooltip" />
-                                {!_.isEmpty(queryResult.results) && queryResult.results.map(result => {
+                                {requestPending ?
+                                    <div className="loader-wrapper">
+                                        <div className="loading"></div>
+                                        <span className="loading-text">LOADING...</span>
+                                    </div>
+                                    : null
+                                }
+                                <ReactTooltip id="search-page-tooltip"/>
+                                {!requestPending && !_.isEmpty(queryResult.results) && queryResult.results.map(result => {
                                     return (
                                         <SearchItem history={history}
                                                     release={result}
@@ -98,13 +101,11 @@ class SearchPage extends Component {
                                 })
                                 }
                             </div>
-                            <Pagination getNextPageResult={getNextPageResult}
+                            {!requestPending && <Pagination getNextPageResult={getNextPageResult}
                                         isInBottom={true}
                                         isVisible={!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1}
-                                        data={queryResult.pagination} />
+                                        data={queryResult.pagination}/>}
                         </div>
-                        : null
-                    }
                 </Fragment>
             </div>
         );

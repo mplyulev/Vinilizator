@@ -42,18 +42,20 @@ class Collection extends Component {
         });
 
         if (newFiltered.length > 0) {
-            console.log('mek');
             this.setState({ filteredCollection : newFiltered });
         }
 
         if (searchQuery.length === 1 && (selectedGenre || selectedStyle)) {
+            console.log('asd1', selectedStyle, selectedGenre)
             selectedGenre ? this.setSelectedGenre(selectedGenre) : this.setSelectedStyle(selectedStyle);
-            console.log('sek');
             if (selectedGenre && selectedStyle) {
                 this.setSelectedStyle(selectedGenre);
                 this.setSelectedStyle(selectedStyle);
             }
+        } else if (searchQuery.length === 1) {
+            this.setState({ filteredCollection : data });
         }
+
     };
 
     toggle = (type) => {
@@ -78,7 +80,7 @@ class Collection extends Component {
         this.setState({
             filteredCollection: genre === GENRES.all ? data : filteredCollection,
             filteredByGenre: genre === GENRES.all ? data : filteredCollection,
-            selectedStyle: 'Filter by style'
+            selectedStyle: ''
         });
     };
 
