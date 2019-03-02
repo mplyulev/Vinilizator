@@ -3,14 +3,16 @@ import { Button } from 'reactstrap/dist/reactstrap.es'
 import axios from 'axios';
 
 import {
-    COLLECTION_TYPE_COLLECTION, COLLECTION_TYPE_FOR_SELL, COLLECTION_TYPE_MARKET, CONDITION,
+    COLLECTION_TYPE_COLLECTION,
+    CONDITION,
     RESPONSE_STATUS_SUCCESS,
-    ROUTE_COLLECTION, ROUTE_FOR_SELL,
+    ROUTE_COLLECTION,
+    ROUTE_FOR_SELL,
     ROUTE_WISHLIST,
     SNACKBAR_TYPE_FAIL,
-    SNACKBAR_TYPE_SUCCESS, TOOLTIP_DELAY_SHOW
+    SNACKBAR_TYPE_SUCCESS,
+    TOOLTIP_DELAY_SHOW
 } from '../constants';
-import {FaInfoCircle} from "react-icons/fa";
 
 class ReleaseFull extends Component {
     addToCollection = (release) => {

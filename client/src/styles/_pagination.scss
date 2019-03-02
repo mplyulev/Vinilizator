@@ -6,6 +6,10 @@
   width: 330px;
   margin: 30px auto 60px;
 
+  &.bottom {
+    bottom: 20px;
+  }
+
   &.hidden {
     visibility: hidden;
   }

@@ -86,7 +86,7 @@ class Collection extends Component {
         const { data } = this.props;
         this.setState({ selectedStyle: style });
         const filteredCollection = (this.state.filteredByGenre || data).filter(vinyl =>
-            vinyl.styles.includes(style)
+            vinyl.styles && vinyl.styles.includes(style)
         );
 
         if (this.state.selectedGenre && this.state.selectedGenre !== GENRES.all && style === STYLES_ALL) {
@@ -108,9 +108,9 @@ class Collection extends Component {
             currentRelease,
             data,
             clearCurrentRelease,
-            collectionType
+            collectionType,
+            requestPending
         } = this.props;
-
         const { filteredCollection, selectedGenre, selectedStyle, filteredByGenre } = this.state;
 
         let genres = [];
@@ -188,9 +188,15 @@ class Collection extends Component {
                         {styleDropdownOptions}
                     </DropdownMenu>
                 </Dropdown>
-                <div
-                    className={`results-container${collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL ? ' bigger-height' : ''}`}>
-                    {!_.isEmpty(data) && (filteredCollection || data).map(result => {
+                <div className={`results-container collection${collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL ? ' bigger-height' : ''}`}>
+                    {requestPending ?
+                        <div className="loader-wrapper">
+                            <div className="loading"></div>
+                            <span className="loading-text">LOADING...</span>
+                        </div>
+                        : null
+                    }
+                    {!requestPending && !_.isEmpty(data) && (filteredCollection || data).map(result => {
                         return (
                             <SearchItem history={history}
                                         release={result}

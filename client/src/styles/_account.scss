@@ -3,4 +3,20 @@
     top: 100px;
     margin: 0 auto;
     width: 50%;
+    padding: 20px;
+    box-shadow: 3px 2px 17px 2px $background-color-dimgray;
+
+    .sign-up-form {
+        height: 0;
+        overflow: hidden;
+        transition: height 0.5s ease;
+
+        &.opened {
+            height: 315px;
+        }
+
+        label {
+            font-weight: 500;
+        }
+    }
 }

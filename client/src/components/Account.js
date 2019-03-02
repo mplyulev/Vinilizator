@@ -13,7 +13,8 @@ class Account extends Component {
             repeatPassword: '',
             oldPasswordError: '',
             repeatPasswordError: '',
-            serverError: ''
+            serverError: '',
+            isFormOpened: false
         };
     }
 
@@ -26,6 +27,11 @@ class Account extends Component {
             [event.target.id]: event.target.value,
             [`${event.target.id}Error`]: ''
         });
+    };
+
+    onSuccess = (msg) => {
+        this.props.openSnackbar(SNACKBAR_TYPE_SUCCESS, msg);
+        this.setState({isFormOpened: false});
     };
 
     handleSubmit = event => {
@@ -43,8 +49,8 @@ class Account extends Component {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
 
                     res.data.success
-                        ? this.props.openSnackbar(SNACKBAR_TYPE_SUCCESS, res.data.msg)
-                        : this.setState({ oldPasswordError: res.data.msg });
+                        ? this.onSuccess(res.data.msg)
+                        : this.setState({oldPasswordError: res.data.msg});
                 } else {
                     this.setState({ serverError: res.data.msg });
                 }
@@ -52,11 +58,11 @@ class Account extends Component {
     };
 
     render() {
-        const { oldPasswordError, repeatPasswordError, serverError } = this.state;
+        const { oldPasswordError, repeatPasswordError, serverError, isFormOpened } = this.state;
 
         return (
-            <div className="sign-up-wrapper change-password-wrapper">
-                <form className="sign-up-form" onSubmit={this.handleSubmit}>
+            <div className={`sign-up-wrapper change-password-wrapper${isFormOpened ? ' opened' : ''}`}>
+                <form className={`sign-up-form${isFormOpened ? ' opened' : ''}`}>
                     <FormGroup className="change-password-form">
                         <Label for="oldPassword">Old Password</Label>
                         <Input
@@ -90,12 +96,18 @@ class Account extends Component {
                     <span className="error">{serverError}</span>
                     <Button
                         block
-                        disabled={!this.validateForm()}
-                        type="submit"
+                        onClick={() => this.setState({isFormOpened: false})}
                     >
-                        Change Password
+                        Cancel
                     </Button>
                 </form>
+                <Button
+                    block
+                    disabled={isFormOpened ? !this.validateForm() : false}
+                    onClick={isFormOpened ? this.handleSubmit : () => this.setState({isFormOpened: true})}
+                >
+                    Change Password
+                </Button>
             </div>
         );
     }

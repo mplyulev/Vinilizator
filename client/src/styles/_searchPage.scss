@@ -3,6 +3,31 @@
     flex-wrap: wrap;
     justify-content: center;
     padding-bottom: 30px;
+
+    &.collection {
+        .loader-wrapper {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: center;
+        }
+
+        .loading-text {
+            font-weight: 600;
+            font-size: 30px;
+        }
+
+        .loading {
+            left: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            margin: 0 auto;
+            background: url('../assets/authentication-background.png') no-repeat local center;
+            background-size: contain;
+            animation:spin 5s linear infinite;
+        }
+    }
 }
 
 .filter-container {

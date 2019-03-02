@@ -42,14 +42,14 @@ class Pagination extends Component {
     }
 
     render() {
-        const { data, filterType, isVisible } = this.props;
+        const { data, filterType, isVisible, isInBottom } = this.props;
         let pages;
         if (data) {
             pages = [...Array(data.pages)];
         }
 
         return (
-            <div className={`pagination-wrapper${!isVisible ? ' hidden' : ''}`}>
+            <div className={`pagination-wrapper${!isVisible ? ' hidden' : ''}${isInBottom ? ' bottom' : ''}`}>
                 {data && data.pages > 1 ?
                     <Fragment>
                         {data && data.pages > 6 &&

@@ -99,6 +99,7 @@ class SearchPage extends Component {
                                 }
                             </div>
                             <Pagination getNextPageResult={getNextPageResult}
+                                        isInBottom={true}
                                         isVisible={!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1}
                                         data={queryResult.pagination} />
                         </div>

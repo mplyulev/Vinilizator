@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import _ from 'lodash';
 import { withRouter } from "react-router-dom";
 import axios from 'axios';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 import {
     Redirect,
@@ -266,8 +267,10 @@ class App extends Component {
     }
 
     getMarket = () => {
+        this.setState({requestPending: true});
         axios.get('/api/controllers/collection/getMarket')
             .then((res) => {
+                this.setState({requestPending: false});
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.setState({
                         market: res.data.collection
@@ -277,8 +280,10 @@ class App extends Component {
     };
 
     getUsers = () => {
+        this.setState({requestPending: true});
         axios.get('/api/controllers/collection/getUsers')
             .then((res) => {
+                this.setState({requestPending: false});
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.setState({
                         users: res.data.users
@@ -334,6 +339,7 @@ class App extends Component {
 
 
     getCollection = (collectionType, shouldResetCurrentRelease, currentReleaseId) => {
+        this.setState({requestPending: true});
         axios.get('/api/controllers/collection/getCollection', {
             params: {
                 collectionType,
@@ -341,6 +347,7 @@ class App extends Component {
             }
         })
             .then((res) => {
+                this.setState({requestPending: false});
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.setState({
                         vinylCollection: collectionType === COLLECTION_TYPE_COLLECTION ? res.data.collection : [],
@@ -363,7 +370,7 @@ class App extends Component {
             || nextPath === ROUTE_MARKET)
             && nextPath !== prevPath) {
             let collectionType = '';
-
+            this.setState({requestPending: false});
             switch (nextPath) {
                 case ROUTE_COLLECTION:
                     collectionType = COLLECTION_TYPE_COLLECTION;
@@ -435,121 +442,135 @@ class App extends Component {
                 state: this.state,
                 searchQuery: this.searchQuery
             }}>
-                <div className="mega-wrapper">
-                    {isSellModalOpened  && <SellModal toggleSellModal={this.toggleSellModal}
-                                                      addToSellList={this.addToSellList}
-                                                      currentRelease={currentRelease}
-                                                      isSellModalOpened={isSellModalOpened}/>}
-                    <AppNavBar isNavBarOpened={isNavBarOpened}
-                               isVisible={location.pathname !== ROUTE_SIGN_UP && location.pathname !== ROUTE_SIGN_IN}
-                               toggleNavBar={this.toggleNavBar}
-                               logout={this.logout} />
-                    <div className={`router-container${isOnAuthRoute ? ' auth' : ''}${isNavBarOpened ? ' opened-navbar' : ''}`}>
-                        {isLightboxOpened && <LightboxWrapper closeLightbox={this.closeLightbox}
-                                                              isLightboxOpened={isLightboxOpened}
-                                                              images={lightboxImages} />}
-                        <div id="player"></div>
-                        <Switch>
-                            <Route exact path="/"
-                                   render={() => <Redirect to={ROUTE_SEARCH}/>}/>
-                            <Route exact path={ROUTE_SIGN_IN}
-                                   render={() => <Authentication setToken={this.setToken} isLoginFormActive={true}/>}/>
-                            <Route exact path={ROUTE_SIGN_UP}
-                                   render={() => <Authentication setToken={this.setToken} isLoginFormActive={false}/>}/>
-                            <Route path={ROUTE_RELEASE}
-                                   render={() => <ReleaseFull openLightbox={this.openLightbox}
-                                                              closeLightbox={this.closeLightbox}
-                                                              getCollection={this.getCollection}
-                                                              toggleSellModal={this.toggleSellModal}
-                                                              openSnackbar={this.openSnackbar}
-                                                              release={currentRelease} />}/>
-                            <Route exact path={ROUTE_SEARCH}
-                                   render={() => <SearchPage getNextPageResult={this.getNextPageResult}
-                                                             currentQueryResult={currentQueryResult}
-                                                             queryResult={queryResult}
-                                                             requestPending={requestPending}
-                                                             getSpecificResult={this.getSpecificResult}
-                                                             currentRelease={currentRelease}x
-                                                             clearCurrentRelease={this.clearCurrentRelease}
-                                                             history={history}
-                                                             makeSearchRequest={this.makeSearchRequest}
-                                                             searchQueryString={searchQuery}
-                                                             searchQuery={this.searchQuery}/>}/>
-                            <Route exact path={ROUTE_COLLECTION}
-                                   render={() => <Collection getSpecificResult={this.getSpecificResult}
-                                                             history={history}
-                                                             collectionType={COLLECTION_TYPE_COLLECTION}
-                                                             clearCurrentRelease={this.clearCurrentRelease}
-                                                             currentRelease={currentRelease}
-                                                             setSpecificResult={this.setSpecificResult}
-                                                             data={vinylCollection}/>}/>
-                            <Route path={`${ROUTE_COLLECTION}${ROUTE_RELEASE}`}
-                                   render={() => <ReleaseFull openLightbox={this.openLightbox}
-                                                              closeLightbox={this.closeLightbox}
-                                                              openSnackbar={this.openSnackbar}
-                                                              isInCollection={true}
-                                                              getCollection={this.getCollection}
-                                                              toggleSellModal={this.toggleSellModal}
-                                                              history={history}
-                                                              release={currentRelease} />}/>
-                            <Route exact path={ROUTE_WISHLIST}
-                                   render={() => <Collection getSpecificResult={this.getSpecificResult}
-                                                          history={history}
-                                                          collectionType={COLLECTION_TYPE_WISHLIST}
-                                                          currentRelease={currentRelease}
-                                                          clearCurrentRelease={this.clearCurrentRelease}
-                                                          setSpecificResult={this.setSpecificResult}
-                                                          data={wishlist}/>}/>
-                            <Route path={`${ROUTE_WISHLIST}${ROUTE_RELEASE}`}
-                                   render={() => <ReleaseFull openLightbox={this.openLightbox}
-                                                              closeLightbox={this.closeLightbox}
-                                                              getCollection={this.getCollection}
-                                                              openSnackbar={this.openSnackbar}
-                                                              isInWishlist={true}
-                                                              history={history}
-                                                              release={currentRelease} />}/>
-                            <Route exact path={ROUTE_FOR_SELL}
-                                   render={() => <Collection getSpecificResult={this.getSpecificResult}
-                                                             history={history}
-                                                             collectionType={COLLECTION_TYPE_FOR_SELL}
-                                                             currentRelease={currentRelease}
-                                                             clearCurrentRelease={this.clearCurrentRelease}
-                                                             setSpecificResult={this.setSpecificResult}
-                                                             data={vinylCollection.filter(vinyl => { return vinyl.forSale})}/>}/>
-                            <Route path={`${ROUTE_FOR_SELL}${ROUTE_RELEASE}`}
-                                   render={() => <ReleaseFull openLightbox={this.openLightbox}
-                                                              closeLightbox={this.closeLightbox}
-                                                              openSnackbar={this.openSnackbar}
-                                                              isForSell={true}
-                                                              getCollection={this.getCollection}
-                                                              history={history}
-                                                              release={currentRelease} />}/>
-                            <Route exact path={ROUTE_MARKET}
-                                   render={() => <Collection getSpecificResult={this.getSpecificResult}
-                                                             history={history}
-                                                             collectionType={COLLECTION_TYPE_MARKET}
-                                                             currentRelease={currentRelease}
-                                                             clearCurrentRelease={this.clearCurrentRelease}
-                                                             setSpecificResult={this.setSpecificResult}
-                                                             data={market}/>}/>
-                            <Route path={`${ROUTE_MARKET}${ROUTE_RELEASE}`}
-                                   render={() => <ReleaseFull openLightbox={this.openLightbox}
-                                                              closeLightbox={this.closeLightbox}
-                                                              openSnackbar={this.openSnackbar}
-                                                              isInMarket={true}
-                                                              history={history}
-                                                              getCollection={this.getCollection}
-                                                              release={currentRelease} />}/>
-                            <Route path={ROUTE_ACCOUNT}
-                                   render={() => <Account openSnackbar={this.openSnackbar}/>}/>
-                            <Route exact path="/404" render={() => null}/>
-                            <Route path={`${ROUTE_USERS}`}
-                                   render={() => <Users users={users}/>}/>
-                            <Redirect to="/404"/>
-                        </Switch>
-                        <Snackbar snackbarOptions={snackbarOptions} closeSnackbar={this.closeSnackbar}/>
+                <Scrollbars autoHide
+                            autoHideTimeout={1000}
+                            autoHideDuration={300}
+                            style={{width: `100%`, height: `100vh`}}>
+                    <div className="mega-wrapper">
+                        {isSellModalOpened && <SellModal toggleSellModal={this.toggleSellModal}
+                                                         addToSellList={this.addToSellList}
+                                                         currentRelease={currentRelease}
+                                                         isSellModalOpened={isSellModalOpened}/>}
+                        <AppNavBar isNavBarOpened={isNavBarOpened}
+                                   isVisible={location.pathname !== ROUTE_SIGN_UP && location.pathname !== ROUTE_SIGN_IN}
+                                   toggleNavBar={this.toggleNavBar}
+                                   logout={this.logout}/>
+                        <div
+                            className={`router-container${isOnAuthRoute ? ' auth' : ''}${isNavBarOpened ? ' opened-navbar' : ''}`}>
+                            {isLightboxOpened && <LightboxWrapper closeLightbox={this.closeLightbox}
+                                                                  isLightboxOpened={isLightboxOpened}
+                                                                  images={lightboxImages}/>}
+                            <div id="player"></div>
+                            <Switch>
+                                <Route exact path="/"
+                                       render={() => <Redirect to={ROUTE_SEARCH}/>}/>
+                                <Route exact path={ROUTE_SIGN_IN}
+                                       render={() => <Authentication setToken={this.setToken}
+                                                                     isLoginFormActive={true}/>}/>
+                                <Route exact path={ROUTE_SIGN_UP}
+                                       render={() => <Authentication setToken={this.setToken}
+                                                                     isLoginFormActive={false}/>}/>
+                                <Route path={ROUTE_RELEASE}
+                                       render={() => <ReleaseFull openLightbox={this.openLightbox}
+                                                                  closeLightbox={this.closeLightbox}
+                                                                  getCollection={this.getCollection}
+                                                                  toggleSellModal={this.toggleSellModal}
+                                                                  openSnackbar={this.openSnackbar}
+                                                                  release={currentRelease}/>}/>
+                                <Route exact path={ROUTE_SEARCH}
+                                       render={() => <SearchPage getNextPageResult={this.getNextPageResult}
+                                                                 currentQueryResult={currentQueryResult}
+                                                                 queryResult={queryResult}
+                                                                 requestPending={requestPending}
+                                                                 getSpecificResult={this.getSpecificResult}
+                                                                 currentRelease={currentRelease} x
+                                                                 clearCurrentRelease={this.clearCurrentRelease}
+                                                                 history={history}
+                                                                 makeSearchRequest={this.makeSearchRequest}
+                                                                 searchQueryString={searchQuery}
+                                                                 searchQuery={this.searchQuery}/>}/>
+                                <Route exact path={ROUTE_COLLECTION}
+                                       render={() => <Collection getSpecificResult={this.getSpecificResult}
+                                                                 history={history}
+                                                                 requestPending={requestPending}
+                                                                 collectionType={COLLECTION_TYPE_COLLECTION}
+                                                                 clearCurrentRelease={this.clearCurrentRelease}
+                                                                 currentRelease={currentRelease}
+                                                                 setSpecificResult={this.setSpecificResult}
+                                                                 data={vinylCollection}/>}/>
+                                <Route path={`${ROUTE_COLLECTION}${ROUTE_RELEASE}`}
+                                       render={() => <ReleaseFull openLightbox={this.openLightbox}
+                                                                  closeLightbox={this.closeLightbox}
+                                                                  openSnackbar={this.openSnackbar}
+                                                                  isInCollection={true}
+                                                                  getCollection={this.getCollection}
+                                                                  toggleSellModal={this.toggleSellModal}
+                                                                  history={history}
+                                                                  release={currentRelease}/>}/>
+                                <Route exact path={ROUTE_WISHLIST}
+                                       render={() => <Collection getSpecificResult={this.getSpecificResult}
+                                                                 history={history}
+                                                                 requestPending={requestPending}
+                                                                 collectionType={COLLECTION_TYPE_WISHLIST}
+                                                                 currentRelease={currentRelease}
+                                                                 clearCurrentRelease={this.clearCurrentRelease}
+                                                                 setSpecificResult={this.setSpecificResult}
+                                                                 data={wishlist}/>}/>
+                                <Route path={`${ROUTE_WISHLIST}${ROUTE_RELEASE}`}
+                                       render={() => <ReleaseFull openLightbox={this.openLightbox}
+                                                                  closeLightbox={this.closeLightbox}
+                                                                  getCollection={this.getCollection}
+                                                                  openSnackbar={this.openSnackbar}
+                                                                  isInWishlist={true}
+                                                                  history={history}
+                                                                  release={currentRelease}/>}/>
+                                <Route exact path={ROUTE_FOR_SELL}
+                                       render={() => <Collection getSpecificResult={this.getSpecificResult}
+                                                                 history={history}
+                                                                 requestPending={requestPending}
+                                                                 collectionType={COLLECTION_TYPE_FOR_SELL}
+                                                                 currentRelease={currentRelease}
+                                                                 clearCurrentRelease={this.clearCurrentRelease}
+                                                                 setSpecificResult={this.setSpecificResult}
+                                                                 data={vinylCollection.filter(vinyl => {
+                                                                     return vinyl.forSale
+                                                                 })}/>}/>
+                                <Route path={`${ROUTE_FOR_SELL}${ROUTE_RELEASE}`}
+                                       render={() => <ReleaseFull openLightbox={this.openLightbox}
+                                                                  closeLightbox={this.closeLightbox}
+                                                                  openSnackbar={this.openSnackbar}
+                                                                  isForSell={true}
+                                                                  getCollection={this.getCollection}
+                                                                  history={history}
+                                                                  release={currentRelease}/>}/>
+                                <Route exact path={ROUTE_MARKET}
+                                       render={() => <Collection getSpecificResult={this.getSpecificResult}
+                                                                 history={history}
+                                                                 requestPending={requestPending}
+                                                                 collectionType={COLLECTION_TYPE_MARKET}
+                                                                 currentRelease={currentRelease}
+                                                                 clearCurrentRelease={this.clearCurrentRelease}
+                                                                 setSpecificResult={this.setSpecificResult}
+                                                                 data={market}/>}/>
+                                <Route path={`${ROUTE_MARKET}${ROUTE_RELEASE}`}
+                                       render={() => <ReleaseFull openLightbox={this.openLightbox}
+                                                                  closeLightbox={this.closeLightbox}
+                                                                  openSnackbar={this.openSnackbar}
+                                                                  isInMarket={true}
+                                                                  history={history}
+                                                                  getCollection={this.getCollection}
+                                                                  release={currentRelease}/>}/>
+                                <Route path={ROUTE_ACCOUNT}
+                                       render={() => <Account openSnackbar={this.openSnackbar}/>}/>
+                                <Route exact path="/404" render={() => null}/>
+                                <Route path={`${ROUTE_USERS}`}
+                                       render={() => <Users users={users}/>}/>
+                                <Redirect to="/404"/>
+                            </Switch>
+                            <Snackbar snackbarOptions={snackbarOptions} closeSnackbar={this.closeSnackbar}/>
+                        </div>
                     </div>
-                </div>
+                </Scrollbars>
             </AppContext.Provider>
         );
     }
