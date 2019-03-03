@@ -1,15 +1,25 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import _ from 'lodash';
 import SearchItem from "./SearchItem";
 import {
+    COLLECTION_TYPE_COLLECTION,
     COLLECTION_TYPE_FOR_SELL,
-    COLLECTION_TYPE_MARKET,
+    COLLECTION_TYPE_MARKET, COLLECTION_TYPE_WISHLIST,
     DATA_TYPE_RELEASE,
     GENRE_DROPDOWN,
-    GENRES, STYLE_DROPDOWN, STYLES_ALL
+    GENRES, ROUTE_SEARCH, STYLE_DROPDOWN, STYLES_ALL
 } from '../constants';
 import ReactTooltip from 'react-tooltip';
-import { InputGroup, InputGroupAddon, Input, Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import {
+    InputGroup,
+    InputGroupAddon,
+    Input,
+    Dropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem,
+    Button, ModalFooter
+} from 'reactstrap';
 
 class Collection extends Component {
     constructor(props) {
@@ -167,30 +177,33 @@ class Collection extends Component {
 
         return (
             <div>
-                <ReactTooltip id="collection-page-tooltip"/>
-                <InputGroup className="search-bar">
-                    <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
-                    <Input onChange={this.onChange}/>
-                </InputGroup>
-                <Dropdown isOpen={this.state.isGenreDropdownOpen}
-                          toggle={() => this.toggle(GENRE_DROPDOWN)}>
-                    <DropdownToggle caret>
-                        {selectedGenre || 'Filter by genre'}
-                    </DropdownToggle>
-                    <DropdownMenu>
-                        {genreDropdownOptions}
-                    </DropdownMenu>
-                </Dropdown>
-                <Dropdown isOpen={this.state.isStyleDropdownOpen}
-                          toggle={() => this.toggle(STYLE_DROPDOWN)}>
-                    <DropdownToggle caret>
-                        {selectedStyle || 'Filter by style'}
-                    </DropdownToggle>
-                    <DropdownMenu>
-                        {styleDropdownOptions}
-                    </DropdownMenu>
-                </Dropdown>
-                <div className={`results-container collection${collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL ? ' bigger-height' : ''}`}>
+                {!_.isEmpty(data) && <div>
+                    <ReactTooltip id="collection-page-tooltip" />
+                    <InputGroup className="search-bar">
+                        <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
+                        <Input onChange={this.onChange} />
+                    </InputGroup>
+                    <Dropdown isOpen={this.state.isGenreDropdownOpen}
+                              toggle={() => this.toggle(GENRE_DROPDOWN)}>
+                        <DropdownToggle caret>
+                            {selectedGenre || 'Filter by genre'}
+                        </DropdownToggle>
+                        <DropdownMenu>
+                            {genreDropdownOptions}
+                        </DropdownMenu>
+                    </Dropdown>
+                    <Dropdown isOpen={this.state.isStyleDropdownOpen}
+                              toggle={() => this.toggle(STYLE_DROPDOWN)}>
+                        <DropdownToggle caret>
+                            {selectedStyle || 'Filter by style'}
+                        </DropdownToggle>
+                        <DropdownMenu>
+                            {styleDropdownOptions}
+                        </DropdownMenu>
+                    </Dropdown>
+                </div>}
+                <div
+                    className={`results-container collection${collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL ? ' bigger-height' : ''}`}>
                     {requestPending ?
                         <div className="loader-wrapper">
                             <div className="loading"></div>
@@ -198,21 +211,38 @@ class Collection extends Component {
                         </div>
                         : null
                     }
-                    {!requestPending && !_.isEmpty(data) && (filteredCollection || data).map(result => {
-                        return (
-                            <SearchItem history={history}
-                                        release={result}
-                                        currentRelease={currentRelease}
-                                        clearCurrentRelease={clearCurrentRelease}
-                                        collectionType={collectionType}
-                                        filterType={DATA_TYPE_RELEASE}
-                                        getSpecificResult={getSpecificResult}
-                                        setSpecificResult={setSpecificResult}
-                                        key={result.id}>
-                            </SearchItem>
-                        );
-                    })
-                    }
+                    {!requestPending
+                        ?
+                        !_.isEmpty(data)
+                            ? (filteredCollection || data).map(result => {
+                                return (
+                                    <SearchItem history={history}
+                                                release={result}
+                                                currentRelease={currentRelease}
+                                                clearCurrentRelease={clearCurrentRelease}
+                                                collectionType={collectionType}
+                                                filterType={DATA_TYPE_RELEASE}
+                                                getSpecificResult={getSpecificResult}
+                                                setSpecificResult={setSpecificResult}
+                                                key={result.id}>
+                                    </SearchItem>
+                                );
+                            })
+                            :
+                            <div className="no-results">
+                                {collectionType === COLLECTION_TYPE_WISHLIST ?
+                                    <p>YOU HAVE NO RECORDS IN YOU WISHLIST</p> : null}
+                                {collectionType === COLLECTION_TYPE_COLLECTION ?
+                                    <p>YOU HAVE NO RECORDS IN YOUR COLLECTIOn</p> : null}
+                                {collectionType === COLLECTION_TYPE_FOR_SELL ?
+                                    <p>YOU HAVE NO RECORDS FOR SALE</p> : null}
+                                {collectionType === COLLECTION_TYPE_MARKET ? <span>THE MARKET IS EMPTY</span> : null}
+                                <Button color="success"
+                                        onClick={() => this.props.history.push(ROUTE_SEARCH)}>
+                                    SEARCH FOR RECORDS
+                                </Button>
+                            </div>
+                    : null}
                 </div>
             </div>
         );

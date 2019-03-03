@@ -165,7 +165,7 @@
   &.success {
     color: $background-color-white;
     background-color: $background-color-green;
-    border-color: $background-color-green
+    border-color: $background-color-green;
   }
 
   &.fail {
@@ -193,6 +193,11 @@
     &.opened-navbar {
       top: 260px;
     }
+  }
+
+  .loader-wrapper {
+    top: 100%;
+    transform: translate(-50%, 0%);
   }
 
   .snackbar {

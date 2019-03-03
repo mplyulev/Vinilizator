@@ -5,6 +5,17 @@
     padding-bottom: 30px;
 }
 
+.no-results {
+    position: relative;
+    top: 50%;
+    text-align: center;
+
+    p {
+        font-size: 40px;
+        font-weight: 700;
+    }
+}
+
 .filter-container {
     position: relative;
     top: 10px;
