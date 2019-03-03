@@ -228,7 +228,7 @@ class ReleaseFull extends Component {
                             </Fragment>
                             : null
                         }
-                        {isInCollection ?
+                        {isInCollection && !isInWishlist ?
                             <Fragment>
                                 <Button color="success" className="add-button"
                                         onClick={() => this.removeFromCollection(release)}>

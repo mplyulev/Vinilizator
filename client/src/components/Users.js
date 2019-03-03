@@ -1,11 +1,4 @@
 import React, {Component, Fragment} from 'react';
-import {
-    COLLECTION_TYPE_FOR_SELL,
-    COLLECTION_TYPE_MARKET,
-    CONDITION,
-    DOGS_SPACE_GIF_URL,
-    TOOLTIP_DELAY_SHOW
-} from '../constants';
 import ReactTooltip from 'react-tooltip';
 
 class Users extends Component {
@@ -18,32 +11,34 @@ class Users extends Component {
         ReactTooltip.rebuild();
     }
 
-    renderUsers = (users) => {
-        users.map(user => {
-            return (
-                <div className="user">{user.username}</div>
-            );
-        })
-    };
-
-    itemsForSell = (user) => {
-        user.vinylCollection.filter(vinyl => {
+    getItemsForSell = user => {
+        const forSale = user.vinylCollection.filter(vinyl => {
             return vinyl.forSale;
-        })
+        });
+
+        return forSale;
     };
 
     render () {
-        const { users } = this.props;
+        const { users, renderUser, requestPending } = this.props;
 
         return (
             <Fragment>
-                <div className="users-wrapper">
-                    {users && users.map(user => {
+                <div className="users-wrapper" >
+                    {requestPending ?
+                        <div className="loader-wrapper">
+                            <div className="loading"></div>
+                            <span className="loading-text">LOADING...</span>
+                        </div>
+                        : null
+                    }
+                    {!requestPending && users && users.map(user => {
                         return (
-                            <div className="user">
+                            <div className="user" key={user.username} onClick={() => renderUser(user)}>
                                 <span>{user.username}</span>
                                 <span>Items in collection: {user.vinylCollection.length}</span>
-                                <span>Items for sell: {this.itemsForSell(user).length}</span>
+                                <span>Items for sale: {this.getItemsForSell(user) ? this.getItemsForSell(user).length : 0}</span>
+                                <span>Items in wishlist: {user.wishlist.length}</span>
                             </div>
                         );
                     })}

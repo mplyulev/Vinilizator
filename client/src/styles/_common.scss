@@ -60,6 +60,30 @@
   }
 }
 
+.loader-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+
+  .loading-text {
+    font-weight: 600;
+    font-size: 30px;
+  }
+
+  .loading {
+    left: 0;
+    right: 0;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+    background: url('../assets/authentication-background.png') no-repeat local center;
+    background-size: contain;
+    animation: spin 5s linear infinite;
+  }
+}
+
 .dropdown-toggle,
 .dropdown-menu {
   width: 215px;
@@ -70,7 +94,7 @@
   top: 20px;
   right: 0;
   width: calc(100% - 200px);
-  height: 100%;
+  height: 98%;
 
   &.auth {
     position: absolute;

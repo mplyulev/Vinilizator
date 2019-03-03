@@ -19,7 +19,10 @@ import ReleaseFull from './components/ReleaseFull';
 import Account from './components/Account';
 import SellModal from './components/SellModal';
 import Snackbar from './components/common/Snackbar';
-
+import Authentication from "./components/Authentication";
+import LightboxWrapper from './components/common/LightboxWrapper';
+import Users from "./components/Users";
+import User from "./components/User";
 
 import {
     COLLECTION_TYPE_COLLECTION,
@@ -45,13 +48,9 @@ import {
     ROUTE_MARKET,
     COLLECTION_TYPE_MARKET,
     SNACKBAR_TYPE_SUCCESS,
-    SNACKBAR_TYPE_FAIL, ROUTE_USERS
+    SNACKBAR_TYPE_FAIL,
+    ROUTE_USERS
 } from './constants';
-import Authentication from "./components/Authentication";
-import LightboxWrapper from './components/common/LightboxWrapper';
-import Users from "./components/Users";
-
-const AppContext = React.createContext();
 
 class App extends Component {
     constructor(props) {
@@ -83,7 +82,8 @@ class App extends Component {
             forSale: [],
             market: [],
             isNavBarOpened: false,
-            isSellModalOpened: false
+            isSellModalOpened: false,
+            currentUser: null
         };
 
         this.searchQuery = _.debounce(this.searchQuery, DEBOUNCE_TIME);
@@ -168,6 +168,11 @@ class App extends Component {
             .catch(error => {
                 this.setState({ requestPending: false });
             });
+    };
+
+    renderUser = user => {
+        this.props.history.push(`${ROUTE_USERS}/${user.username}`);
+        this.setState({ currentUser: user })
     };
 
     getNextPageResult = (page, type) => {
@@ -337,7 +342,6 @@ class App extends Component {
         });
     };
 
-
     getCollection = (collectionType, shouldResetCurrentRelease, currentReleaseId) => {
         this.setState({requestPending: true});
         axios.get('/api/controllers/collection/getCollection', {
@@ -432,16 +436,14 @@ class App extends Component {
             users,
             market,
             isNavBarOpened,
-            isSellModalOpened
+            isSellModalOpened,
+            currentUser
         } = this.state;
 
         const { location, history } = this.props;
         const isOnAuthRoute = location.pathname === ROUTE_SIGN_IN || location.pathname === ROUTE_SIGN_UP;
         return (
-            <AppContext.Provider props={{
-                state: this.state,
-                searchQuery: this.searchQuery
-            }}>
+            <div>
                 <Scrollbars autoHide
                             autoHideTimeout={1000}
                             autoHideDuration={300}
@@ -563,15 +565,19 @@ class App extends Component {
                                 <Route path={ROUTE_ACCOUNT}
                                        render={() => <Account openSnackbar={this.openSnackbar}/>}/>
                                 <Route exact path="/404" render={() => null}/>
-                                <Route path={`${ROUTE_USERS}`}
-                                       render={() => <Users users={users}/>}/>
+                                <Route exact path={`${ROUTE_USERS}`}
+                                       render={() => <Users requestPending={requestPending}
+                                                            users={users}
+                                                            renderUser={this.renderUser}/>}/>
+                                <Route path={`${ROUTE_USERS}/`}
+                                       render={() => <User user={currentUser} renderUser={this.renderUser}/>}/>
                                 <Redirect to="/404"/>
                             </Switch>
                             <Snackbar snackbarOptions={snackbarOptions} closeSnackbar={this.closeSnackbar}/>
                         </div>
                     </div>
                 </Scrollbars>
-            </AppContext.Provider>
+            </div>
         );
     }
 }
