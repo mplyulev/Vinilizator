@@ -114,7 +114,7 @@ class Collection extends Component {
             requestPending
         } = this.props;
         const { filteredCollection, selectedGenre, selectedStyle, filteredByGenre } = this.state;
-
+        console.log(collectionType);
         let genres = [];
         let styles = [];
 

@@ -13,7 +13,7 @@ class SellModal extends React.Component {
         this.state = {
             isDropdownOpen: false,
             selectedItem : null,
-            condition: currentRelease.forSale ? currentRelease.condition && currentRelease.condition.full : null,
+            condition: currentRelease.forSale && currentRelease.condition ? currentRelease.condition : null,
             price: currentRelease.forSale ? currentRelease.price : null,
             notes: currentRelease.forSale ? currentRelease.notes : ''
         };
@@ -60,10 +60,10 @@ class SellModal extends React.Component {
     }
 
     renderDropdownItem = (condition) => {
+        console.log('asdasdas', condition, this.state.condition);
         return (
             <DropdownItem data-for="sell-modal"
-                          // data-tip={tooltip}
-                          className={this.state.condition && this.state.condition.full === condition.full ? 'selected' : ''}
+                          className={this.state.condition && this.state.condition.type === condition.type ? 'selected' : ''}
                           onClick={() => this.setSelected(condition)}>{condition.full}</DropdownItem>
         );
     };
@@ -82,7 +82,7 @@ class SellModal extends React.Component {
                         Vinyl Condition
                         <Dropdown isOpen={this.state.isDropdownOpen} toggle={this.toggle}>
                             <DropdownToggle caret>
-                                {condition && condition.full || 'Choose condition'}
+                                {condition ? condition.full : 'Choose condition'}
                             </DropdownToggle>
                             <DropdownMenu className="dropdown-menu sell-dropdown">
                                 {this.renderDropdownItem(CONDITION.mint)}

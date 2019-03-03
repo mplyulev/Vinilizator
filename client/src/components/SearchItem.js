@@ -30,6 +30,7 @@ class SearchItem extends Component {
         if (!collectionType) {
             await this.props.getSpecificResult(type, id);
             } else {
+            console.log('asd', collectionType);
             this.timeout = setTimeout(() => {
                 this.props.setSpecificResult(this.props.release, collectionType);
             }, 300);

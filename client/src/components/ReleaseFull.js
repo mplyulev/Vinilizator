@@ -87,11 +87,11 @@ class ReleaseFull extends Component {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
                 }
-            });
 
-        axios.post('/api/controllers/collection/removeFromWishlist', { release, userId })
-            .then((res) => {
-                this.props.history.push(ROUTE_WISHLIST);
+                axios.post('/api/controllers/collection/removeFromWishlist', { release, userId })
+                    .then((res) => {
+                        this.props.history.push(ROUTE_WISHLIST);
+                    });
             });
     };
 
@@ -180,7 +180,7 @@ class ReleaseFull extends Component {
                                data-tip={release.condition && CONDITION.tooltips[release.condition.type]}>
                                 Condition: {release.condition && release.condition.abr}
                                 {(isForSell || isInMarket) && release.notes
-                                    ? <p>Item info: {release.notes}</p>
+                                    ? <span>Item info: {release.notes}</span>
                                     : null}
                             </p>
                         </div>
@@ -211,7 +211,7 @@ class ReleaseFull extends Component {
                                did mount and check respone to see if anything is loaded if not hide iframe */}
                     </div>
                     <div className="buttons-wrapper">
-                        {!isInCollection && !isInMarket
+                        {!isInCollection && !isInMarket && !isInWishlist && !isForSell
                             ? <Fragment>
                                 <Button color="success" className="add-button"
                                         onClick={() => this.addToCollection(release)}>
@@ -275,6 +275,10 @@ class ReleaseFull extends Component {
                                 <Button color="success" className="add-button"
                                         onClick={() => this.markAsSold(release)}>
                                     Mark as sold
+                                </Button>
+                                <Button color="success" className="add-button"
+                                        onClick={() => toggleSellModal(release)}>
+                                    Edit sell info
                                 </Button>
                             </Fragment>
                             : null

@@ -43,7 +43,6 @@ import {
     ROUTE_SIGN_UP,
     ROUTE_WISHLIST,
     ROUTE_ACCOUNT,
-    ROUTE_SELL,
     ROUTE_FOR_SELL,
     ROUTE_MARKET,
     COLLECTION_TYPE_MARKET,
@@ -220,10 +219,6 @@ class App extends Component {
             this.props.history.push(ROUTE_SIGN_IN);
         }
 
-        if (location.pathname === ROUTE_USERS) {
-            this.getUsers();
-        }
-
         if (location.pathname === ROUTE_COLLECTION
             || location.pathname === ROUTE_WISHLIST
             || location.pathname === ROUTE_MARKET
@@ -232,22 +227,27 @@ class App extends Component {
             switch (location.pathname) {
                 case ROUTE_COLLECTION:
                     collectionType = COLLECTION_TYPE_COLLECTION;
+                    this.getCollection(collectionType);
                     break;
                 case ROUTE_WISHLIST:
                     collectionType = COLLECTION_TYPE_WISHLIST;
+                    this.getCollection(collectionType);
                     break;
                 case ROUTE_MARKET:
                     collectionType = COLLECTION_TYPE_MARKET;
+                    this.getMarket();
                     break;
                 case ROUTE_FOR_SELL:
                     collectionType = COLLECTION_TYPE_COLLECTION;
+                    this.getCollection(collectionType);
                     break;
-            }
-            this.getCollection(collectionType);
-        }
+                case ROUTE_USERS:
+                    this.getUsers();
+                    break;
 
-        if (location.pathname === ROUTE_MARKET) {
-            this.getMarket();
+            }
+
+
         }
 
         this.makeSearchRequest('');
@@ -299,6 +299,7 @@ class App extends Component {
 
     setSpecificResult = (release, collectionType) => {
         this.clearCurrentRelease();
+
         this.setState({ currentRelease: release }, () => {
             this.releaseAnimationTimeout = setTimeout(() => {
                 switch (collectionType) {
@@ -310,9 +311,10 @@ class App extends Component {
                         break;
                     case COLLECTION_TYPE_FOR_SELL:
                         this.props.history.push(`${ROUTE_FOR_SELL}${ROUTE_RELEASE}/${release.id}`);
+                        break;
                     case COLLECTION_TYPE_MARKET:
                         this.props.history.push(`${ROUTE_MARKET}${ROUTE_RELEASE}/${release.id}`);
-                        break;
+                            break;
                 }
             }, 600);
         })
@@ -352,9 +354,11 @@ class App extends Component {
         })
             .then((res) => {
                 this.setState({requestPending: false});
+
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
+                    console.log('asd', res.data)
                     this.setState({
-                        vinylCollection: collectionType === COLLECTION_TYPE_COLLECTION ? res.data.collection : [],
+                        vinylCollection: collectionType === COLLECTION_TYPE_COLLECTION || collectionType === COLLECTION_TYPE_FOR_SELL ? res.data.collection : [],
                         wishlist: collectionType === COLLECTION_TYPE_WISHLIST ? res.data.collection : [],
                     });
 
@@ -378,25 +382,26 @@ class App extends Component {
             switch (nextPath) {
                 case ROUTE_COLLECTION:
                     collectionType = COLLECTION_TYPE_COLLECTION;
+                    this.getCollection(collectionType);
                     break;
                 case ROUTE_WISHLIST:
                     collectionType = COLLECTION_TYPE_WISHLIST;
+                    this.getCollection(collectionType);
                     break;
                 case ROUTE_FOR_SELL:
                     collectionType = COLLECTION_TYPE_COLLECTION;
+                    this.getCollection(collectionType);
+                    break;
                 case ROUTE_MARKET:
-                    collectionType = COLLECTION_TYPE_COLLECTION;
+                    collectionType = COLLECTION_TYPE_MARKET;
+                    this.getMarket();
+                    break;
+                case ROUTE_USERS:
+                    this.getUsers();
+                    break;
             }
 
-            this.getCollection(collectionType);
-        }
 
-        if (nextPath === ROUTE_MARKET && prevPath !== nextPath) {
-            this.getMarket();
-        }
-
-        if (nextPath === ROUTE_USERS && prevPath !== nextPath) {
-            this.getUsers();
         }
 
         const { searchQuery, token, lastRequestedRoute } = this.state;
@@ -461,7 +466,7 @@ class App extends Component {
                             className={`router-container${isOnAuthRoute ? ' auth' : ''}${isNavBarOpened ? ' opened-navbar' : ''}`}>
                             {isLightboxOpened && <LightboxWrapper closeLightbox={this.closeLightbox}
                                                                   isLightboxOpened={isLightboxOpened}
-                                                                  images={lightboxImages}/>}
+                                                         Collection         images={lightboxImages}/>}
                             <div id="player"></div>
                             <Switch>
                                 <Route exact path="/"
@@ -542,6 +547,7 @@ class App extends Component {
                                                                   closeLightbox={this.closeLightbox}
                                                                   openSnackbar={this.openSnackbar}
                                                                   isForSell={true}
+                                                                  toggleSellModal={this.toggleSellModal}
                                                                   getCollection={this.getCollection}
                                                                   history={history}
                                                                   release={currentRelease}/>}/>
