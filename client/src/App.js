@@ -110,7 +110,7 @@ class App extends Component {
         const userId = localStorage.getItem('userId');
         this.toggleSellModal();
         axios.post('/api/controllers/collection/addToCollection', {release, userId});
-
+        axios.post('/api/controllers/collection/removeFromWishlist', {release, userId});
         axios.post('/api/controllers/collection/addToSellList', { release, userId, sellData, isEditing })
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
@@ -222,6 +222,7 @@ class App extends Component {
         if (location.pathname === ROUTE_COLLECTION
             || location.pathname === ROUTE_WISHLIST
             || location.pathname === ROUTE_MARKET
+            || location.pathname === ROUTE_USERS
             || location.pathname === ROUTE_FOR_SELL) {
             let collectionType = '';
             switch (location.pathname) {
@@ -356,7 +357,6 @@ class App extends Component {
                 this.setState({requestPending: false});
 
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
-                    console.log('asd', res.data)
                     this.setState({
                         vinylCollection: collectionType === COLLECTION_TYPE_COLLECTION || collectionType === COLLECTION_TYPE_FOR_SELL ? res.data.collection : [],
                         wishlist: collectionType === COLLECTION_TYPE_WISHLIST ? res.data.collection : [],
@@ -375,7 +375,8 @@ class App extends Component {
         if ((nextPath === ROUTE_COLLECTION
             || nextPath === ROUTE_WISHLIST
             || nextPath === ROUTE_FOR_SELL
-            || nextPath === ROUTE_MARKET)
+            || nextPath === ROUTE_MARKET
+            || nextPath === ROUTE_USERS)
             && nextPath !== prevPath) {
             let collectionType = '';
             this.setState({requestPending: false});
@@ -400,8 +401,6 @@ class App extends Component {
                     this.getUsers();
                     break;
             }
-
-
         }
 
         const { searchQuery, token, lastRequestedRoute } = this.state;
@@ -450,8 +449,9 @@ class App extends Component {
         return (
             <div>
                 <Scrollbars autoHide
+                            className="scrollbar"
                             autoHideTimeout={1000}
-                            autoHideDuration={300}
+                            autoHideDuration={500}
                             style={{width: `100%`, height: `100vh`}}>
                     <div className="mega-wrapper">
                         {isSellModalOpened && <SellModal toggleSellModal={this.toggleSellModal}
@@ -575,8 +575,8 @@ class App extends Component {
                                        render={() => <Users requestPending={requestPending}
                                                             users={users}
                                                             renderUser={this.renderUser}/>}/>
-                                <Route path={`${ROUTE_USERS}/`}
-                                       render={() => <User user={currentUser} renderUser={this.renderUser}/>}/>
+                                <Route path={`${ROUTE_USERS}/${currentUser && currentUser.username}`}
+                                       render={() => <User  setSpecificResult={this.setSpecificResult} user={currentUser}/>}/>
                                 <Redirect to="/404"/>
                             </Switch>
                             <Snackbar snackbarOptions={snackbarOptions} closeSnackbar={this.closeSnackbar}/>

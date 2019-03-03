@@ -177,7 +177,7 @@ class Collection extends Component {
 
         return (
             <div>
-                {!_.isEmpty(data) && <div>
+                <div>
                     <ReactTooltip id="collection-page-tooltip" />
                     <InputGroup className="search-bar">
                         <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
@@ -201,7 +201,7 @@ class Collection extends Component {
                             {styleDropdownOptions}
                         </DropdownMenu>
                     </Dropdown>
-                </div>}
+                </div>
                 <div
                     className={`results-container collection${collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL ? ' bigger-height' : ''}`}>
                     {requestPending ?
@@ -233,7 +233,7 @@ class Collection extends Component {
                                 {collectionType === COLLECTION_TYPE_WISHLIST ?
                                     <p>YOU HAVE NO RECORDS IN YOU WISHLIST</p> : null}
                                 {collectionType === COLLECTION_TYPE_COLLECTION ?
-                                    <p>YOU HAVE NO RECORDS IN YOUR COLLECTIOn</p> : null}
+                                    <p>YOU HAVE NO RECORDS IN YOUR COLLECTION</p> : null}
                                 {collectionType === COLLECTION_TYPE_FOR_SELL ?
                                     <p>YOU HAVE NO RECORDS FOR SALE</p> : null}
                                 {collectionType === COLLECTION_TYPE_MARKET ? <span>THE MARKET IS EMPTY</span> : null}

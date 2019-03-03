@@ -35,7 +35,7 @@ class Users extends Component {
                     {!requestPending && users && users.map(user => {
                         return (
                             <div className="user" key={user.username} onClick={() => renderUser(user)}>
-                                <span>{user.username}</span>
+                                <span className="username">{user.username}</span>
                                 <span>Items in collection: {user.vinylCollection.length}</span>
                                 <span>Items for sale: {this.getItemsForSell(user) ? this.getItemsForSell(user).length : 0}</span>
                                 <span>Items in wishlist: {user.wishlist.length}</span>
