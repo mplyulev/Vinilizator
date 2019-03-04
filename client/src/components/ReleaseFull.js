@@ -158,9 +158,12 @@ class ReleaseFull extends Component {
             : '';
 
         const tracklistTemplate = tracklist.map(track => {
+            console.log(track);
             return (
                 <div key={track.title} className="track">
                     <span>{track.position}.</span>
+                    {track.artists && <Fragment><span>{track.artists[0].name}</span>
+                        <span>-</span></Fragment>}
                     <span>{track.title}</span>
                     <span>{track.duration}</span>
                 </div>
@@ -188,7 +191,7 @@ class ReleaseFull extends Component {
                     {images && <img className="release-cover" onClick={() => openLightbox(images)} src={images[0]}/>}
                     <div className="info-wrapper">
                         <span className="artists">{artists}</span> - <span className="release-title">{title}</span>
-                        {labels && <p>Label: {labels}<span> - {release.labels[0].catno}</span></p>}
+                        {labels && <p>Label: {labels}<span>{release.labels[0].catno ? '-' : ''}{release.labels[0].catno}</span></p>}
                         {formats.length && formats[0] &&
                         <p>Format: {formats[0].qty > 1 ? formats[0].qty + ' x ' : ''}
                             <span>{formats[0].name}</span> {formatDescription} </p>}
@@ -204,7 +207,7 @@ class ReleaseFull extends Component {
                             {tracklistTemplate}
                         </div>
                         <iframe id="ytplayer" type="text/html" width="640" height="360"
-                                src={`https://www.youtube.com/embed?listType=search&list=${this.props.release.artists[0].name}${this.props.release.title}`}
+                                src={`https://www.youtube.com/embed?listType=search&list=${release.tracklist[0] && release.tracklist[0].artists ? release.tracklist[0].artists[0].name : release.artists[0].name}${release.tracklist[0].title}`}
                                 frameBorder="0">
                         </iframe>
                         {/*when my site has an url add ?origin=http://mywebsite.com to src so i and remake it on component

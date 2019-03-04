@@ -15,7 +15,6 @@ class Users extends Component {
         const forSale = user.vinylCollection.filter(vinyl => {
             return vinyl.forSale;
         });
-
         return forSale;
     };
 

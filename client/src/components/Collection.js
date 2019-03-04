@@ -113,6 +113,7 @@ class Collection extends Component {
     }
 
     render () {
+        ReactTooltip.rebuild();
         const {
             history,
             getSpecificResult,
@@ -121,10 +122,12 @@ class Collection extends Component {
             data,
             clearCurrentRelease,
             collectionType,
-            requestPending
+            requestPending,
+            isOtherUserCollection
         } = this.props;
+
         const { filteredCollection, selectedGenre, selectedStyle, filteredByGenre } = this.state;
-        console.log(collectionType);
+        console.log('the ge', collectionType);
         let genres = [];
         let styles = [];
 
@@ -217,6 +220,7 @@ class Collection extends Component {
                             ? (filteredCollection || data).map(result => {
                                 return (
                                     <SearchItem history={history}
+                                                isOtherUserCollection={isOtherUserCollection}
                                                 release={result}
                                                 currentRelease={currentRelease}
                                                 clearCurrentRelease={clearCurrentRelease}

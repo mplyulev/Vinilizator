@@ -48,7 +48,7 @@ import {
     COLLECTION_TYPE_MARKET,
     SNACKBAR_TYPE_SUCCESS,
     SNACKBAR_TYPE_FAIL,
-    ROUTE_USERS
+    ROUTE_USERS, COLLECTION_TYPE_OTHER_USER
 } from './constants';
 
 class App extends Component {
@@ -69,7 +69,7 @@ class App extends Component {
             prevPath: props.location.pathname,
             requestPending: false,
             currentRelease: {},
-            isLightboxOpened: false,
+            isLightboxOpenesetd: false,
             lightboxImages: [],
             snackbarOptions: {
                 isOpened: false,
@@ -211,48 +211,46 @@ class App extends Component {
 
     componentDidMount() {
         document.addEventListener('click', this.closeOnOutsideClick);
-        const {token} = this.state;
+        const { token } = this.state;
         const { location } = this.props;
 
         if (!token && location.pathname !== ROUTE_SIGN_UP && location.pathname !== ROUTE_SIGN_IN) {
-            this.setState({lastRequestedRoute: this.props.location.pathname});
+            this.setState({ lastRequestedRoute: this.props.location.pathname });
             this.props.history.push(ROUTE_SIGN_IN);
         }
 
-        if (location.pathname === ROUTE_COLLECTION
-            || location.pathname === ROUTE_WISHLIST
-            || location.pathname === ROUTE_MARKET
-            || location.pathname === ROUTE_USERS
-            || location.pathname === ROUTE_FOR_SELL) {
-            let collectionType = '';
-            switch (location.pathname) {
-                case ROUTE_COLLECTION:
-                    collectionType = COLLECTION_TYPE_COLLECTION;
-                    this.getCollection(collectionType);
-                    break;
-                case ROUTE_WISHLIST:
-                    collectionType = COLLECTION_TYPE_WISHLIST;
-                    this.getCollection(collectionType);
-                    break;
-                case ROUTE_MARKET:
-                    collectionType = COLLECTION_TYPE_MARKET;
-                    this.getMarket();
-                    break;
-                case ROUTE_FOR_SELL:
-                    collectionType = COLLECTION_TYPE_COLLECTION;
-                    this.getCollection(collectionType);
-                    break;
-                case ROUTE_USERS:
-                    this.getUsers();
-                    break;
+        let pathname = location.pathname;
 
-            }
-
-
+        if (pathname[pathname.length - 1] === '/') {
+            pathname = pathname.substring(0, pathname.length - 1)
         }
 
-        this.makeSearchRequest('');
+        let collectionType = '';
+        switch (pathname) {
+            case ROUTE_COLLECTION:
+                collectionType = COLLECTION_TYPE_COLLECTION;
+                this.getCollection(collectionType);
+                break;
+            case ROUTE_WISHLIST:
+                collectionType = COLLECTION_TYPE_WISHLIST;
+                this.getCollection(collectionType);
+                break;
+            case ROUTE_MARKET:
+                collectionType = COLLECTION_TYPE_MARKET;
+                this.getMarket();
+                break;
+            case ROUTE_FOR_SELL:
+                collectionType = COLLECTION_TYPE_COLLECTION;
+                this.getCollection(collectionType);
+                break;
+            case ROUTE_USERS:
+                this.getUsers();
+                break;
+            case ROUTE_SEARCH:
+                this.makeSearchRequest('');
+        }
     }
+
 
     static getDerivedStateFromProps(nextProps, prevState) {
         const {token} = prevState;
@@ -298,12 +296,14 @@ class App extends Component {
             });
     };
 
-    setSpecificResult = (release, collectionType) => {
+    setSpecificResult = (release, collectionType, isOtherUserCollection) => {
         this.clearCurrentRelease();
+
+        const { currentUser } = this.state;
 
         this.setState({ currentRelease: release }, () => {
             this.releaseAnimationTimeout = setTimeout(() => {
-                switch (collectionType) {
+                switch (collectionType && !isOtherUserCollection) {
                     case COLLECTION_TYPE_COLLECTION:
                         this.props.history.push(`${ROUTE_COLLECTION}${ROUTE_RELEASE}/${release.id}`);
                         break;
@@ -315,7 +315,11 @@ class App extends Component {
                         break;
                     case COLLECTION_TYPE_MARKET:
                         this.props.history.push(`${ROUTE_MARKET}${ROUTE_RELEASE}/${release.id}`);
-                            break;
+                        break;
+                    case COLLECTION_TYPE_OTHER_USER:
+                        this.props.history.push(`${ROUTE_USERS}/${currentUser && currentUser.username}${ROUTE_RELEASE}/${release.id}`);
+                        break;
+
                 }
             }, 600);
         })
@@ -354,27 +358,30 @@ class App extends Component {
             }
         })
             .then((res) => {
-                this.setState({requestPending: false});
 
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.setState({
                         vinylCollection: collectionType === COLLECTION_TYPE_COLLECTION || collectionType === COLLECTION_TYPE_FOR_SELL ? res.data.collection : [],
-                        wishlist: collectionType === COLLECTION_TYPE_WISHLIST ? res.data.collection : [],
+                        wishlist: collectionType === COLLECTION_TYPE_WISHLIST ? res.data.collection : []
                     });
 
                     if (shouldResetCurrentRelease) {
                         this.resetSpecificResult(res.data.collection, currentReleaseId)
                     }
                 }
+
+                this.setState({ requestPending: false });
             });
     };
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         const prevPath = prevProps.location.pathname;
         const nextPath = this.props.location.pathname;
+
         if ((nextPath === ROUTE_COLLECTION
             || nextPath === ROUTE_WISHLIST
             || nextPath === ROUTE_FOR_SELL
+            || nextPath === ROUTE_SEARCH
             || nextPath === ROUTE_MARKET
             || nextPath === ROUTE_USERS)
             && nextPath !== prevPath) {
@@ -400,6 +407,8 @@ class App extends Component {
                 case ROUTE_USERS:
                     this.getUsers();
                     break;
+                case ROUTE_SEARCH:
+                    this.makeSearchRequest('');
             }
         }
 
@@ -443,7 +452,7 @@ class App extends Component {
             isSellModalOpened,
             currentUser
         } = this.state;
-
+        console.log(`${ROUTE_USERS}/${currentUser && currentUser.username}/${ROUTE_RELEASE}`);
         const { location, history } = this.props;
         const isOnAuthRoute = location.pathname === ROUTE_SIGN_IN || location.pathname === ROUTE_SIGN_UP;
         return (
@@ -575,8 +584,16 @@ class App extends Component {
                                        render={() => <Users requestPending={requestPending}
                                                             users={users}
                                                             renderUser={this.renderUser}/>}/>
-                                <Route path={`${ROUTE_USERS}/${currentUser && currentUser.username}`}
+                                <Route exact path={`${ROUTE_USERS}/${currentUser && currentUser.username}`}
                                        render={() => <User  setSpecificResult={this.setSpecificResult} user={currentUser}/>}/>
+                                <Route path={`${ROUTE_USERS}/${currentUser && currentUser.username}${ROUTE_RELEASE}`}
+                                       render={() => <ReleaseFull openLightbox={this.openLightbox}
+                                                                  closeLightbox={this.closeLightbox}
+                                                                  openSnackbar={this.openSnackbar}
+                                                                  history={history}
+                                                                  isOtherUserCollection={true}
+                                                                  getCollection={this.getCollection}
+                                                                  release={currentRelease}/>}/>
                                 <Redirect to="/404"/>
                             </Switch>
                             <Snackbar snackbarOptions={snackbarOptions} closeSnackbar={this.closeSnackbar}/>

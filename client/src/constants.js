@@ -8,6 +8,7 @@ export const COLLECTION_TYPE_COLLECTION = 'vinylCollection';
 export const COLLECTION_TYPE_WISHLIST = 'wishlist';
 export const COLLECTION_TYPE_FOR_SELL = 'forSale';
 export const COLLECTION_TYPE_MARKET = 'market';
+export const COLLECTION_TYPE_OTHER_USER = 'otherUser';
 
 //ROUTES
 export const ROUTE_HOME = '/';

@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {
     COLLECTION_TYPE_FOR_SELL,
-    COLLECTION_TYPE_MARKET,
+    COLLECTION_TYPE_MARKET, COLLECTION_TYPE_OTHER_USER,
     CONDITION,
     DOGS_SPACE_GIF_URL,
     TOOLTIP_DELAY_SHOW
@@ -21,7 +21,8 @@ class SearchItem extends Component {
     }
 
     async getRelease (type, id){
-        const {collectionType} = this.props;
+        const { isOtherUserCollection } = this.props;
+        let { collectionType } = this.props;
         document.querySelectorAll('.search-item-container').forEach(container => {
             container.classList.remove('opened');
         });
@@ -30,9 +31,8 @@ class SearchItem extends Component {
         if (!collectionType) {
             await this.props.getSpecificResult(type, id);
             } else {
-            console.log('asd', collectionType);
             this.timeout = setTimeout(() => {
-                this.props.setSpecificResult(this.props.release, collectionType);
+                this.props.setSpecificResult(this.props.release, collectionType, isOtherUserCollection);
             }, 300);
         }
     };
@@ -46,6 +46,7 @@ class SearchItem extends Component {
     }
 
     render () {
+        ReactTooltip.rebuild();
         const {release, collectionType} = this.props;
         const title = release.title;
         let label = release.label ? <span key={release.label[0] + Math.random()}>{release.label[0] +  ' - ' + release.catno}</span> : null;
@@ -59,7 +60,7 @@ class SearchItem extends Component {
         const country = release.country;
         const index = title && title.indexOf("-");
         let artist = title && title.substr(0, index); // Gets the first part
-        let artistTooltip = ''
+        let artistTooltip = '';
         if (collectionType) {
             artist = release.artists && release.artists.map((artist) => {
                 artistTooltip = artist.name + artist.join;

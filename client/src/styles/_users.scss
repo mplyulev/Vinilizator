@@ -34,3 +34,27 @@
     }
   }
 }
+
+.user-wrapper {
+  text-align: center;
+  
+  .user {
+    font-weight: 500;
+    font-size: 24px;
+  }
+
+  .username {
+    font-size: 24px;
+    font-weight: 900;
+  }
+
+  .user-navigation-item {
+    margin: 20px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &.selected {
+      color: $font-color-red;
+    }
+  }
+}
