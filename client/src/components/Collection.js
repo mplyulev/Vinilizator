@@ -234,19 +234,28 @@ class Collection extends Component {
                             })
                             :
                             <div className="no-results">
-                                {collectionType === COLLECTION_TYPE_WISHLIST ?
-                                    <p>YOU HAVE NO RECORDS IN YOU WISHLIST</p> : null}
-                                {collectionType === COLLECTION_TYPE_COLLECTION ?
-                                    <p>YOU HAVE NO RECORDS IN YOUR COLLECTION</p> : null}
-                                {collectionType === COLLECTION_TYPE_FOR_SELL ?
-                                    <p>YOU HAVE NO RECORDS FOR SALE</p> : null}
+                                {collectionType === COLLECTION_TYPE_WISHLIST
+                                    ? !isOtherUserCollection
+                                        ? <p>YOU HAVE NO RECORDS IN YOU WISHLIST</p>
+                                        : <p>USER HAS NO RECORDS IN HIS WISHLIST</p>
+                                    : null}
+                                {collectionType === COLLECTION_TYPE_COLLECTION
+                                    ? !isOtherUserCollection
+                                        ? <p>YOU HAVE NO RECORDS IN YOUR COLLECTION</p>
+                                        : <p>USER HAS NO RECORDS IN HIS COLLECTION</p>
+                                    : null}
+                                {collectionType === COLLECTION_TYPE_FOR_SELL
+                                    ? !isOtherUserCollection
+                                        ? <p>YOU HAVE NO RECORDS FOR SALE</p>
+                                        : <p>USER HAS NO RECORDS FOR SALE</p>
+                                    : null}
                                 {collectionType === COLLECTION_TYPE_MARKET ? <span>THE MARKET IS EMPTY</span> : null}
-                                <Button color="success"
-                                        onClick={() => this.props.history.push(ROUTE_SEARCH)}>
+                                {!isOtherUserCollection ? <Button color="success"
+                                                                  onClick={() => this.props.history.push(ROUTE_SEARCH)}>
                                     SEARCH FOR RECORDS
-                                </Button>
+                                </Button> : null}
                             </div>
-                    : null}
+                        : null}
                 </div>
             </div>
         );

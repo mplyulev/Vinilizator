@@ -50,9 +50,10 @@ class User extends Component {
         return (
             <Fragment>
                 <div className="user-wrapper">
-                    <span className="user">User - </span><span className="username">{user.username}</span>
+                    {/*<span className="user">User - </span>*/}
+                    <span className="username">{user.username}'s</span>
                     <div className="user-navigation-bar">
-                        <span className="user-navigation-item" onClick={(event) => this.renderCollection(event, COLLECTION_TYPE_COLLECTION)}>COLLECTION</span>
+                        <span className="user-navigation-item selected" onClick={(event) => this.renderCollection(event, COLLECTION_TYPE_COLLECTION)}>COLLECTION</span>
                         <span className="user-navigation-item" onClick={(event) => this.renderCollection(event, COLLECTION_TYPE_WISHLIST)}>WISHLIST</span>
                         <span className="user-navigation-item" onClick={(event) => this.renderCollection(event, COLLECTION_TYPE_FOR_SELL)}>FOR SALE</span>
                     </div>

@@ -175,7 +175,7 @@ class ReleaseFull extends Component {
                 <div className="release-data-container">
                     {isInMarket || isForSell ?
                         <div className="selling-info">
-                            <span className="seller">Sold by: {release.soldBy}</span>
+                            <span>Sold by: </span><span className="seller"> {release.soldBy}</span>
                             <span>Price: {release.price} BGN</span>
                             <p className="condition"
                                data-for="collection-page-tooltip"
