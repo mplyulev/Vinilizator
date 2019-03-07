@@ -109,15 +109,17 @@ class App extends Component {
     addToSellList = (release, sellData , isEditing) => {
         const userId = localStorage.getItem('userId');
         this.toggleSellModal();
-        axios.post('/api/controllers/collection/addToCollection', {release, userId});
-        axios.post('/api/controllers/collection/removeFromWishlist', {release, userId});
-        axios.post('/api/controllers/collection/addToSellList', { release, userId, sellData, isEditing })
-            .then((res) => {
-                if (res.status === RESPONSE_STATUS_SUCCESS) {
-                    this.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
-                    this.getCollection(COLLECTION_TYPE_COLLECTION, true, release.id);
-                }
-            });
+        axios.post('/api/controllers/collection/addToCollection', {release, userId}).then(() => {
+            axios.post('/api/controllers/collection/addToSellList', { release, userId, sellData, isEditing })
+                .then((res) => {
+                    if (res.status === RESPONSE_STATUS_SUCCESS) {
+                        this.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
+                        axios.post('/api/controllers/collection/removeFromWishlist', {release, userId});
+                        this.getCollection(COLLECTION_TYPE_COLLECTION, true, release.id);
+                    }
+                });
+        });
+
     };
 
     toggleSellModal = () => {

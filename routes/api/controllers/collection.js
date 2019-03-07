@@ -126,7 +126,23 @@ router.post('/removeFromWishlist', function(req, res) {
 //Add item to wishlist
 router.post('/addToWishlist', function(req, res) {
     User.findById(req.body.userId, function(err, user) {
+        let isInCollection = false;
+
         if (user) {
+            user.vinylCollection.map((vinyl, index) => {
+                if (vinyl.id === req.body.release.id) {
+                    res.send({
+                        success: false,
+                        msg: req.body.release.artists_sort + ' - ' + req.body.release.title + ' is already in your collection!'
+                    });
+                    isInCollection = true;
+                }
+            });
+
+            if (isInCollection) {
+                return;
+            }
+
             const isVinylAlreadyAdded = user.wishlist && user.wishlist.filter(vinyl => vinyl.id === req.body.release.id).length === 0 ? false : true;
 
             if (isVinylAlreadyAdded) {
