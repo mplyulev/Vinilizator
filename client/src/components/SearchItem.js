@@ -26,7 +26,7 @@ class SearchItem extends Component {
         document.querySelectorAll('.search-item-container').forEach(container => {
             container.classList.remove('opened');
         });
-
+        console.log('getRelease', collectionType)
         this.item.classList.add('opened');
         if (!collectionType) {
             await this.props.getSpecificResult(type, id);

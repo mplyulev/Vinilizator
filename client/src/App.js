@@ -305,7 +305,8 @@ class App extends Component {
 
         this.setState({ currentRelease: release }, () => {
             this.releaseAnimationTimeout = setTimeout(() => {
-                switch (collectionType && !isOtherUserCollection) {
+                console.log('settomg resulg, ', collectionType, isOtherUserCollection)
+                    switch (collectionType) {
                     case COLLECTION_TYPE_COLLECTION:
                         this.props.history.push(`${ROUTE_COLLECTION}${ROUTE_RELEASE}/${release.id}`);
                         break;
@@ -321,7 +322,6 @@ class App extends Component {
                     case COLLECTION_TYPE_OTHER_USER:
                         this.props.history.push(`${ROUTE_USERS}/${currentUser && currentUser.username}${ROUTE_RELEASE}/${release.id}`);
                         break;
-
                 }
             }, 600);
         })
