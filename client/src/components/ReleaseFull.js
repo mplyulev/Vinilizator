@@ -74,7 +74,7 @@ class ReleaseFull extends Component {
                     if (!shouldStayOnSamePage) {
                         this.props.history.push(ROUTE_FOR_SELL);
                     }
-                    this.props.getCollection(COLLECTION_TYPE_COLLECTION, true, release.id);
+                    this.props.getCollection(true, release.id);
                     this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
                 }
             });
@@ -104,8 +104,10 @@ class ReleaseFull extends Component {
             isInWishlist,
             isInMarket,
             isForSell,
-            collectionType,
-            isOtherUserCollection
+            isOtherUserCollection,
+            isSearchItemInCollection,
+            isSearchItemForSale,
+            isSearchItemInWishlist
         } = this.props;
 
         const {
@@ -171,13 +173,14 @@ class ReleaseFull extends Component {
                 </div>
             );
         });
-
+        console.log('test', this.props, isSearchItemInCollection)
         return (
             <Fragment>
                 <div className="release-data-container">
-                        {isInMarket || isForSell || (isOtherUserCollection && release.forSale) ?
+                    {isInMarket || isForSell || (isOtherUserCollection && release.forSale) ?
                         <div className="selling-info">
-                            <span className="sold-by">Sold by: </span><span className="seller"> {release.soldBy.username}</span>
+                            <span className="sold-by">Sold by: </span><span
+                            className="seller"> {release.soldBy.username}</span>
                             <span>Price: {release.price} BGN</span>
                             <p className="condition"
                                data-for="collection-page-tooltip"
@@ -193,7 +196,9 @@ class ReleaseFull extends Component {
                     {images && <img className="release-cover" onClick={() => openLightbox(images)} src={images[0]}/>}
                     <div className="info-wrapper">
                         <span className="artists">{artists}</span> - <span className="release-title">{title}</span>
-                        {labels && <p>Label: {labels}<span>{release.labels[0].catno ? '-' : ''}{release.labels[0].catno}</span></p>}
+                        {labels &&
+                        <p>Label: {labels}<span>{release.labels[0].catno ? '-' : ''}{release.labels[0].catno}</span>
+                        </p>}
                         {formats.length && formats[0] &&
                         <p>Format: {formats[0].qty > 1 ? formats[0].qty + ' x ' : ''}
                             <span>{formats[0].name}</span> {formatDescription} </p>}
@@ -218,10 +223,15 @@ class ReleaseFull extends Component {
                     <div className="buttons-wrapper">
                         {!isInCollection && !isInMarket && !isInWishlist && !isForSell && !isOtherUserCollection
                             ? <Fragment>
-                                <Button color="success" className="add-button"
-                                        onClick={() => this.addToCollection(release)}>
-                                    Add to collection
-                                </Button>
+                                {!isSearchItemInCollection
+                                    ? <Button color="success" className="add-button"
+                                              onClick={() => this.addToCollection(release)}>
+                                        Add to collection
+                                    </Button>
+                                    : <Button color="success" className="add-button"
+                                              onClick={() => this.removeFromCollection(release)}>
+                                        Remove from collection
+                                    </Button>}
                                 <Button color="success" className="add-button"
                                         onClick={() => this.addToWishlist(release)}>
                                     Add to wishlist

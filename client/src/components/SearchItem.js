@@ -84,7 +84,7 @@ class SearchItem extends Component {
                      onClick={() => this.getRelease(release.type, release.id)}>
                     {collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL
                         ? <div className="selling-info">
-                            { collectionType !== COLLECTION_TYPE_FOR_SELL && <span className="seller">Sold by: {release.soldBy}</span>}
+                            { collectionType !== COLLECTION_TYPE_FOR_SELL && <span className="seller">Sold by: {release.soldBy.username}</span>}
                             <span>Price: {release.price} BGN</span>
                             <p className="condition"
                                   data-for="collection-page-tooltip"

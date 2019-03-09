@@ -7,8 +7,7 @@ const User = require("../../../models/user");
 router.get('/getCollection', function(req, res) {
     User.findById(req.query.userId, function(err, user) {
         if (user) {
-            const collectionType = req.query.collectionType;
-            res.send({ success: true, collection: user[collectionType] });
+            res.send({ success: true, collection: user });
         }
     });
 });

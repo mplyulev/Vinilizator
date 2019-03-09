@@ -83,7 +83,11 @@ class App extends Component {
             market: [],
             isNavBarOpened: false,
             isSellModalOpened: false,
-            currentUser: null
+            currentUser: null,
+            isSearchItemInCollection: false,
+            isSearchItemInWishlist: false,
+            isSearchItemForSale: false,
+            userInfo: null
         };
 
         this.searchQuery = _.debounce(this.searchQuery, DEBOUNCE_TIME);
@@ -116,7 +120,7 @@ class App extends Component {
                     if (res.status === RESPONSE_STATUS_SUCCESS) {
                         this.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
                         axios.post('/api/controllers/collection/removeFromWishlist', {release, userId});
-                        this.getCollection(COLLECTION_TYPE_COLLECTION, true, release.id);
+                        this.getCollection(true, release.id);
                     }
                 });
         });
@@ -221,6 +225,9 @@ class App extends Component {
             this.setState({ lastRequestedRoute: this.props.location.pathname });
             this.props.history.push(ROUTE_SIGN_IN);
         }
+        if (token) {
+            this.getCollection();
+        }
 
         let pathname = location.pathname;
 
@@ -232,11 +239,11 @@ class App extends Component {
         switch (pathname) {
             case ROUTE_COLLECTION:
                 collectionType = COLLECTION_TYPE_COLLECTION;
-                this.getCollection(collectionType);
+                this.getCollection();
                 break;
             case ROUTE_WISHLIST:
                 collectionType = COLLECTION_TYPE_WISHLIST;
-                this.getCollection(collectionType);
+                this.getCollection();
                 break;
             case ROUTE_MARKET:
                 collectionType = COLLECTION_TYPE_MARKET;
@@ -244,7 +251,7 @@ class App extends Component {
                 break;
             case ROUTE_FOR_SELL:
                 collectionType = COLLECTION_TYPE_COLLECTION;
-                this.getCollection(collectionType);
+                this.getCollection();
                 break;
             case ROUTE_USERS:
                 this.getUsers();
@@ -332,6 +339,41 @@ class App extends Component {
         })
     };
 
+    setReleaseStatus = (release) => {
+        console.log('asd',release);
+        this.setState({requestPending: true});
+        axios.get('/api/controllers/collection/getCollection', {
+            params: {
+                userId: localStorage.getItem('userId')
+            }
+        }).then((res) => {
+            if (res.status === RESPONSE_STATUS_SUCCESS) {
+                const collection = res.data.collection;
+
+                collection.vinylCollection.map(vinyl => {
+                    if(vinyl.id === release.id) {}
+                    if (vinyl.id === release.id) {
+                        this.setState({isSearchItemInCollection: true});
+                        return;
+                    }
+
+                    if (vinyl.forSale) {
+                        this.setState({isSearchItemForSale: true});
+                        return;
+                    }
+                });
+
+                if (collection.wishlist.length > 0) {
+                    collection.wishlist.map(vinyl => {
+                        if (vinyl.id === release.id) {
+                            this.setState({isSearchItemInWishlist: true})
+                        }
+                    });
+                }
+            }
+        });
+    };
+
     async getSpecificResult(type, id) {
         this.clearCurrentRelease();
         clearTimeout(this.releaseAnimationTimeout);
@@ -339,6 +381,7 @@ class App extends Component {
             .then(response => {
                 this.setState({currentRelease: response.data}, () => {
                     this.releaseAnimationTimeout = setTimeout(() => {
+                        this.setReleaseStatus(response.data);
                         this.props.history.push(`${type}/${id}`);
                     }, 600);
                 });
@@ -356,29 +399,26 @@ class App extends Component {
         });
     };
 
-    getCollection = (collectionType, shouldResetCurrentRelease, currentReleaseId) => {
+    getCollection = (shouldResetCurrentRelease, currentReleaseId) => {
         this.setState({requestPending: true});
         axios.get('/api/controllers/collection/getCollection', {
             params: {
-                collectionType,
                 userId: localStorage.getItem('userId')
             }
-        })
-            .then((res) => {
+        }).then((res) => {
+            if (res.status === RESPONSE_STATUS_SUCCESS) {
+                this.setState({
+                    vinylCollection: res.data.collection.vinylCollection || [],
+                    wishlist: res.data.collection.wishlist || []
+                });
 
-                if (res.status === RESPONSE_STATUS_SUCCESS) {
-                    this.setState({
-                        vinylCollection: collectionType === COLLECTION_TYPE_COLLECTION || collectionType === COLLECTION_TYPE_FOR_SELL ? res.data.collection : [],
-                        wishlist: collectionType === COLLECTION_TYPE_WISHLIST ? res.data.collection : []
-                    });
-
-                    if (shouldResetCurrentRelease) {
-                        this.resetSpecificResult(res.data.collection, currentReleaseId)
-                    }
+                if (shouldResetCurrentRelease) {
+                    this.resetSpecificResult(res.data.collection, currentReleaseId)
                 }
+            }
 
-                this.setState({ requestPending: false });
-            });
+            this.setState({ requestPending: false });
+        });
     };
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -386,7 +426,7 @@ class App extends Component {
         const nextPath = this.props.location.pathname;
 
         if (nextPath === ROUTE_SEARCH && prevPath !== ROUTE_RELEASE && nextPath !== prevPath) {
-            this.setState({ searchQuery: '' })
+            this.setState({searchQuery: ''});
         }
 
         if ((nextPath === ROUTE_COLLECTION
@@ -401,15 +441,15 @@ class App extends Component {
             switch (nextPath) {
                 case ROUTE_COLLECTION:
                     collectionType = COLLECTION_TYPE_COLLECTION;
-                    this.getCollection(collectionType);
+                    this.getCollection();
                     break;
                 case ROUTE_WISHLIST:
                     collectionType = COLLECTION_TYPE_WISHLIST;
-                    this.getCollection(collectionType);
+                    this.getCollection();
                     break;
                 case ROUTE_FOR_SELL:
                     collectionType = COLLECTION_TYPE_COLLECTION;
-                    this.getCollection(collectionType);
+                    this.getCollection();
                     break;
                 case ROUTE_MARKET:
                     collectionType = COLLECTION_TYPE_MARKET;
@@ -462,7 +502,10 @@ class App extends Component {
             isNavBarOpened,
             isSellModalOpened,
             currentUser,
-            collectionType
+            collectionType,
+            isSearchItemInCollection,
+            isSearchItemForSale,
+            isSearchItemInWishlist
         } = this.state;
 
         const { location, history } = this.props;
@@ -505,6 +548,9 @@ class App extends Component {
                                                                   getCollection={this.getCollection}
                                                                   toggleSellModal={this.toggleSellModal}
                                                                   openSnackbar={this.openSnackbar}
+                                                                  isSearchItemInCollection={isSearchItemInCollection}
+                                                                  isSearchItemForSale={isSearchItemForSale}
+                                                                  isSearchItemInWishlist={isSearchItemInWishlist}
                                                                   release={currentRelease}/>}/>
                                 <Route exact path={ROUTE_SEARCH}
                                        render={() => <SearchPage getNextPageResult={this.getNextPageResult}
@@ -512,7 +558,7 @@ class App extends Component {
                                                                  queryResult={queryResult}
                                                                  requestPending={requestPending}
                                                                  getSpecificResult={this.getSpecificResult}
-                                                                 currentRelease={currentRelease} x
+                                                                 currentRelease={currentRelease}
                                                                  clearCurrentRelease={this.clearCurrentRelease}
                                                                  history={history}
                                                                  makeSearchRequest={this.makeSearchRequest}
