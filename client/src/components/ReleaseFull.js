@@ -3,7 +3,7 @@ import { Button } from 'reactstrap/dist/reactstrap.es'
 import axios from 'axios';
 
 import {
-    COLLECTION_TYPE_COLLECTION,
+    COLLECTION_TYPE_COLLECTION, COLLECTION_TYPE_FOR_SELL,
     CONDITION,
     RESPONSE_STATUS_SUCCESS,
     ROUTE_COLLECTION,
@@ -104,6 +104,7 @@ class ReleaseFull extends Component {
             isInWishlist,
             isInMarket,
             isForSell,
+            collectionType,
             isOtherUserCollection
         } = this.props;
 
@@ -174,9 +175,9 @@ class ReleaseFull extends Component {
         return (
             <Fragment>
                 <div className="release-data-container">
-                    {isInMarket || isForSell ?
+                        {isInMarket || isForSell || (isOtherUserCollection && release.forSale) ?
                         <div className="selling-info">
-                            <span>Sold by: </span><span className="seller"> {release.soldBy}</span>
+                            <span className="sold-by">Sold by: </span><span className="seller"> {release.soldBy.username}</span>
                             <span>Price: {release.price} BGN</span>
                             <p className="condition"
                                data-for="collection-page-tooltip"
@@ -291,7 +292,7 @@ class ReleaseFull extends Component {
                             <Fragment>
                                 <Button color="success" className="add-button"
                                         onClick={() => console.log('asd')}>
-                                    Message {release.soldBy}
+                                    Message {release.soldBy.username}
                                 </Button>
                             </Fragment>
                             : null

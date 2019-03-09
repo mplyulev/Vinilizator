@@ -78,6 +78,7 @@ class App extends Component {
             },
             vinylCollection: [],
             wishlist: [],
+            collectionType: '',
             forSale: [],
             market: [],
             isNavBarOpened: false,
@@ -309,6 +310,7 @@ class App extends Component {
                     this.props.history.push(`${ROUTE_USERS}/${currentUser && currentUser.username}${ROUTE_COLLECTION}${ROUTE_RELEASE}/${release.id}`);
                     return
                 }
+                this.setState({collectionType: collectionType});
                 switch (collectionType) {
                 case COLLECTION_TYPE_COLLECTION:
                     this.props.history.push(`${ROUTE_COLLECTION}${ROUTE_RELEASE}/${release.id}`);
@@ -459,11 +461,13 @@ class App extends Component {
             market,
             isNavBarOpened,
             isSellModalOpened,
-            currentUser
+            currentUser,
+            collectionType
         } = this.state;
-        console.log(`${ROUTE_USERS}/${currentUser && currentUser.username}/${ROUTE_RELEASE}`);
+
         const { location, history } = this.props;
         const isOnAuthRoute = location.pathname === ROUTE_SIGN_IN || location.pathname === ROUTE_SIGN_UP;
+
         return (
             <div>
                 <Scrollbars autoHide
@@ -600,6 +604,7 @@ class App extends Component {
                                                                   closeLightbox={this.closeLightbox}
                                                                   openSnackbar={this.openSnackbar}
                                                                   history={history}
+                                                                  collectionType={collectionType}
                                                                   isOtherUserCollection={true}
                                                                   getCollection={this.getCollection}
                                                                   release={currentRelease}/>}/>
