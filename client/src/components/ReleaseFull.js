@@ -103,7 +103,8 @@ class ReleaseFull extends Component {
             toggleSellModal,
             isInWishlist,
             isInMarket,
-            isForSell
+            isForSell,
+            isOtherUserCollection
         } = this.props;
 
         const {
@@ -214,7 +215,7 @@ class ReleaseFull extends Component {
                                did mount and check respone to see if anything is loaded if not hide iframe */}
                     </div>
                     <div className="buttons-wrapper">
-                        {!isInCollection && !isInMarket && !isInWishlist && !isForSell
+                        {!isInCollection && !isInMarket && !isInWishlist && !isForSell && !isOtherUserCollection
                             ? <Fragment>
                                 <Button color="success" className="add-button"
                                         onClick={() => this.addToCollection(release)}>
@@ -231,7 +232,7 @@ class ReleaseFull extends Component {
                             </Fragment>
                             : null
                         }
-                        {isInCollection && !isInWishlist ?
+                        {isInCollection && !isInWishlist && !isOtherUserCollection ?
                             <Fragment>
                                 <Button color="success" className="add-button"
                                         onClick={() => this.removeFromCollection(release)}>
@@ -256,7 +257,7 @@ class ReleaseFull extends Component {
                             </Fragment>
                             : null
                         }
-                        {isInWishlist ?
+                        {isInWishlist && !isOtherUserCollection ?
                             <Fragment>
                                 <Button color="success" className="add-button"
                                         onClick={() => this.removeFromWishlist(release)}>
@@ -269,7 +270,7 @@ class ReleaseFull extends Component {
                             </Fragment>
                             : null
                         }
-                        {isForSell ?
+                        {isForSell && !isOtherUserCollection ?
                             <Fragment>
                                 <Button color="success" className="add-button"
                                         onClick={() => this.removeFromSell(release)}>
@@ -286,7 +287,7 @@ class ReleaseFull extends Component {
                             </Fragment>
                             : null
                         }
-                        {isInMarket ?
+                        {isInMarket || isOtherUserCollection ?
                             <Fragment>
                                 <Button color="success" className="add-button"
                                         onClick={() => console.log('asd')}>

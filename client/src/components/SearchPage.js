@@ -20,7 +20,8 @@ class SearchPage extends Component {
 
         this.state = {
             prevProps: props,
-            dropdownOpen: false
+            dropdownOpen: false,
+            searchQueryString: props.searchQueryString
         };
 
         this.onChange = this.onChange.bind(this);
@@ -28,6 +29,7 @@ class SearchPage extends Component {
 
     onChange(event) {
         this.props.searchQuery(event.target.value);
+        this.setState({ searchQueryString: event.target.value })
     }
 
     toggle = () => {
@@ -39,7 +41,6 @@ class SearchPage extends Component {
     render () {
         const {
             getNextPageResult,
-            searchQueryString,
             requestPending,
             getSpecificResult,
             history,
@@ -58,7 +59,7 @@ class SearchPage extends Component {
             <div>
                 <InputGroup className="search-bar">
                     <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
-                    <Input onChange={this.onChange} placeholder={searchQueryString}/>
+                    <Input onChange={this.onChange} value={this.state.searchQueryString} />
                 </InputGroup>
                 <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                     <DropdownToggle caret>

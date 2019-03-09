@@ -305,23 +305,26 @@ class App extends Component {
 
         this.setState({ currentRelease: release }, () => {
             this.releaseAnimationTimeout = setTimeout(() => {
-                console.log('settomg resulg, ', collectionType, isOtherUserCollection)
-                    switch (collectionType) {
-                    case COLLECTION_TYPE_COLLECTION:
-                        this.props.history.push(`${ROUTE_COLLECTION}${ROUTE_RELEASE}/${release.id}`);
-                        break;
-                    case COLLECTION_TYPE_WISHLIST:
-                        this.props.history.push(`${ROUTE_WISHLIST}${ROUTE_RELEASE}/${release.id}`);
-                        break;
-                    case COLLECTION_TYPE_FOR_SELL:
-                        this.props.history.push(`${ROUTE_FOR_SELL}${ROUTE_RELEASE}/${release.id}`);
-                        break;
-                    case COLLECTION_TYPE_MARKET:
-                        this.props.history.push(`${ROUTE_MARKET}${ROUTE_RELEASE}/${release.id}`);
-                        break;
-                    case COLLECTION_TYPE_OTHER_USER:
-                        this.props.history.push(`${ROUTE_USERS}/${currentUser && currentUser.username}${ROUTE_RELEASE}/${release.id}`);
-                        break;
+                if (isOtherUserCollection) {
+                    this.props.history.push(`${ROUTE_USERS}/${currentUser && currentUser.username}${ROUTE_COLLECTION}${ROUTE_RELEASE}/${release.id}`);
+                    return
+                }
+                switch (collectionType) {
+                case COLLECTION_TYPE_COLLECTION:
+                    this.props.history.push(`${ROUTE_COLLECTION}${ROUTE_RELEASE}/${release.id}`);
+                    break;
+                case COLLECTION_TYPE_WISHLIST:
+                    this.props.history.push(`${ROUTE_WISHLIST}${ROUTE_RELEASE}/${release.id}`);
+                    break;
+                case COLLECTION_TYPE_FOR_SELL:
+                    this.props.history.push(`${ROUTE_FOR_SELL}${ROUTE_RELEASE}/${release.id}`);
+                    break;
+                case COLLECTION_TYPE_MARKET:
+                    this.props.history.push(`${ROUTE_MARKET}${ROUTE_RELEASE}/${release.id}`);
+                    break;
+                case COLLECTION_TYPE_OTHER_USER:
+                    this.props.history.push(`${ROUTE_USERS}/${currentUser && currentUser.username}${ROUTE_RELEASE}/${release.id}`);
+                    break;
                 }
             }, 600);
         })
@@ -380,6 +383,10 @@ class App extends Component {
         const prevPath = prevProps.location.pathname;
         const nextPath = this.props.location.pathname;
 
+        if (nextPath === ROUTE_SEARCH && prevPath !== ROUTE_RELEASE && nextPath !== prevPath) {
+            this.setState({ searchQuery: '' })
+        }
+
         if ((nextPath === ROUTE_COLLECTION
             || nextPath === ROUTE_WISHLIST
             || nextPath === ROUTE_FOR_SELL
@@ -410,7 +417,7 @@ class App extends Component {
                     this.getUsers();
                     break;
                 case ROUTE_SEARCH:
-                    this.makeSearchRequest('');
+                    this.makeSearchRequest(this.state.searchQuery || '');
             }
         }
 
@@ -588,7 +595,7 @@ class App extends Component {
                                                             renderUser={this.renderUser}/>}/>
                                 <Route exact path={`${ROUTE_USERS}/${currentUser && currentUser.username}`}
                                        render={() => <User  setSpecificResult={this.setSpecificResult} user={currentUser}/>}/>
-                                <Route path={`${ROUTE_USERS}/${currentUser && currentUser.username}${ROUTE_RELEASE}`}
+                                <Route path={`${ROUTE_USERS}/${currentUser && currentUser.username}${ROUTE_COLLECTION}${ROUTE_RELEASE}`}
                                        render={() => <ReleaseFull openLightbox={this.openLightbox}
                                                                   closeLightbox={this.closeLightbox}
                                                                   openSnackbar={this.openSnackbar}
