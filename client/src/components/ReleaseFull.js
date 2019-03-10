@@ -15,6 +15,15 @@ import {
 import {withRouter} from "react-router-dom";
 
 class ReleaseFull extends Component {
+    constructor(props) {
+        super(props);
+        const { release } = props;
+
+        this.state = {
+            youtubeSrc:  `https://www.youtube.com/embed?listType=search&list=${release.tracklist[0] && release.tracklist[0].artists ? release.tracklist[0].artists[0].name : release.artists[0].name}${release.tracklist[0].title}`
+        };
+    }
+    
     addToCollection = (release, shouldResetReleaseStatus) => {
         const userId = localStorage.getItem('userId');
         axios.post('/api/controllers/collection/addToCollection', { release, userId})
@@ -117,7 +126,14 @@ class ReleaseFull extends Component {
             });
     };
 
+    setYoutubeSrc = (release, track) => {
+        console.log(track, release)
+        this.setState({ youtubeSrc: `https://www.youtube.com/embed?listType=search&list=${track.artists ? track.artists[0].name : release.artists[0].name}${track.title}` })
+    };
+
     render () {
+        const { youtubeSrc } = this.state;
+
         const {
             release,
             openLightbox,
@@ -186,7 +202,7 @@ class ReleaseFull extends Component {
         const tracklistTemplate = tracklist.map(track => {
 
             return (
-                <div key={track.title} className="track">
+                <div key={track.title} className="track" onClick={() => this.setYoutubeSrc(release, track)}>
                     <span>{track.position}.</span>
                     {track.artists && <Fragment><span>{track.artists[0].name}</span>
                         <span>-</span></Fragment>}
@@ -236,7 +252,7 @@ class ReleaseFull extends Component {
                             {tracklistTemplate}
                         </div>
                         <iframe id="ytplayer" type="text/html" width="640" height="360"
-                                src={`https://www.youtube.com/embed?listType=search&list=${release.tracklist[0] && release.tracklist[0].artists ? release.tracklist[0].artists[0].name : release.artists[0].name}${release.tracklist[0].title}`}
+                                src={youtubeSrc}
                                 frameBorder="0">
                         </iframe>
                         {/*when my site has an url add ?origin=http://mywebsite.com to src so i and remake it on component
