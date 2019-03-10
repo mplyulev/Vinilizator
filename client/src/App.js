@@ -90,6 +90,7 @@ class App extends Component {
             userInfo: null
         };
 
+        this.getCollection = this.getCollection.bind(this);
         this.searchQuery = _.debounce(this.searchQuery, DEBOUNCE_TIME);
         this.getSpecificResult = this.getSpecificResult.bind(this);
         this.releaseAnimationTimeout = null
@@ -118,13 +119,13 @@ class App extends Component {
             axios.post('/api/controllers/collection/addToSellList', { release, userId, sellData, isEditing })
                 .then((res) => {
                     if (res.status === RESPONSE_STATUS_SUCCESS) {
-                        this.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
                         axios.post('/api/controllers/collection/removeFromWishlist', {release, userId});
-                        this.getCollection(true, release.id);
+                        this.getCollection(true, true, release.id).then(() => {
+                            this.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
+                        });
                     }
                 });
         });
-
     };
 
     toggleSellModal = () => {
@@ -235,23 +236,12 @@ class App extends Component {
             pathname = pathname.substring(0, pathname.length - 1)
         }
 
-        let collectionType = '';
         switch (pathname) {
-            case ROUTE_COLLECTION:
-                collectionType = COLLECTION_TYPE_COLLECTION;
-                this.getCollection();
-                break;
-            case ROUTE_WISHLIST:
-                collectionType = COLLECTION_TYPE_WISHLIST;
+            case ROUTE_COLLECTION || ROUTE_WISHLIST || ROUTE_FOR_SELL:
                 this.getCollection();
                 break;
             case ROUTE_MARKET:
-                collectionType = COLLECTION_TYPE_MARKET;
                 this.getMarket();
-                break;
-            case ROUTE_FOR_SELL:
-                collectionType = COLLECTION_TYPE_COLLECTION;
-                this.getCollection();
                 break;
             case ROUTE_USERS:
                 this.getUsers();
@@ -339,37 +329,27 @@ class App extends Component {
         })
     };
 
-    setReleaseStatus = (release) => {
-        console.log('asd',release);
-        this.setState({requestPending: true});
-        axios.get('/api/controllers/collection/getCollection', {
-            params: {
-                userId: localStorage.getItem('userId')
-            }
-        }).then((res) => {
-            if (res.status === RESPONSE_STATUS_SUCCESS) {
-                const collection = res.data.collection;
+    setReleaseStatus = (release, vinylCollection, wishlist) => {
+        this.setState({
+            isSearchItemInCollection: false,
+            isSearchItemForSale: false,
+            isSearchItemInWishlist: false
+        });
+        console.log('settigns')
+        vinylCollection.map(vinyl => {
+            if (vinyl.id === release.id) {
+                this.setState({isSearchItemInCollection: true});
 
-                collection.vinylCollection.map(vinyl => {
-                    if(vinyl.id === release.id) {}
-                    if (vinyl.id === release.id) {
-                        this.setState({isSearchItemInCollection: true});
-                        return;
-                    }
-
-                    if (vinyl.forSale) {
-                        this.setState({isSearchItemForSale: true});
-                        return;
-                    }
-                });
-
-                if (collection.wishlist.length > 0) {
-                    collection.wishlist.map(vinyl => {
-                        if (vinyl.id === release.id) {
-                            this.setState({isSearchItemInWishlist: true})
-                        }
-                    });
+                if (vinyl.forSale) {
+                    this.setState({isSearchItemForSale: true});
                 }
+            }
+        });
+
+
+        wishlist.map(vinyl => {
+            if (vinyl.id === release.id) {
+                this.setState({isSearchItemInWishlist: true})
             }
         });
     };
@@ -381,7 +361,8 @@ class App extends Component {
             .then(response => {
                 this.setState({currentRelease: response.data}, () => {
                     this.releaseAnimationTimeout = setTimeout(() => {
-                        this.setReleaseStatus(response.data);
+                        console.log('asd', response.data, this.state.vinylCollection)
+                        this.setReleaseStatus(response.data, this.state.vinylCollection, this.state.wishlist);
                         this.props.history.push(`${type}/${id}`);
                     }, 600);
                 });
@@ -399,7 +380,7 @@ class App extends Component {
         });
     };
 
-    getCollection = (shouldResetCurrentRelease, currentReleaseId) => {
+    async getCollection (shouldResetReleaseStatus, shouldResetCurrentRelease, currentReleaseId) {
         this.setState({requestPending: true});
         axios.get('/api/controllers/collection/getCollection', {
             params: {
@@ -410,10 +391,14 @@ class App extends Component {
                 this.setState({
                     vinylCollection: res.data.collection.vinylCollection || [],
                     wishlist: res.data.collection.wishlist || []
+                }, () => {
+                    if (shouldResetReleaseStatus) {
+                        this.setReleaseStatus(this.state.currentRelease, this.state.vinylCollection, this.state.wishlist);
+                    }
                 });
 
                 if (shouldResetCurrentRelease) {
-                    this.resetSpecificResult(res.data.collection, currentReleaseId)
+                    this.resetSpecificResult(res.data.collection.vinylCollection, currentReleaseId);
                 }
             }
 
@@ -425,47 +410,38 @@ class App extends Component {
         const prevPath = prevProps.location.pathname;
         const nextPath = this.props.location.pathname;
 
-        if (nextPath === ROUTE_SEARCH && prevPath !== ROUTE_RELEASE && nextPath !== prevPath) {
-            this.setState({searchQuery: ''});
-        }
+        if (nextPath !== prevPath) {
+            if (nextPath === ROUTE_SEARCH && prevPath !== ROUTE_RELEASE) {
+                this.setState({searchQuery: ''});
+            }
 
-        if ((nextPath === ROUTE_COLLECTION
-            || nextPath === ROUTE_WISHLIST
-            || nextPath === ROUTE_FOR_SELL
-            || nextPath === ROUTE_SEARCH
-            || nextPath === ROUTE_MARKET
-            || nextPath === ROUTE_USERS)
-            && nextPath !== prevPath) {
-            let collectionType = '';
-            this.setState({requestPending: false});
-            switch (nextPath) {
-                case ROUTE_COLLECTION:
-                    collectionType = COLLECTION_TYPE_COLLECTION;
-                    this.getCollection();
-                    break;
-                case ROUTE_WISHLIST:
-                    collectionType = COLLECTION_TYPE_WISHLIST;
-                    this.getCollection();
-                    break;
-                case ROUTE_FOR_SELL:
-                    collectionType = COLLECTION_TYPE_COLLECTION;
-                    this.getCollection();
-                    break;
-                case ROUTE_MARKET:
-                    collectionType = COLLECTION_TYPE_MARKET;
-                    this.getMarket();
-                    break;
-                case ROUTE_USERS:
-                    this.getUsers();
-                    break;
-                case ROUTE_SEARCH:
-                    this.makeSearchRequest(this.state.searchQuery || '');
+            if (nextPath === ROUTE_COLLECTION
+                || nextPath === ROUTE_WISHLIST
+                || nextPath === ROUTE_FOR_SELL
+                || nextPath === ROUTE_SEARCH
+                || nextPath === ROUTE_MARKET
+                || nextPath === ROUTE_USERS) {
+                this.setState({requestPending: false});
+                switch (nextPath) {
+                    case ROUTE_COLLECTION || ROUTE_FOR_SELL || ROUTE_WISHLIST:
+                        this.getCollection();
+                        break;
+                    case ROUTE_MARKET:
+                        this.getMarket();
+                        break;
+                    case ROUTE_USERS:
+                        this.getUsers();
+                        break;
+                    case ROUTE_SEARCH:
+                        this.makeSearchRequest(this.state.searchQuery || '');
+                }
             }
         }
 
         const { searchQuery, token, lastRequestedRoute } = this.state;
         if (prevState.token !== token && lastRequestedRoute !== ROUTE_SIGN_IN) {
             this.props.history.push(lastRequestedRoute || ROUTE_HOME);
+            this.getCollection();
         }
 
         if (prevState.searchQuery !== searchQuery) {

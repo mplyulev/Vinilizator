@@ -3,7 +3,6 @@ import { Button } from 'reactstrap/dist/reactstrap.es'
 import axios from 'axios';
 
 import {
-    COLLECTION_TYPE_COLLECTION, COLLECTION_TYPE_FOR_SELL,
     CONDITION,
     RESPONSE_STATUS_SUCCESS,
     ROUTE_COLLECTION,
@@ -15,24 +14,29 @@ import {
 } from '../constants';
 
 class ReleaseFull extends Component {
-    addToCollection = (release) => {
+    addToCollection = (release, shouldResetReleaseStatus) => {
         const userId = localStorage.getItem('userId');
         axios.post('/api/controllers/collection/addToCollection', { release, userId})
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
-                    this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
+                    axios.post('/api/controllers/collection/removeFromWishlist', {release, userId});
+                    this.props.getCollection(shouldResetReleaseStatus).then(() => {
+                        this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
+                    });
                 }
-
-                axios.post('/api/controllers/collection/removeFromWishlist', {release, userId});
             });
     };
 
-    removeFromCollection = (release) => {
+    removeFromCollection = (release, shouldStayOnSamePage) => {
         const userId = localStorage.getItem('userId');
         axios.post('/api/controllers/collection/removeFromCollection', { release, userId })
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
-                    this.props.history.push(ROUTE_COLLECTION);
+                    if (!shouldStayOnSamePage) {
+                        this.props.history.push(ROUTE_COLLECTION);
+                    }
+
+                    this.props.getCollection(true);
                     this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
                 }
             });
@@ -41,7 +45,9 @@ class ReleaseFull extends Component {
     markAsSold = (release) => {
         const userId = localStorage.getItem('userId');
         axios.post('/api/controllers/collection/removeFromCollection', { release, userId }).then(() => {
-            this.props.history.push(ROUTE_FOR_SELL);
+            this.props.getCollection().then(() => {
+                this.props.history.push(ROUTE_FOR_SELL);
+            });
         });
     };
 
@@ -52,16 +58,23 @@ class ReleaseFull extends Component {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
                 }
+
+                this.props.getCollection(true, true, release);
             });
     };
 
-    removeFromWishlist = (release) => {
+    removeFromWishlist = (release, shouldStayOnSamePage) => {
         const userId = localStorage.getItem('userId');
         axios.post('/api/controllers/collection/removeFromWishlist', { release, userId })
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
-                    this.props.history.push(ROUTE_WISHLIST);
-                    this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
+                    if (!shouldStayOnSamePage) {
+                        this.props.history.push(ROUTE_WISHLIST);
+                    }
+
+                    this.props.getCollection(true, true, release.id).then(() => {
+                        this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
+                    });
                 }
             });
     };
@@ -73,8 +86,11 @@ class ReleaseFull extends Component {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     if (!shouldStayOnSamePage) {
                         this.props.history.push(ROUTE_FOR_SELL);
+                        this.props.getCollection();
+                    } else {
+                        this.props.getCollection(true, true, release.id);
                     }
-                    this.props.getCollection(true, release.id);
+
                     this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
                 }
             });
@@ -90,7 +106,11 @@ class ReleaseFull extends Component {
 
                 axios.post('/api/controllers/collection/removeFromWishlist', { release, userId })
                     .then((res) => {
-                        this.props.history.push(ROUTE_WISHLIST);
+                        if (res.status === RESPONSE_STATUS_SUCCESS) {
+                            this.props.getCollection().then(() => {
+                                this.props.history.push(ROUTE_WISHLIST);
+                            });
+                        }
                     });
             });
     };
@@ -162,7 +182,7 @@ class ReleaseFull extends Component {
             : '';
 
         const tracklistTemplate = tracklist.map(track => {
-            console.log(track);
+
             return (
                 <div key={track.title} className="track">
                     <span>{track.position}.</span>
@@ -173,7 +193,7 @@ class ReleaseFull extends Component {
                 </div>
             );
         });
-        console.log('test', this.props, isSearchItemInCollection)
+
         return (
             <Fragment>
                 <div className="release-data-container">
@@ -223,23 +243,29 @@ class ReleaseFull extends Component {
                     <div className="buttons-wrapper">
                         {!isInCollection && !isInMarket && !isInWishlist && !isForSell && !isOtherUserCollection
                             ? <Fragment>
-                                {!isSearchItemInCollection
-                                    ? <Button color="success" className="add-button"
-                                              onClick={() => this.addToCollection(release)}>
-                                        Add to collection
-                                    </Button>
-                                    : <Button color="success" className="add-button"
-                                              onClick={() => this.removeFromCollection(release)}>
-                                        Remove from collection
-                                    </Button>}
                                 <Button color="success" className="add-button"
-                                        onClick={() => this.addToWishlist(release)}>
-                                    Add to wishlist
+                                        onClick={
+                                            () => !isSearchItemInCollection
+                                                ? this.addToCollection(release, true)
+                                                : this.removeFromCollection(release, true)}>
+                                    {!isSearchItemInCollection ? 'Add to collection' : 'Remove from collection'}
                                 </Button>
+                                {!isSearchItemInCollection && <Button color="success" className="add-button"
+                                        onClick={() => !isSearchItemInWishlist
+                                                ? this.addToWishlist(release)
+                                                : this.removeFromWishlist(release, true)}>
+                                    {!isSearchItemInWishlist ? 'Add to wishlist' : 'Remove from wishlist'}
+                                </Button>}
                                 <Button color="success" className="add-button"
+                                        onClick={() => !isSearchItemForSale
+                                                ? toggleSellModal(release)
+                                                : this.removeFromSell(release, true)}>
+                                    {!isSearchItemForSale ? 'Add to selling' : 'Remove from selling'}
+                                </Button>
+                                {isSearchItemForSale && <Button color="success" className="add-button"
                                         onClick={() => toggleSellModal(release)}>
-                                    Add to selling
-                                </Button>
+                                    Edit sell info
+                                </Button>}
                             </Fragment>
                             : null
                         }
