@@ -6,12 +6,13 @@ import {
     CONDITION,
     RESPONSE_STATUS_SUCCESS,
     ROUTE_COLLECTION,
-    ROUTE_FOR_SELL,
+    ROUTE_FOR_SELL, ROUTE_RELEASE,
     ROUTE_WISHLIST,
     SNACKBAR_TYPE_FAIL,
     SNACKBAR_TYPE_SUCCESS,
     TOOLTIP_DELAY_SHOW
 } from '../constants';
+import {withRouter} from "react-router-dom";
 
 class ReleaseFull extends Component {
     addToCollection = (release, shouldResetReleaseStatus) => {
@@ -34,9 +35,11 @@ class ReleaseFull extends Component {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     if (!shouldStayOnSamePage) {
                         this.props.history.push(ROUTE_COLLECTION);
+                        this.props.getCollection();
+                    } else {
+                        this.props.getCollection(true);
                     }
 
-                    this.props.getCollection(true);
                     this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
                 }
             });
@@ -86,12 +89,11 @@ class ReleaseFull extends Component {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     if (!shouldStayOnSamePage) {
                         this.props.history.push(ROUTE_FOR_SELL);
-                        this.props.getCollection();
-                    } else {
-                        this.props.getCollection(true, true, release.id);
                     }
 
-                    this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
+                    this.props.getCollection(this.props.location.pathname === `${ROUTE_RELEASE}/${release.id}` ? true : false, true, release.id).then(() => {
+                        this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
+                    });
                 }
             });
     };
@@ -340,4 +342,4 @@ class ReleaseFull extends Component {
     }
 }
 
-export default ReleaseFull;
+export default withRouter(ReleaseFull);

@@ -119,8 +119,9 @@ class App extends Component {
             axios.post('/api/controllers/collection/addToSellList', { release, userId, sellData, isEditing })
                 .then((res) => {
                     if (res.status === RESPONSE_STATUS_SUCCESS) {
+
                         axios.post('/api/controllers/collection/removeFromWishlist', {release, userId});
-                        this.getCollection(true, true, release.id).then(() => {
+                        this.getCollection(this.props.location.pathname === `${ROUTE_RELEASE}/${release.id}` ? true : false, true, release.id).then(() => {
                             this.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
                         });
                     }
