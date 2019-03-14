@@ -47,7 +47,7 @@ class SearchItem extends Component {
 
     render () {
         ReactTooltip.rebuild();
-        const {release, collectionType} = this.props;
+        const {release, collectionType, getSpecificUser} = this.props;
         const title = release.title;
         let label = release.label ? <span key={release.label[0] + Math.random()}>{release.label[0] +  ' - ' + release.catno}</span> : null;
 
@@ -84,26 +84,30 @@ class SearchItem extends Component {
                      onClick={() => this.getRelease(release.type, release.id)}>
                     {collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL
                         ? <div className="selling-info">
-                            { collectionType !== COLLECTION_TYPE_FOR_SELL && <span className="seller">Sold by: {release.soldBy.username}</span>}
+                            {collectionType !== COLLECTION_TYPE_FOR_SELL
+                                ? <span className="seller" onClick={() => getSpecificUser(release.soldBy.userId)}>
+                                    Sold by: {release.soldBy.username}
+                                  </span>
+                                : null}
                             <span>Price: {release.price} BGN</span>
                             <p className="condition"
-                                  data-for="collection-page-tooltip"
-                                  data-delay-show={TOOLTIP_DELAY_SHOW}
-                                  data-tip={release.condition && CONDITION.tooltips[release.condition.type]}>
+                               data-for="collection-page-tooltip"
+                               data-delay-show={TOOLTIP_DELAY_SHOW}
+                               data-tip={release.condition && CONDITION.tooltips[release.condition.type]}>
                                 Condition: {release.condition && release.condition.abr}
                                 {(collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL) && release.notes
-                                ? <FaInfoCircle className="info-icon"
-                                                data-for="collection-page-tooltip"
-                                                data-delay-show={TOOLTIP_DELAY_SHOW}
-                                                data-tip={release.notes}></FaInfoCircle>
-                                : null}
+                                    ? <FaInfoCircle className="info-icon"
+                                                    data-for="collection-page-tooltip"
+                                                    data-delay-show={TOOLTIP_DELAY_SHOW}
+                                                    data-tip={release.notes}></FaInfoCircle>
+                                    : null}
                             </p>
                         </div>
                         : null}
                     <div className="cover-wrapper">
                         <div className="cover-fix-wrapper"><img className="search-item-cover" src={coverUrl}
-                                                                alt="Release cover"/></div>
-                        <img className="half-vinyl" src={HalfVinyl} alt="Release cover"/>
+                                                                alt="Release cover" /></div>
+                        <img className="half-vinyl" src={HalfVinyl} alt="Release cover" />
                     </div>
                     <div className="search-item-info-wrapper">
                         <div className="search-item-title"
@@ -125,7 +129,7 @@ class SearchItem extends Component {
                                  data-delay-show={TOOLTIP_DELAY_SHOW}
                                  data-tip={country}>{country}</div> : null}
                     </div>
-                    <hr className='divider'/>
+                    <hr className='divider' />
                 </div>
             </Fragment>
         );

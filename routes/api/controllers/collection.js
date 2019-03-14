@@ -35,6 +35,12 @@ router.get('/getUsers', function(req, res) {
     });
 });
 
+router.get('/getUser', function(req, res) {
+    User.findById(req.query.userId, function(err, result) {
+        res.send({ success: true, user: result});
+    });
+});
+
 // Add item to collection
 router.post('/addToCollection', function(req, res) {
     User.findById(req.body.userId, function(err, user) {
@@ -166,7 +172,10 @@ router.post('/addToSellList', function(req, res) {
                         });
                     } else {
                         vinyl.forSale = true;
-                        vinyl.soldBy = user.username;
+                        vinyl.soldBy = {
+                            username: user.username,
+                            userId: user.id
+                        };
                         vinyl.notes = req.body.sellData.notes;
                         vinyl.price = req.body.sellData.price;
                         vinyl.condition = req.body.sellData.condition;

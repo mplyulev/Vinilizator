@@ -123,6 +123,7 @@ class Collection extends Component {
             clearCurrentRelease,
             collectionType,
             requestPending,
+            getSpecificUser,
             isOtherUserCollection
         } = this.props;
 
@@ -226,6 +227,7 @@ class Collection extends Component {
                                                 clearCurrentRelease={clearCurrentRelease}
                                                 collectionType={collectionType}
                                                 filterType={DATA_TYPE_RELEASE}
+                                                getSpecificUser={getSpecificUser}
                                                 getSpecificResult={getSpecificResult}
                                                 setSpecificResult={setSpecificResult}
                                                 key={result.id}>

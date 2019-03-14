@@ -19,7 +19,7 @@ class Users extends Component {
     };
 
     render () {
-        const { users, renderUser, requestPending } = this.props;
+        const { users, getSpecificUser, requestPending } = this.props;
 
         return (
             <Fragment>
@@ -33,7 +33,7 @@ class Users extends Component {
                     }
                     {!requestPending && users && users.map(user => {
                         return (
-                            <div className="user" key={user.username} onClick={() => renderUser(user)}>
+                            <div className="user" key={user.username} onClick={() => getSpecificUser(user.id)}>
                                 <span className="username">{user.username}</span>
                                 <span>Items in collection: {user.vinylCollection.length}</span>
                                 <span>Items for sale: {this.getItemsForSell(user) ? this.getItemsForSell(user).length : 0}</span>

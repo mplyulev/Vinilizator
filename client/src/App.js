@@ -178,11 +178,6 @@ class App extends Component {
             });
     };
 
-    renderUser = user => {
-        this.props.history.push(`${ROUTE_USERS}/${user.username}`);
-        this.setState({ currentUser: user })
-    };
-
     getNextPageResult = (page, type) => {
         this.setState({requestPending: true});
         const {searchQuery} = this.state;
@@ -291,7 +286,24 @@ class App extends Component {
                 this.setState({requestPending: false});
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.setState({
-                        users: res.data.users
+                        vi: res.data.users
+                    });
+                }
+            });
+    };
+
+    getSpecificUser = (userId) => {
+        console.log('asd', userId);
+        this.setState({requestPending: true});
+        axios.get('/api/controllers/collection/getUser',  {params: {
+            userId
+        }}).then((res) => {
+                this.setState({requestPending: false});
+                if (res.status === RESPONSE_STATUS_SUCCESS) {
+                    this.setState({
+                        currentUser: res.data.user
+                    }, () => {
+                        this.props.history.push(`${ROUTE_USERS}/${this.state.currentUser.username}`);
                     });
                 }
             });
@@ -582,6 +594,7 @@ class App extends Component {
                                                                  requestPending={requestPending}
                                                                  collectionType={COLLECTION_TYPE_FOR_SELL}
                                                                  currentRelease={currentRelease}
+                                                                 getSpecificUser={this.getSpecificUser}
                                                                  clearCurrentRelease={this.clearCurrentRelease}
                                                                  setSpecificResult={this.setSpecificResult}
                                                                  data={vinylCollection.filter(vinyl => {
@@ -602,6 +615,7 @@ class App extends Component {
                                                                  requestPending={requestPending}
                                                                  collectionType={COLLECTION_TYPE_MARKET}
                                                                  currentRelease={currentRelease}
+                                                                 getSpecificUser={this.getSpecificUser}
                                                                  clearCurrentRelease={this.clearCurrentRelease}
                                                                  setSpecificResult={this.setSpecificResult}
                                                                  data={market}/>}/>
@@ -618,8 +632,7 @@ class App extends Component {
                                 <Route exact path="/404" render={() => null}/>
                                 <Route exact path={`${ROUTE_USERS}`}
                                        render={() => <Users requestPending={requestPending}
-                                                            users={users}
-                                                            renderUser={this.renderUser}/>}/>
+                                                            users={users} />}/>
                                 <Route exact path={`${ROUTE_USERS}/${currentUser && currentUser.username}`}
                                        render={() => <User  setSpecificResult={this.setSpecificResult} user={currentUser}/>}/>
                                 <Route path={`${ROUTE_USERS}/${currentUser && currentUser.username}${ROUTE_COLLECTION}${ROUTE_RELEASE}`}
