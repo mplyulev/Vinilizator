@@ -5,13 +5,15 @@
   justify-content: center;
   width: 100%;
   height: 100%;
-  padding: 30px;
+  padding: 70px 30px;
   text-align: center;
 
   .user {
     width: 300px;
-    height: 130px;
+    height: 300px;
     margin: 30px;
+    background: url('../assets/user-vinyl.png') no-repeat local center;
+    background-size: 101%;
     box-shadow: 0px 2px 17px 0px $background-color-black;
     color: $font-color-black;
     cursor: pointer;

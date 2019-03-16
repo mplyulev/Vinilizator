@@ -251,8 +251,8 @@ class Collection extends Component {
                                         ? <p>YOU HAVE NO RECORDS FOR SALE</p>
                                         : <p>USER HAS NO RECORDS FOR SALE</p>
                                     : null}
-                                {collectionType === COLLECTION_TYPE_MARKET ? <span>THE MARKET IS EMPTY</span> : null}
-                                {!isOtherUserCollection ? <Button color="success"
+                                {collectionType === COLLECTION_TYPE_MARKET ? <p>THE MARKET IS EMPTY</p> : null}
+                                {!isOtherUserCollection && !collectionType ? <Button color="success"
                                                                   onClick={() => this.props.history.push(ROUTE_SEARCH)}>
                                     SEARCH FOR RECORDS
                                 </Button> : null}

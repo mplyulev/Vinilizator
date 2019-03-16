@@ -145,7 +145,8 @@ class ReleaseFull extends Component {
             isOtherUserCollection,
             isSearchItemInCollection,
             isSearchItemForSale,
-            isSearchItemInWishlist
+            isSearchItemInWishlist,
+            getSpecificUser
         } = this.props;
 
         const {
@@ -217,21 +218,23 @@ class ReleaseFull extends Component {
                 <div className="release-data-container">
                     {isInMarket || isForSell || (isOtherUserCollection && release.forSale) ?
                         <div className="selling-info">
-                            <span className="sold-by">Sold by: </span><span
-                            className="seller"> {release.soldBy.username}</span>
+                            {isInMarket && <Fragment>
+                                <span className="sold-by">Sold by: </span>
+                                <span className="seller" onClick={() => getSpecificUser(release.soldBy.userId)}> {release.soldBy.username}</span>
+                            </Fragment>}
                             <span>Price: {release.price} BGN</span>
                             <p className="condition"
                                data-for="collection-page-tooltip"
                                data-delay-show={TOOLTIP_DELAY_SHOW}
                                data-tip={release.condition && CONDITION.tooltips[release.condition.type]}>
-                                Condition: {release.condition && release.condition.abr}
+                                Condition: {release.condition && release.condition.full}
                                 {(isForSell || isInMarket) && release.notes
                                     ? <span>Item info: {release.notes}</span>
                                     : null}
                             </p>
                         </div>
                         : null}
-                    {images && <img className="release-cover" onClick={() => openLightbox(images)} src={images[0]}/>}
+                    {images && <img className="release-cover" onClick={() => openLightbox(images)} src={images[0]} />}
                     <div className="info-wrapper">
                         <span className="artists">{artists}</span> - <span className="release-title">{title}</span>
                         {labels &&
@@ -269,19 +272,19 @@ class ReleaseFull extends Component {
                                     {!isSearchItemInCollection ? 'Add to collection' : 'Remove from collection'}
                                 </Button>
                                 {!isSearchItemInCollection && <Button color="success" className="add-button"
-                                        onClick={() => !isSearchItemInWishlist
-                                                ? this.addToWishlist(release)
-                                                : this.removeFromWishlist(release, true)}>
+                                                                      onClick={() => !isSearchItemInWishlist
+                                                                          ? this.addToWishlist(release)
+                                                                          : this.removeFromWishlist(release, true)}>
                                     {!isSearchItemInWishlist ? 'Add to wishlist' : 'Remove from wishlist'}
                                 </Button>}
                                 <Button color="success" className="add-button"
                                         onClick={() => !isSearchItemForSale
-                                                ? toggleSellModal(release)
-                                                : this.removeFromSell(release, true)}>
+                                            ? toggleSellModal(release)
+                                            : this.removeFromSell(release, true)}>
                                     {!isSearchItemForSale ? 'Add to selling' : 'Remove from selling'}
                                 </Button>
                                 {isSearchItemForSale && <Button color="success" className="add-button"
-                                        onClick={() => toggleSellModal(release)}>
+                                                                onClick={() => toggleSellModal(release)}>
                                     Edit sell info
                                 </Button>}
                             </Fragment>

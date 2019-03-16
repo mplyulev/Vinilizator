@@ -286,7 +286,7 @@ class App extends Component {
                 this.setState({requestPending: false});
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
                     this.setState({
-                        vi: res.data.users
+                        users: res.data.users
                     });
                 }
             });
@@ -624,6 +624,7 @@ class App extends Component {
                                                                   closeLightbox={this.closeLightbox}
                                                                   openSnackbar={this.openSnackbar}
                                                                   isInMarket={true}
+                                                                  getSpecificUser={this.getSpecificUser}
                                                                   history={history}
                                                                   getCollection={this.getCollection}
                                                                   release={currentRelease}/>}/>
@@ -632,6 +633,7 @@ class App extends Component {
                                 <Route exact path="/404" render={() => null}/>
                                 <Route exact path={`${ROUTE_USERS}`}
                                        render={() => <Users requestPending={requestPending}
+                                                            getSpecificUser={this.getSpecificUser}
                                                             users={users} />}/>
                                 <Route exact path={`${ROUTE_USERS}/${currentUser && currentUser.username}`}
                                        render={() => <User  setSpecificResult={this.setSpecificResult} user={currentUser}/>}/>
