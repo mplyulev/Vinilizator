@@ -21,7 +21,8 @@ class SearchPage extends Component {
         this.state = {
             prevProps: props,
             dropdownOpen: false,
-            searchQueryString: props.searchQueryString
+            searchQueryString: props.searchQueryString,
+            selectedGenre: null
         };
 
         this.onChange = this.onChange.bind(this);
@@ -38,6 +39,12 @@ class SearchPage extends Component {
         }));
     };
 
+    setSelectedGenre = (genre) => {
+        this.setState({ selectedGenre: genre });
+
+        this.props.makeSearchRequest(this.props.searchQueryString, genre.name)
+    };
+
     render () {
         const {
             getNextPageResult,
@@ -49,10 +56,15 @@ class SearchPage extends Component {
             clearCurrentRelease
         } = this.props;
 
-        ReactTooltip.rebuild();
+        const { selectedGenre } = this.state;
 
-        const dropdownOptions = Object.keys(GENRES).map(genre =>
-            <DropdownItem value={genre}>{GENRES.name}</DropdownItem>
+        ReactTooltip.rebuild();
+        const dropdownOptions = Object.values(GENRES).map(genre =>
+            <DropdownItem onClick={() => this.setSelectedGenre(genre)}
+                          className={selectedGenre && selectedGenre.name === genre.name ? 'selected' : ''}
+                          value={genre.name}>
+                {genre.name}
+            </DropdownItem>
         );
 
         return (
@@ -63,7 +75,7 @@ class SearchPage extends Component {
                 </InputGroup>
                 <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
                     <DropdownToggle caret>
-                        Filter by genre
+                        {selectedGenre ? selectedGenre.name : `Filter by genre`}
                     </DropdownToggle>
                     <DropdownMenu>
                         {dropdownOptions}

@@ -166,9 +166,9 @@ class App extends Component {
         }));
     };
 
-    makeSearchRequest = (searchQuery, type) => {
+    makeSearchRequest = (searchQuery, genre, style) => {
         this.setState({requestPending: true});
-        axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${DATA_TYPE_RELEASE}&format=Vinyl&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
+        axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${DATA_TYPE_RELEASE}${genre && `&genre=${genre}`}&format=Vinyl&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
                 this.setState({ queryResult: response.data });
                 this.setState({ requestPending: false });
