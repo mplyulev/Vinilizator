@@ -175,7 +175,7 @@ class App extends Component {
     makeSearchRequest = (searchQuery, genre, style) => {
         console.log('asd', style, genre)
         this.setState({requestPending: true});
-        axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${DATA_TYPE_RELEASE}${genre && `&genre=${genre}`}${style ? `&style=${style}` : ''}&format=Vinyl&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
+        axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${DATA_TYPE_RELEASE}${genre ? `&genre=${genre}`: ''}${style ? `&style=${style}` : ''}&format=Vinyl&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
                 this.setState({ queryResult: response.data });
                 this.setState({ requestPending: false });
@@ -431,9 +431,10 @@ class App extends Component {
         const nextPath = this.props.location.pathname;
 
         if (nextPath !== prevPath) {
-            if (nextPath === ROUTE_SEARCH && prevPath !== ROUTE_RELEASE) {
-                this.setState({searchQuery: ''});
-            }
+            // if (nextPath === ROUTE_SEARCH && prevPath !== `${ROUTE_RELEASE}/`) {
+            //     console.log('asdasd')
+            //     this.setState({searchQuery: ''});
+            // }
 
             if (nextPath === ROUTE_COLLECTION
                 || nextPath === ROUTE_WISHLIST
@@ -456,6 +457,7 @@ class App extends Component {
                         this.makeSearchRequest(this.state.searchQuery || '');
                 }
             }
+
         }
 
         const { searchQuery, token, lastRequestedRoute, genre } = this.state;

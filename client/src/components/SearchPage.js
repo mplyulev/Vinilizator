@@ -30,7 +30,7 @@ class SearchPage extends Component {
     }
 
     onChange(event) {
-        this.props.searchQuery(event.target.value, this.state.selectedGenre.name, this.state.selectedStyle);
+        this.props.searchQuery(event.target.value, this.state.selectedGenre && this.state.selectedGenre.name, this.state.selectedStyle);
         this.setState({ searchQueryString: event.target.value })
     }
 
@@ -67,6 +67,19 @@ class SearchPage extends Component {
                 {genre.name}
             </DropdownItem>
         );
+
+        const styleDropddownOptions = Object.values(GENRES).map(genre => {
+                genre.styles && genre.styles.map(style =>
+                    <DropdownItem onClick={() => this.setSelectedGenre(genre)}
+                                  className={selectedGenre && selectedGenre.name === genre.name ? 'selected' : ''}
+                                  value={genre.name}>
+                        {genre.name}
+                    </DropdownItem>
+                )
+            }
+        );
+
+        console.log(styleDropddownOptions);
 
         return (
             <div>

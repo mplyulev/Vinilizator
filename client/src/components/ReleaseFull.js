@@ -256,6 +256,7 @@ class ReleaseFull extends Component {
                         </div>
                         <iframe id="ytplayer" type="text/html" width="640" height="360"
                                 src={youtubeSrc}
+                                controls
                                 frameBorder="0">
                         </iframe>
                         {/*when my site has an url add ?origin=http://mywebsite.com to src so i and remake it on component
