@@ -22,14 +22,15 @@ class SearchPage extends Component {
             prevProps: props,
             dropdownOpen: false,
             searchQueryString: props.searchQueryString,
-            selectedGenre: null
+            selectedGenre: null,
+            selectedStyle: ''
         };
 
         this.onChange = this.onChange.bind(this);
     }
 
     onChange(event) {
-        this.props.searchQuery(event.target.value);
+        this.props.searchQuery(event.target.value, this.state.selectedGenre.name, this.state.selectedStyle);
         this.setState({ searchQueryString: event.target.value })
     }
 
@@ -56,7 +57,7 @@ class SearchPage extends Component {
             clearCurrentRelease
         } = this.props;
 
-        const { selectedGenre } = this.state;
+        const { selectedGenre, selectedStyle } = this.state;
 
         ReactTooltip.rebuild();
         const dropdownOptions = Object.values(GENRES).map(genre =>
@@ -82,43 +83,48 @@ class SearchPage extends Component {
                     </DropdownMenu>
                 </Dropdown>
                 {queryResult.pagination.pages > 1 && <Pagination getNextPageResult={getNextPageResult}
+                                                                 style={selectedStyle}
+                                                                 genre={selectedGenre}
                                                                  isVisible={!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1}
-                                                                 data={queryResult.pagination}/>
+                                                                 data={queryResult.pagination} />
                 }
                 <Fragment>
-                        <div className="search-result-container">
-                            {!_.isEmpty(queryResult.results) && <div className="filter-container">
+                    <div className="search-result-container">
+                        {!_.isEmpty(queryResult.results) && <div className="filter-container">
                                 <span className="result-filter no-pointer">
                                     Results: {queryResult.pagination.items}
                                 </span>
-                            </div>}
-                            <div className="results-container">
-                                {requestPending ?
-                                    <div className="loader-wrapper">
-                                        <div className="loading"></div>
-                                        <span className="loading-text">LOADING...</span>
-                                    </div>
-                                    : null
-                                }
-                                <ReactTooltip id="search-page-tooltip"/>
-                                {!requestPending && !_.isEmpty(queryResult.results) && queryResult.results.map(result => {
-                                    return (
-                                        <SearchItem history={history}
-                                                    release={result}
-                                                    currentRelease={currentRelease}
-                                                    clearCurrentRelease={clearCurrentRelease}
-                                                    getSpecificResult={getSpecificResult}
-                                                    key={result.id}>
-                                        </SearchItem>
-                                    );
-                                })
-                                }
-                            </div>
-                            {!requestPending && <Pagination getNextPageResult={getNextPageResult}
-                                        isInBottom={true}
-                                        isVisible={!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1}
-                                        data={queryResult.pagination}/>}
+                        </div>}
+                        <div className="results-container">
+                            {requestPending ?
+                                <div className="loader-wrapper">
+                                    <div className="loading"></div>
+                                    <span className="loading-text">LOADING...</span>
+                                </div>
+                                : null
+                            }
+                            <ReactTooltip id="search-page-tooltip" />
+                            {!requestPending && !_.isEmpty(queryResult.results) && queryResult.results.map(result => {
+                                return (
+                                    <SearchItem history={history}
+                                                release={result}
+                                                currentRelease={currentRelease}
+                                                clearCurrentRelease={clearCurrentRelease}
+                                                getSpecificResult={getSpecificResult}
+                                                key={result.id}>
+                                    </SearchItem>
+                                );
+                            })
+                            }
                         </div>
+                        {!requestPending &&
+                        <Pagination getNextPageResult={getNextPageResult}
+                                    isInBottom={true}
+                                    style={selectedStyle}
+                                    genre={selectedGenre}
+                                    isVisible={!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1}
+                                    data={queryResult.pagination} />}
+                    </div>
                 </Fragment>
             </div>
         );

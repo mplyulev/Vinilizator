@@ -12,9 +12,11 @@ class Pagination extends Component {
         };
     }
 
-    slideToNextPagination = (nextPage, type, shouldBlockSlide, slideToTheLeft) => {
+    slideToNextPagination = (nextPage, genre, style, shouldBlockSlide, slideToTheLeft) => {
+        console.log('asd', genre,style)
+
         if (this.props.data.page !== nextPage) {
-            this.props.getNextPageResult(nextPage, type);
+            this.props.getNextPageResult(nextPage, this.props.genre.name, this.props.style);
 
             if (!shouldBlockSlide) {
                 if (nextPage % PAGINATION_PAGES_PER_SLIDE === 1 && !slideToTheLeft) {
@@ -42,7 +44,7 @@ class Pagination extends Component {
     }
 
     render() {
-        const { data, filterType, isVisible, isInBottom } = this.props;
+        const { data, isVisible, isInBottom, genre, style } = this.props;
         let pages;
         if (data) {
             pages = [...Array(data.pages)];
@@ -54,7 +56,7 @@ class Pagination extends Component {
                     <Fragment>
                         {data && data.pages > 6 &&
                         <FaArrowAltCircleLeft className={`icon-arrow left${data.page === 1 ? ' disabled' : ''}`}
-                                              onClick={() => this.slideToNextPagination(data.page - 1, filterType, false, true)} />}
+                                              onClick={() => this.slideToNextPagination(data.page - 1, genre, style , false, true)} />}
                         <div className="numbers-wrapper">
                             <ButtonToolbar className={`toolbar${data.pages <= 6 ? ' center' : ''}`}
                                            style={{ right: this.state.paginationPositionRight + 'px' }}>
@@ -64,7 +66,7 @@ class Pagination extends Component {
                                             <div key={index} className="page-number-wrapper">
                                                 <Button
                                                     className={`page-number${index + 1 === data.page ? ' active' : ''}`}
-                                                    onClick={() => this.slideToNextPagination(index + 1, filterType, true)}
+                                                    onClick={() => this.slideToNextPagination(index + 1, genre, style, true)}
                                                     key={index}>
                                                     {index + 1}
                                                 </Button>
@@ -77,7 +79,7 @@ class Pagination extends Component {
                         {data && data.pages > 6 &&
                         <FaArrowAltCircleRight
                             className={`icon-arrow right${data.page === data.pages ? ' disabled' : ''}`}
-                            onClick={() => this.slideToNextPagination(data.page + 1, filterType, false)} />}
+                            onClick={() => this.slideToNextPagination(data.page + 1, genre, style, false)} />}
                     </Fragment> : null}
             </div>
 

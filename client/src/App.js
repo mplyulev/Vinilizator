@@ -87,7 +87,9 @@ class App extends Component {
             isSearchItemInCollection: false,
             isSearchItemInWishlist: false,
             isSearchItemForSale: false,
-            userInfo: null
+            userInfo: null,
+            genre: '',
+            style: ''
         };
 
         this.getCollection = this.getCollection.bind(this);
@@ -135,9 +137,13 @@ class App extends Component {
         });
     };
 
-    searchQuery = (value) => {
+    searchQuery = (value, genre, style) => {
         if (value.length > 0) {
-            this.setState({ searchQuery: value });
+            this.setState({
+                searchQuery: value,
+                genre,
+                style
+            });
         } else {
             this.setState({ currentQueryResult: {}, searchQuery: '' })
         }
@@ -167,8 +173,9 @@ class App extends Component {
     };
 
     makeSearchRequest = (searchQuery, genre, style) => {
+        console.log('asd', style, genre)
         this.setState({requestPending: true});
-        axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${DATA_TYPE_RELEASE}${genre && `&genre=${genre}`}&format=Vinyl&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
+        axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${DATA_TYPE_RELEASE}${genre && `&genre=${genre}`}${style ? `&style=${style}` : ''}&format=Vinyl&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
                 this.setState({ queryResult: response.data });
                 this.setState({ requestPending: false });
@@ -178,11 +185,11 @@ class App extends Component {
             });
     };
 
-    getNextPageResult = (page, type) => {
+    getNextPageResult = (page, genre, style) => {
         this.setState({requestPending: true});
         const {searchQuery} = this.state;
 
-        axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${DATA_TYPE_RELEASE}&format=Vinyl&page=${page}&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
+        axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${DATA_TYPE_RELEASE}${genre && `&genre=${genre}`}${style && `&style=${style}`}&format=Vinyl&page=${page}&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
                 this.setState({ queryResult: response.data });
 
@@ -451,14 +458,14 @@ class App extends Component {
             }
         }
 
-        const { searchQuery, token, lastRequestedRoute } = this.state;
+        const { searchQuery, token, lastRequestedRoute, genre } = this.state;
         if (prevState.token !== token && lastRequestedRoute !== ROUTE_SIGN_IN) {
             this.props.history.push(lastRequestedRoute || ROUTE_HOME);
             this.getCollection();
         }
 
         if (prevState.searchQuery !== searchQuery) {
-            this.makeSearchRequest(searchQuery);
+            this.makeSearchRequest(searchQuery, this.state.genre, this.state.style);
         }
     }
 
