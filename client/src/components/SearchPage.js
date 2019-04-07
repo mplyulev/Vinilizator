@@ -12,7 +12,8 @@ import _ from 'lodash';
 import ReactTooltip from 'react-tooltip';
 import Pagination from './common/Pagination';
 import SearchItem from "./SearchItem";
-import { GENRES } from '../constants';
+import { GENRE_DROPDOWN, GENRES, GENRES_ALL, STYLE_DROPDOWN } from '../constants';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 class SearchPage extends Component {
     constructor(props) {
@@ -20,7 +21,8 @@ class SearchPage extends Component {
 
         this.state = {
             prevProps: props,
-            dropdownOpen: false,
+            isGenreDropdownOpen: false,
+            isStyleDropdownOpen: false,
             searchQueryString: props.searchQueryString,
             selectedGenre: null,
             selectedStyle: ''
@@ -34,16 +36,35 @@ class SearchPage extends Component {
         this.setState({ searchQueryString: event.target.value })
     }
 
-    toggle = () => {
-        this.setState(prevState => ({
-            dropdownOpen: !prevState.dropdownOpen
-        }));
-    };
-
     setSelectedGenre = (genre) => {
         this.setState({ selectedGenre: genre });
+        let { selectedStyle } = this.state;
 
-        this.props.makeSearchRequest(this.props.searchQueryString, genre.name)
+        if (!genre.styles.includes(selectedStyle)) {
+            this.setState({ selectedStyle: '' });
+        }
+
+        this.props.makeSearchRequest(this.props.searchQueryString, genre.name === GENRES_ALL ? '' : genre.name, selectedStyle ? selectedStyle : '');
+    };
+
+
+    setSelectedStyle = (style) => {
+        const { selectedGenre } = this.state
+        this.setState({ selectedStyle: style });
+
+        this.props.makeSearchRequest(this.props.searchQueryString, selectedGenre && selectedGenre.name !== GENRES_ALL ? selectedGenre.name : '', style)
+    };
+
+    toggle = (type) => {
+        type === GENRE_DROPDOWN
+            ? this.setState(prevState => ({
+                isGenreDropdownOpen: !prevState.isGenreDropdownOpen,
+                isStyleDropdownOpen: false
+            }))
+            : this.setState(prevState => ({
+                isStyleDropdownOpen: !prevState.isStyleDropdownOpen,
+                isGenreDropdownOpen: false,
+            }));
     };
 
     render () {
@@ -57,7 +78,7 @@ class SearchPage extends Component {
             clearCurrentRelease
         } = this.props;
 
-        const { selectedGenre, selectedStyle } = this.state;
+        const { selectedGenre, selectedStyle, isGenreDropdownOpen, isStyleDropdownOpen } = this.state;
 
         ReactTooltip.rebuild();
         const dropdownOptions = Object.values(GENRES).map(genre =>
@@ -68,18 +89,33 @@ class SearchPage extends Component {
             </DropdownItem>
         );
 
-        const styleDropddownOptions = Object.values(GENRES).map(genre => {
-                genre.styles && genre.styles.map(style =>
-                    <DropdownItem onClick={() => this.setSelectedGenre(genre)}
-                                  className={selectedGenre && selectedGenre.name === genre.name ? 'selected' : ''}
-                                  value={genre.name}>
-                        {genre.name}
-                    </DropdownItem>
-                )
+        let allStyles = [];
+        Object.values(GENRES).forEach(genre => {
+            if (genre.styles) {
+                allStyles = allStyles.concat(genre.styles);
             }
-        );
+        });
 
-        console.log(styleDropddownOptions);
+        let styleDropdownOptions = null;
+        !selectedGenre || selectedGenre.name === GENRES_ALL
+            ?
+            styleDropdownOptions = allStyles.map(style =>
+                <DropdownItem onClick={() => this.setSelectedStyle(style)}
+                              className={style && style === selectedStyle ? 'selected' : ''}
+                              value={style}>
+                    {style}
+                </DropdownItem>
+            )
+            :
+            styleDropdownOptions = selectedGenre.styles && selectedGenre.styles.map(style =>
+                <DropdownItem onClick={() => this.setSelectedStyle(style)}
+                              className={style && style === selectedStyle ? 'selected' : ''}
+                              value={style}>
+                    {style}
+                </DropdownItem>
+            );
+
+
 
         return (
             <div>
@@ -87,12 +123,26 @@ class SearchPage extends Component {
                     <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
                     <Input onChange={this.onChange} value={this.state.searchQueryString} />
                 </InputGroup>
-                <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggle}>
+                <Dropdown isOpen={isGenreDropdownOpen} toggle={() => this.toggle(GENRE_DROPDOWN)}>
                     <DropdownToggle caret>
                         {selectedGenre ? selectedGenre.name : `Filter by genre`}
                     </DropdownToggle>
                     <DropdownMenu>
                         {dropdownOptions}
+                    </DropdownMenu>
+                </Dropdown>
+                <Dropdown isOpen={isStyleDropdownOpen} toggle={() => this.toggle(STYLE_DROPDOWN)}>
+                    <DropdownToggle caret>
+                        {selectedStyle ? selectedStyle : `Filter by style`}
+                    </DropdownToggle>
+                    <DropdownMenu className="styles-dropdown">
+                        <Scrollbars
+                                    className="scrollbar"
+                                    autoHideTimeout={1000}
+                                    autoHideDuration={500}
+                                    style={{width: `100%`, height: `100vh`}}>
+                        {styleDropdownOptions}
+                        </Scrollbars>
                     </DropdownMenu>
                 </Dropdown>
                 {queryResult.pagination.pages > 1 && <Pagination getNextPageResult={getNextPageResult}

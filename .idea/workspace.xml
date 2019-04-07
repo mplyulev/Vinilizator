@@ -5,9 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5b8da01a-7da7-42f1-97ac-40f37681adb4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/client/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/src/components/ReleaseFull.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/ReleaseFull.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/Collection.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/Collection.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/components/SearchItem.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/SearchItem.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/src/components/SearchPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/components/SearchPage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/client/src/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/client/src/constants.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,22 +34,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/client/src/App.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="233">
-              <caret line="177" column="110" selection-start-line="177" selection-start-column="110" selection-end-line="177" selection-end-column="110" />
-              <folding>
-                <element signature="e#0#41#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/src/components/SearchPage.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="30" selection-start-line="30" selection-end-line="30" />
+            <state relative-caret-position="341">
+              <caret line="45" lean-forward="true" selection-start-line="45" selection-end-line="45" />
               <folding>
                 <element signature="e#0#51#0" expanded="true" />
               </folding>
@@ -58,7 +48,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/src/components/ReleaseFull.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="143">
+            <state relative-caret-position="533">
               <caret line="258" column="40" selection-start-line="258" selection-start-column="40" selection-end-line="258" selection-end-column="40" />
               <folding>
                 <element signature="e#0#51#0" expanded="true" />
@@ -70,7 +60,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/src/components/common/Pagination.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="251">
+            <state relative-caret-position="270">
               <caret line="18" column="31" selection-start-line="18" selection-start-column="31" selection-end-line="18" selection-end-column="31" />
             </state>
           </provider>
@@ -80,16 +70,7 @@
         <entry file="file://$PROJECT_DIR$/client/src/constants.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="189">
-              <caret line="19" column="38" selection-start-line="19" selection-start-column="38" selection-end-line="19" selection-end-column="38" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/client/node_modules/reactstrap/src/Alert.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret line="4" column="26" selection-start-line="4" selection-start-column="26" selection-end-line="4" selection-end-column="26" />
+              <caret line="100" column="13" selection-start-line="100" selection-start-column="13" selection-end-line="100" selection-end-column="13" />
             </state>
           </provider>
         </entry>
@@ -111,8 +92,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/src/components/Collection.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="335">
-              <caret line="172" column="10" lean-forward="true" selection-start-line="165" selection-start-column="7" selection-end-line="172" selection-end-column="10" />
+            <state relative-caret-position="179">
+              <caret line="157" column="90" selection-start-line="157" selection-start-column="80" selection-end-line="157" selection-end-column="90" />
             </state>
           </provider>
         </entry>
@@ -120,8 +101,23 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client/src/components/SearchItem.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1764">
-              <caret line="109" column="90" selection-start-line="109" selection-start-column="23" selection-end-line="109" selection-end-column="90" />
+            <state relative-caret-position="179">
+              <caret line="74" column="46" selection-start-line="74" selection-start-column="46" selection-end-line="74" selection-end-column="46" />
+              <folding>
+                <element signature="e#0#49#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/client/src/App.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="251">
+              <caret line="517" column="69" lean-forward="true" selection-start-line="513" selection-start-column="14" selection-end-line="517" selection-end-column="69" />
+              <folding>
+                <element signature="e#0#41#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -130,27 +126,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>loader-wrapper</find>
-      <find>users-</find>
-      <find>search-bar</find>
-      <find>users-wrapper</find>
-      <find>re</find>
-      <find>soldBy</find>
-      <find>condition</find>
-      <find>ReleaseFull</find>
-      <find>Filter by genre</find>
-      <find>empty</find>
-      <find>genres</find>
-      <find>representedGenres</find>
-      <find>DropdownItem</find>
-      <find>className</find>
-      <find>setSelectedGenre</find>
-      <find>discogs</find>
-      <find>SearchPAge</find>
-      <find>makeSearchRequest</find>
-      <find>searchQuery</find>
-      <find>makeSear</find>
-      <find>selectedGenre</find>
       <find>genre</find>
       <find>getNextPageResult</find>
       <find>slideToNextPagination</find>
@@ -160,6 +135,27 @@
       <find>Igrsm</find>
       <find>ref</find>
       <find>componentDidUpdate</find>
+      <find>dropdownOptions</find>
+      <find>dropdownOpen</find>
+      <find>makeSearchRequest</find>
+      <find>toggle</find>
+      <find>Collect</find>
+      <find>search-item-cover</find>
+      <find>release-cover</find>
+      <find>noImag</find>
+      <find>styleDropdownOptions</find>
+      <find>gif</find>
+      <find>DOGS_SPACE_GIF</find>
+      <find>ъзз</find>
+      <find>NO_IMAGE</find>
+      <find>s</find>
+      <find>scrollbars</find>
+      <find>release.cover_image</find>
+      <find>Scrollbars</find>
+      <find>GENRES.all</find>
+      <find>STYLES_ALL</find>
+      <find>all</find>
+      <find>GENRES_ALLL</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -204,21 +200,21 @@
         <option value="$PROJECT_DIR$/client/src/styles/_searchPage.scss" />
         <option value="$PROJECT_DIR$/client/src/components/AppNavBar.js" />
         <option value="$PROJECT_DIR$/client/node_modules/reactstrap/src/Alert.js" />
-        <option value="$PROJECT_DIR$/client/src/constants.js" />
         <option value="$PROJECT_DIR$/client/src/components/User.js" />
         <option value="$PROJECT_DIR$/client/src/styles/_searchItem.scss" />
         <option value="$PROJECT_DIR$/client/src/styles/_release.scss" />
         <option value="$PROJECT_DIR$/routes/api/controllers/collection.js" />
-        <option value="$PROJECT_DIR$/client/src/components/SearchItem.js" />
         <option value="$PROJECT_DIR$/client/src/styles/_authentication.scss" />
         <option value="$PROJECT_DIR$/client/src/styles/_common.scss" />
         <option value="$PROJECT_DIR$/client/src/styles/_users.scss" />
         <option value="$PROJECT_DIR$/client/src/components/Users.js" />
-        <option value="$PROJECT_DIR$/client/src/components/Collection.js" />
         <option value="$PROJECT_DIR$/client/src/components/common/Pagination.jsx" />
         <option value="$PROJECT_DIR$/client/src/components/ReleaseFull.js" />
-        <option value="$PROJECT_DIR$/client/src/components/SearchPage.js" />
         <option value="$PROJECT_DIR$/client/src/App.js" />
+        <option value="$PROJECT_DIR$/client/src/components/SearchItem.js" />
+        <option value="$PROJECT_DIR$/client/src/constants.js" />
+        <option value="$PROJECT_DIR$/client/src/components/Collection.js" />
+        <option value="$PROJECT_DIR$/client/src/components/SearchPage.js" />
       </list>
     </option>
   </component>
@@ -242,7 +238,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="javascript.nodejs.core.library.configured.version" value="8.14.0" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../swagger" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -326,18 +322,21 @@
       <workItem from="1552714900153" duration="6339000" />
       <workItem from="1552808522508" duration="2168000" />
       <workItem from="1553761890624" duration="1262000" />
-      <workItem from="1553845307214" duration="4585000" />
+      <workItem from="1553845307214" duration="5890000" />
+      <workItem from="1554014723325" duration="39000" />
+      <workItem from="1554014764671" duration="2104000" />
+      <workItem from="1554531446634" duration="6165000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="507514000" />
+    <option name="totallyTimeSpent" value="517127000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="49" y="25" width="1871" height="1055" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15123288" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15616438" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info id="npm" order="3" side_tool="true" />
@@ -351,7 +350,7 @@
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="8" />
       <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="10" sideWeight="0.49840087" visible="true" weight="0.32937366" />
+      <window_info anchor="bottom" id="Terminal" order="10" sideWeight="0.49840087" visible="true" weight="0.32937366" />
       <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.50159913" side_tool="true" weight="0.43661973" />
       <window_info anchor="bottom" id="TypeScript" order="12" />
       <window_info anchor="bottom" id="Command Line Tools Console" order="13" weight="0.32937366" />
@@ -389,9 +388,6 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/client/src/assets/no-cover.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/app-env.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="22">
@@ -663,8 +659,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/styles/_users.scss">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$PROJECT_DIR$/client/src/assets/no-cover.png">
+      <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
@@ -675,28 +671,27 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client/src/components/SearchItem.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1764">
-          <caret line="109" column="90" selection-start-line="109" selection-start-column="23" selection-end-line="109" selection-end-column="90" />
+        <state relative-caret-position="179">
+          <caret line="74" column="46" selection-start-line="74" selection-start-column="46" selection-end-line="74" selection-end-column="46" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/components/common/Pagination.jsx">
+    <entry file="file://$PROJECT_DIR$/client/src/App.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="251">
-          <caret line="18" column="31" selection-start-line="18" selection-start-column="31" selection-end-line="18" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/components/Collection.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="335">
-          <caret line="172" column="10" lean-forward="true" selection-start-line="165" selection-start-column="7" selection-end-line="172" selection-end-column="10" />
+          <caret line="517" column="69" lean-forward="true" selection-start-line="513" selection-start-column="14" selection-end-line="517" selection-end-column="69" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client/src/components/ReleaseFull.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="143">
+        <state relative-caret-position="533">
           <caret line="258" column="40" selection-start-line="258" selection-start-column="40" selection-end-line="258" selection-end-column="40" />
           <folding>
             <element signature="e#0#51#0" expanded="true" />
@@ -704,29 +699,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/components/SearchPage.js">
+    <entry file="file://$PROJECT_DIR$/client/src/components/common/Pagination.jsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="270">
-          <caret line="30" selection-start-line="30" selection-end-line="30" />
-          <folding>
-            <element signature="e#0#51#0" expanded="true" />
-          </folding>
+          <caret line="18" column="31" selection-start-line="18" selection-start-column="31" selection-end-line="18" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/styles/_users.scss">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client/src/components/Collection.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="179">
+          <caret line="157" column="90" selection-start-line="157" selection-start-column="80" selection-end-line="157" selection-end-column="90" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client/src/constants.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="189">
-          <caret line="19" column="38" selection-start-line="19" selection-start-column="38" selection-end-line="19" selection-end-column="38" />
+          <caret line="100" column="13" selection-start-line="100" selection-start-column="13" selection-end-line="100" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/client/src/App.js">
+    <entry file="file://$PROJECT_DIR$/client/src/components/SearchPage.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="233">
-          <caret line="177" column="110" selection-start-line="177" selection-start-column="110" selection-end-line="177" selection-end-column="110" />
+        <state relative-caret-position="341">
+          <caret line="45" lean-forward="true" selection-start-line="45" selection-end-line="45" />
           <folding>
-            <element signature="e#0#41#0" expanded="true" />
+            <element signature="e#0#51#0" expanded="true" />
           </folding>
         </state>
       </provider>

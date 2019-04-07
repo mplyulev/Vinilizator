@@ -7,7 +7,7 @@ import {
     COLLECTION_TYPE_MARKET, COLLECTION_TYPE_WISHLIST,
     DATA_TYPE_RELEASE,
     GENRE_DROPDOWN,
-    GENRES, ROUTE_SEARCH, STYLE_DROPDOWN, STYLES_ALL
+    GENRES, GENRES_ALL, ROUTE_SEARCH, STYLE_DROPDOWN, STYLES_ALL
 } from '../constants';
 import ReactTooltip from 'react-tooltip';
 import {
@@ -88,8 +88,8 @@ class Collection extends Component {
         );
 
         this.setState({
-            filteredCollection: genre === GENRES.all ? data : filteredCollection,
-            filteredByGenre: genre === GENRES.all ? data : filteredCollection,
+            filteredCollection: genre === GENRES_ALL ? data : filteredCollection,
+            filteredByGenre: genre === GENRES_ALL ? data : filteredCollection,
             selectedStyle: ''
         });
     };
@@ -101,7 +101,7 @@ class Collection extends Component {
             vinyl.styles && vinyl.styles.includes(style)
         );
 
-        if (this.state.selectedGenre && this.state.selectedGenre !== GENRES.all && style === STYLES_ALL) {
+        if (this.state.selectedGenre && this.state.selectedGenre !== GENRES_ALL && style === STYLES_ALL) {
             this.setSelectedGenre(this.state.selectedGenre);
         } else {
             this.setState({ filteredCollection: style === STYLES_ALL ? data : filteredCollection });
@@ -128,7 +128,6 @@ class Collection extends Component {
         } = this.props;
 
         const { filteredCollection, selectedGenre, selectedStyle, filteredByGenre } = this.state;
-        console.log('the ge', collectionType);
         let genres = [];
         let styles = [];
 
@@ -156,11 +155,11 @@ class Collection extends Component {
             </DropdownItem>
         );
 
-        genreDropdownOptions.unshift(<DropdownItem className={selectedGenre === GENRES.all ? 'selected' : ''}
-                                                   key={GENRES.all}
+        genreDropdownOptions.unshift(<DropdownItem className={selectedGenre === GENRES_ALL ? 'selected' : ''}
+                                                   key={GENRES_ALL}
                                                    onClick={(event) => this.setSelectedGenre(event.target.innerText)}
-                                                   value={GENRES.all}>
-            {GENRES.all}
+                                                   value={GENRES_ALL}>
+            {GENRES_ALL}
         </DropdownItem>);
 
         const styleDropdownOptions = representedStyles.map(style =>

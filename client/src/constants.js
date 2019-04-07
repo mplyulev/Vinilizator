@@ -35,7 +35,7 @@ export const TOOLTIP_DELAY_SHOW = 700;
 
 //URLS
 export const DOGS_SEARCH_URL = 'https://api.discogs.com/database/search';
-export const DOGS_SPACE_GIF_URL = 'https://img.discogs.com/images/spacer.gif';
+export const DOGS_SPACE_GIF = 'spacer.gif';
 export const DOGS_BASE_URL = 'https://api.discogs.com/';
 export const DOGS_GET_ITEM_URL = {
     release: `${DOGS_BASE_URL}releases/`,
@@ -97,10 +97,12 @@ export const CONDITION = {
 //DROPDOWN TYPES
 export const GENRE_DROPDOWN = 'genre';
 export const STYLE_DROPDOWN = 'style';
+export const STYLES_ALL = 'All Styles';
+export const GENRES_ALL = 'All Genres';
 
 //GENRES
 export const GENRES = {
-    all: 'All Genres',
+    all: {name: 'All Genres', styles: []},
     blues: {name: 'Blues', styles:
             ['Acid Rock', 'Boogie Woogie', 'Chicago Blues', 'Country Blues',
             'Delta Blues', 'East Coast Blues', 'Electric Blues', 'Harmonica Blues',
@@ -141,4 +143,3 @@ export const GENRES = {
     stage: 'Stage & Screen'
 };
 
-export const STYLES_ALL = 'All Styles';

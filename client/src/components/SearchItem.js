@@ -1,9 +1,9 @@
 import React, {Component, Fragment} from 'react';
 import {
     COLLECTION_TYPE_FOR_SELL,
-    COLLECTION_TYPE_MARKET, COLLECTION_TYPE_OTHER_USER,
+    COLLECTION_TYPE_MARKET,
     CONDITION,
-    DOGS_SPACE_GIF_URL,
+    DOGS_SPACE_GIF,
     TOOLTIP_DELAY_SHOW
 } from '../constants';
 import NoImagePlaceholder from '../assets/no-cover.png';
@@ -72,7 +72,7 @@ class SearchItem extends Component {
 
         const itemTitle = title && title.substr(index + 1);
         const collectionReleaseImage = release.images && release.images.length > 0 ? release.images[0].uri : ''
-        let coverUrl = release.cover_image === DOGS_SPACE_GIF_URL ? NoImagePlaceholder : release.cover_image || collectionReleaseImage;
+        let coverUrl = release.cover_image && release.cover_image.includes(DOGS_SPACE_GIF) ? NoImagePlaceholder : release.cover_image || collectionReleaseImage;
         if (!release.cover_image && !collectionReleaseImage) {
             coverUrl = NoImagePlaceholder;
         }
