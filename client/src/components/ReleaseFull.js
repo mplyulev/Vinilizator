@@ -20,7 +20,7 @@ class ReleaseFull extends Component {
         const { release } = props;
 
         this.state = {
-            youtubeSrc:  `https://www.youtube.com/embed?listType=search&list=${release.tracklist[0] && release.tracklist[0].artists ? release.tracklist[0].artists[0].name : release.artists[0].name}${release.tracklist[0].title}`
+            youtubeSrc:  `https://www.youtube.com/embed?listType=search&list=${release.tracklist[0] && release.tracklist[0].artists ? release.tracklist[0].artists[0].name : release.artists[0].name}+${release.tracklist[0].title}`
         };
     }
     
@@ -127,8 +127,7 @@ class ReleaseFull extends Component {
     };
 
     setYoutubeSrc = (release, track) => {
-        console.log(track, release)
-        this.setState({ youtubeSrc: `https://www.youtube.com/embed?listType=search&list=${track.artists ? track.artists[0].name : release.artists[0].name}${track.title}` })
+        this.setState({ youtubeSrc: `https://www.youtube.com/embed??modestbranding=1&showinfo=1&listType=search&list=${track.artists ? track.artists[0].name : release.artists[0].name}+${track.title}`})
     };
 
     render () {

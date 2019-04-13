@@ -155,7 +155,7 @@ class Collection extends Component {
             </DropdownItem>
         );
 
-        genreDropdownOptions.unshift(<DropdownItem className={selectedGenre === GENRES_ALL ? 'selected' : ''}
+        genreDropdownOptions.unshift(<DropdownItem className={selectedGenre === <GENRES_ALL></GENRES_ALL> ? 'selected' : ''}
                                                    key={GENRES_ALL}
                                                    onClick={(event) => this.setSelectedGenre(event.target.innerText)}
                                                    value={GENRES_ALL}>

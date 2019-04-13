@@ -13,10 +13,10 @@ class Pagination extends Component {
     }
 
     slideToNextPagination = (nextPage, genre, style, shouldBlockSlide, slideToTheLeft) => {
-        console.log('asd', genre,style)
+
 
         if (this.props.data.page !== nextPage) {
-            this.props.getNextPageResult(nextPage, this.props.genre.name, this.props.style);
+            this.props.getNextPageResult(nextPage,  this.props.genre && this.props.genre.name, this.props.style);
 
             if (!shouldBlockSlide) {
                 if (nextPage % PAGINATION_PAGES_PER_SLIDE === 1 && !slideToTheLeft) {

@@ -31,6 +31,18 @@ class SearchPage extends Component {
         this.onChange = this.onChange.bind(this);
     }
 
+    closeDropdowns = () => {
+        this.setState({isGenreDropdownOpen: false, isStyleDropdownOpen: false})
+    };
+
+    componentDidMount() {
+        window.addEventListener("scroll", this.closeDropdowns);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("scroll", this.closeDropdowns);
+    }
+
     onChange(event) {
         this.props.searchQuery(event.target.value, this.state.selectedGenre && this.state.selectedGenre.name, this.state.selectedStyle);
         this.setState({ searchQueryString: event.target.value })
@@ -136,11 +148,12 @@ class SearchPage extends Component {
                         {selectedStyle ? selectedStyle : `Filter by style`}
                     </DropdownToggle>
                     <DropdownMenu className="styles-dropdown">
-                        <Scrollbars
+                        <Scrollbars autoHeight
+                                    autoHeightMax={300}
                                     className="scrollbar"
                                     autoHideTimeout={1000}
                                     autoHideDuration={500}
-                                    style={{width: `100%`, height: `100vh`}}>
+                                    style={{width: `100%`}}>
                         {styleDropdownOptions}
                         </Scrollbars>
                     </DropdownMenu>
