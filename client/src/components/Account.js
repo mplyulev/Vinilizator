@@ -1,7 +1,14 @@
 import React, { Component } from "react";
-import { Button, FormGroup, Input, Label } from "reactstrap";
+import { Button, DropdownItem, FormGroup, Input, Label } from "reactstrap";
 import axios from 'axios';
-import { RESPONSE_STATUS_SUCCESS, SNACKBAR_TYPE_FAIL, SNACKBAR_TYPE_SUCCESS } from "../constants";
+import DropdownComponent from '../components/common/Dropdown';
+
+import {
+    GENRES,
+    RESPONSE_STATUS_SUCCESS,
+    SNACKBAR_TYPE_FAIL,
+    SNACKBAR_TYPE_SUCCESS,
+} from "../constants";
 
 class Account extends Component {
     constructor(props) {
@@ -14,7 +21,8 @@ class Account extends Component {
             oldPasswordError: '',
             repeatPasswordError: '',
             serverError: '',
-            isFormOpened: false
+            isFormOpened: false,
+            favoriteStyles: []
         };
     }
 
@@ -57,57 +65,90 @@ class Account extends Component {
             });
     };
 
+
+    setSelectedStyle = (style) => {
+        console.log(style, this.state.favoriteStyles);
+        this.setState({ favoriteStyles: [] });
+
+    };
+
     render() {
-        const { oldPasswordError, repeatPasswordError, serverError, isFormOpened } = this.state;
+        let allStyles = [];
+        Object.values(GENRES).forEach(genre => {
+            if (genre.styles) {
+                allStyles = allStyles.concat(genre.styles);
+            }
+        });
+
+        let styleDropdownOptions = null;
+        const dedupedStyles = [...new Set(allStyles)].sort();
+
+        styleDropdownOptions = dedupedStyles.map(style =>
+            <DropdownItem onClick={() => this.setSelectedStyle(style)}
+                          className={this.state.favoriteStyles.includes(style) ? 'selected' : ''}
+                          key={style}
+                          toggle={false}
+                          value={style}>
+                {style}
+            </DropdownItem>
+        );
+
+        const { oldPasswordError, repeatPasswordError, serverError, isFormOpened, favoriteStyles } = this.state;
 
         return (
-            <div className={`sign-up-wrapper change-password-wrapper${isFormOpened ? ' opened' : ''}`}>
-                <form className={`sign-up-form${isFormOpened ? ' opened' : ''}`}>
-                    <FormGroup className="change-password-form">
-                        <Label for="oldPassword">Old Password</Label>
-                        <Input
-                            autoFocus
-                            type="password"
-                            id="oldPassword"
-                            name="oldPassword"
-                            onChange={this.handleChange}
-                        />
-                        <span className="error">{oldPasswordError}</span>
-                    </FormGroup>
-                    <FormGroup className="new-password-form">
-                        <Label for="newPassword">New Password</Label>
-                        <Input
-                            type="password"
-                            id="newPassword"
-                            name="newPassword"
-                            onChange={this.handleChange}
-                        />
-                    </FormGroup>
-                    <FormGroup className="repeat-password-form">
-                        <Label for="repeatPassword">Password</Label>
-                        <Input
-                            onChange={this.handleChange}
-                            type="password"
-                            name="repeatPassword"
-                            id="repeatPassword"
-                        />
-                        <span className="error">{repeatPasswordError}</span>
-                    </FormGroup>
-                    <span className="error">{serverError}</span>
+            <div className={'account-wrapper'}>
+                <div className={`sign-up-wrapper change-password-wrapper${isFormOpened ? ' opened' : ''}`}>
+                    <form className={`sign-up-form${isFormOpened ? ' opened' : ''}`}>
+                        <FormGroup className="change-password-form">
+                            <Label for="oldPassword">Old Password</Label>
+                            <Input
+                                autoFocus
+                                type="password"
+                                id="oldPassword"
+                                name="oldPassword"
+                                onChange={this.handleChange}
+                            />
+                            <span className="error">{oldPasswordError}</span>
+                        </FormGroup>
+                        <FormGroup className="new-password-form">
+                            <Label for="newPassword">New Password</Label>
+                            <Input
+                                type="password"
+                                id="newPassword"
+                                name="newPassword"
+                                onChange={this.handleChange}
+                            />
+                        </FormGroup>
+                        <FormGroup className="repeat-password-form">
+                            <Label for="repeatPassword">Password</Label>
+                            <Input
+                                onChange={this.handleChange}
+                                type="password"
+                                name="repeatPassword"
+                                id="repeatPassword"
+                            />
+                            <span className="error">{repeatPasswordError}</span>
+                        </FormGroup>
+                        <span className="error">{serverError}</span>
+                        <Button
+                            block
+                            onClick={() => this.setState({ isFormOpened: false })}
+                        >
+                            Cancel
+                        </Button>
+                    </form>
                     <Button
                         block
-                        onClick={() => this.setState({isFormOpened: false})}
+                        disabled={isFormOpened ? !this.validateForm() : false}
+                        onClick={isFormOpened ? this.handleSubmit : () => this.setState({ isFormOpened: true })}
                     >
-                        Cancel
+                        Change Password
                     </Button>
-                </form>
-                <Button
-                    block
-                    disabled={isFormOpened ? !this.validateForm() : false}
-                    onClick={isFormOpened ? this.handleSubmit : () => this.setState({isFormOpened: true})}
-                >
-                    Change Password
-                </Button>
+                </div>
+             <DropdownComponent items={styleDropdownOptions}
+                                dropdownTitle='Choose favorite styles'
+                                showSelected={false}
+                                selected={favoriteStyles}/>
             </div>
         );
     }

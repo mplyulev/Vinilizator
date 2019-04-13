@@ -56,7 +56,6 @@ class Collection extends Component {
         }
 
         if (searchQuery.length === 1 && (selectedGenre || selectedStyle)) {
-            console.log('asd1', selectedStyle, selectedGenre)
             selectedGenre ? this.setSelectedGenre(selectedGenre) : this.setSelectedStyle(selectedStyle);
             if (selectedGenre && selectedStyle) {
                 this.setSelectedStyle(selectedGenre);

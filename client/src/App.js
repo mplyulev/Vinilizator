@@ -173,7 +173,6 @@ class App extends Component {
     };
 
     makeSearchRequest = (searchQuery, genre, style) => {
-        console.log('asd', style, genre)
         this.setState({requestPending: true});
         axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${DATA_TYPE_RELEASE}${genre ? `&genre=${genre}`: ''}${style ? `&style=${style}` : ''}&format=Vinyl&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
@@ -300,7 +299,6 @@ class App extends Component {
     };
 
     getSpecificUser = (userId) => {
-        console.log('asd', userId);
         this.setState({requestPending: true});
         axios.get('/api/controllers/collection/getUser',  {params: {
             userId
@@ -381,7 +379,6 @@ class App extends Component {
             .then(response => {
                 this.setState({currentRelease: response.data}, () => {
                     this.releaseAnimationTimeout = setTimeout(() => {
-                        console.log('asd', response.data, this.state.vinylCollection)
                         this.setReleaseStatus(response.data, this.state.vinylCollection, this.state.wishlist);
                         this.props.history.push(`${type}/${id}`);
                     }, 600);

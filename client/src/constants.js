@@ -159,7 +159,7 @@ export const GENRES = {
             "Tango", "Tejano", "Timba", "Trova", "Vallenato"]},
     non_music: {name:'Non-Music', styles: ["Audiobook", "Comedy", "Dialogue", "Education", "Field Recording",
             "Interview", "Monolog", "Movie Effects", "Movie Effects",
-            "Poetry", "Political", "Promotional", "Public Service Announcement",
+            "Poetry", "Political", "Promotional",
             "Radioplay", "Religious", "Sermon", "Special Effects", "Speech",
             "Spoken Word", "Technical", "Therapy"]},
     pop: {name: 'Pop', styles: ["Ballad", "Bollywood", "Chanson", "Enka",

@@ -60,7 +60,6 @@ class SellModal extends React.Component {
     }
 
     renderDropdownItem = (condition) => {
-        console.log('asdasdas', condition, this.state.condition);
         return (
             <DropdownItem data-for="sell-modal"
                           className={this.state.condition && this.state.condition.type === condition.type ? 'selected' : ''}
