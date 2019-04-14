@@ -5,7 +5,7 @@
         top: 100px;
         margin: 0 auto;
         width: 50%;
-        padding: 20px;
+        padding: 10px;
         box-shadow: 3px 2px 17px 2px $background-color-dimgray;
 
         .sign-up-form {
@@ -19,6 +19,45 @@
 
             label {
                 font-weight: 500;
+            }
+        }
+
+
+    }
+
+    .favorite-styles-wrapper {
+        position: relative;
+        right: 0;
+        left: 0;
+        width:0;
+        opacity: 0;
+        margin: 50px auto;
+        padding: 10px;
+        box-shadow: 3px 2px 17px 2px $background-color-dimgray;
+        transition: all 2s ease;
+
+        &.visible {
+            opacity: 1;
+            width: 75%;
+            overflow: hidden;
+        }
+
+        span {
+            position: relative;
+            top: -500px;
+            float: left;
+            margin: 5px 10px;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: top 1s ease;
+
+            &:hover {
+                color: $font-color-red;
+            }
+
+            &.visible {
+                top: 0;
             }
         }
     }

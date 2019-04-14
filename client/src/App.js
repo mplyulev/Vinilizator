@@ -253,7 +253,6 @@ class App extends Component {
         }
     }
 
-
     static getDerivedStateFromProps(nextProps, prevState) {
         const {token} = prevState;
         const prevPath = prevState.prevProps.location.pathname;

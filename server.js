@@ -5,6 +5,7 @@ const passport = require('passport');
 
 const authentication = require('./routes/api/controllers/authentication');
 const collection = require('./routes/api/controllers/collection');
+const accountSettings = require('./routes/api/controllers/accountSettings');
 
 const app = express();
 
@@ -22,6 +23,7 @@ mongoose
 app.use(passport.initialize());
 app.use('/api/controllers/authentication', authentication);
 app.use('/api/controllers/collection', collection);
+app.use('/api/controllers/accountSettings', accountSettings);
 
 app.use(function(req, res, next) {
     const err = new Error('Not Found');

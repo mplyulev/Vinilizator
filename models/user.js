@@ -19,6 +19,12 @@ const userSchema = new Schema({
     wishlist: {
         type: Array
     },
+    favoriteStyles: {
+        type: Array
+    },
+    hideSellingFromCollection: {
+        type: Boolean
+    },
     hash: String,
     salt: String
 });

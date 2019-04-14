@@ -24,6 +24,23 @@ class Account extends Component {
             isFormOpened: false,
             favoriteStyles: []
         };
+
+        this.timeout = null;
+        this.favoritesWrapper = React.createRef();
+    }
+
+    componentDidMount() {
+        axios.get('/api/controllers/accountSettings/getFavoriteStyles', {
+        params: {
+            userId: localStorage.getItem('userId')}
+        }).then((res) => {
+            this.setState({ favoriteStyles: res.data.favoriteStyles}, () => {
+                const childNodesArray = Array.from(this.favoritesWrapper.current.childNodes);
+                childNodesArray.map(child => child.classList.add('visible'));
+            });
+        });
+
+        window.addEventListener('beforeunload', this.saveFavorites);
     }
 
     validateForm() {
@@ -48,6 +65,7 @@ class Account extends Component {
         const { oldPassword, newPassword, repeatPassword } = this.state;
 
         if (newPassword !== repeatPassword) {
+            console.log(newPassword, repeatPassword);
             this.setState({ repeatPasswordError: "The passwords don't match" });
             return;
         }
@@ -65,12 +83,45 @@ class Account extends Component {
             });
     };
 
+    componentWillUnmount() {
+        this.saveFavorites();
+        window.removeEventListener('beforeunload', this.saveFavorites); // remove the event handler for normal unmounting
+    }
 
-    setSelectedStyle = (style) => {
-        console.log(style, this.state.favoriteStyles);
-        this.setState({ favoriteStyles: [] });
 
+    saveFavorites = () => {
+        const { favoriteStyles } = this.state;
+        axios.post('/api/controllers/accountSettings/saveFavorites', {
+            favoriteStyles,
+            userId: localStorage.getItem('userId')
+        });
     };
+
+
+    toggleStyle = (style, isRemoving, event) => {
+
+        let favoriteStyles = [...this.state.favoriteStyles];
+        clearTimeout(this.timeout);
+        if (isRemoving) {
+            const styleIndex = favoriteStyles.indexOf(style);
+            event.target.classList.remove("visible", "selected");
+            this.favoritesWrapper.current.childNodes[styleIndex].classList.remove('visible');
+
+            this.timeout = setTimeout(() => {
+                favoriteStyles.splice(styleIndex, 1);
+                this.setState({ favoriteStyles });
+            },100);
+        } else {
+            favoriteStyles.push(style);
+
+            this.setState({ favoriteStyles } );
+            this.timeout = setTimeout(() => {
+                this.lastStyle && this.lastStyle.classList.add('visible')
+            }, 0)
+        }
+    };
+
+
 
     render() {
         let allStyles = [];
@@ -79,12 +130,12 @@ class Account extends Component {
                 allStyles = allStyles.concat(genre.styles);
             }
         });
+        console.log(this.state.favoriteStyles);
 
-        let styleDropdownOptions = null;
         const dedupedStyles = [...new Set(allStyles)].sort();
 
-        styleDropdownOptions = dedupedStyles.map(style =>
-            <DropdownItem onClick={() => this.setSelectedStyle(style)}
+        const styleDropdownOptions = dedupedStyles.map(style =>
+            <DropdownItem onClick={(event) => this.toggleStyle(style, this.state.favoriteStyles.includes(style) ? true : false, event)}
                           className={this.state.favoriteStyles.includes(style) ? 'selected' : ''}
                           key={style}
                           toggle={false}
@@ -120,7 +171,7 @@ class Account extends Component {
                             />
                         </FormGroup>
                         <FormGroup className="repeat-password-form">
-                            <Label for="repeatPassword">Password</Label>
+                            <Label for="repeatPassword">Repeat New Password</Label>
                             <Input
                                 onChange={this.handleChange}
                                 type="password"
@@ -145,11 +196,17 @@ class Account extends Component {
                         Change Password
                     </Button>
                 </div>
-             <DropdownComponent items={styleDropdownOptions}
-                                dropdownTitle='Choose favorite styles'
-                                showSelected={false}
-                                selected={favoriteStyles}/>
+                <DropdownComponent items={styleDropdownOptions}
+                                   dropdownTitle='Choose favorite styles'
+                                   showSelected={false}
+                                   selected={favoriteStyles} />
+                <div className={`favorite-styles-wrapper ${favoriteStyles.length > 0 ? 'visible' : ''}`} ref={this.favoritesWrapper}>
+                    {favoriteStyles.map((style, index) => <span ref={index === favoriteStyles.length -1 ? (node) => this.lastStyle = node : null}
+                                                                key={style}
+                                                                onClick={(event) => this.toggleStyle(style, true, event)}>{style}</span>)}
+                </div>
             </div>
+
         );
     }
 }
