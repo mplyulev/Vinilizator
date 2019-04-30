@@ -56,8 +56,10 @@ class ReleaseFull extends Component {
 
     markAsSold = (release) => {
         const userId = localStorage.getItem('userId');
-        axios.post('/api/controllers/collection/removeFromCollection', { release, userId }).then(() => {
+        axios.post('/api/controllers/collection/removeFromCollection', { release, userId }).then((res) => {
             this.props.getCollection().then(() => {
+                const msg = res.data.success ? `${res.data.release} successfully marked as sold` : 'A problem occurred. Please try again!';
+                this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, msg);
                 this.props.history.push(ROUTE_FOR_SELL);
             });
         });

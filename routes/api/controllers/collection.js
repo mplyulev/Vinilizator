@@ -90,6 +90,7 @@ router.post('/removeFromCollection', function(req, res) {
                 } else {
                     res.send({
                         success: true,
+                        release: req.body.release.artists_sort + ' - ' + req.body.release.title,
                         msg: req.body.release.artists_sort + ' - ' + req.body.release.title + ' successfully removed from your collection!'
                     })
                 }

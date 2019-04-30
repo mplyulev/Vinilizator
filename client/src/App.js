@@ -89,7 +89,8 @@ class App extends Component {
             isSearchItemForSale: false,
             userInfo: null,
             genre: '',
-            style: ''
+            style: '',
+            shouldShowSelling: true
         };
 
         this.getCollection = this.getCollection.bind(this);
@@ -218,6 +219,19 @@ class App extends Component {
             this.toggleNavBar(true);
         }
     };
+    //
+    // getAccountSettings = () => {
+    //     axios.get('/api/controllers/collection/getUser',  {params: {
+    //             userId: localStorage.getItem('userId')
+    //         }}).then((res) => {
+    //         this.setState({requestPending: false});
+    //         if (res.status === RESPONSE_STATUS_SUCCESS) {
+    //             console.log(res.data.user);
+    //             this.setState({
+    //                 shouldShowSelling: res.data.user.shouldShowSelling,
+    //                 favoriteStyles: res.data.user.favoriteStyles
+    //             }, () => {
+    // }
 
     componentDidMount() {
         document.addEventListener('click', this.closeOnOutsideClick);
@@ -228,6 +242,7 @@ class App extends Component {
             this.setState({ lastRequestedRoute: this.props.location.pathname });
             this.props.history.push(ROUTE_SIGN_IN);
         }
+
         if (token) {
             this.getCollection();
         }
@@ -352,7 +367,7 @@ class App extends Component {
             isSearchItemForSale: false,
             isSearchItemInWishlist: false
         });
-        console.log('settigns')
+
         vinylCollection.map(vinyl => {
             if (vinyl.id === release.id) {
                 this.setState({isSearchItemInCollection: true});
@@ -398,15 +413,19 @@ class App extends Component {
 
     async getCollection (shouldResetReleaseStatus, shouldResetCurrentRelease, currentReleaseId) {
         this.setState({requestPending: true});
-        axios.get('/api/controllers/collection/getCollection', {
+        axios.get('/api/controllers/collection/getUser', {
             params: {
                 userId: localStorage.getItem('userId')
             }
         }).then((res) => {
             if (res.status === RESPONSE_STATUS_SUCCESS) {
+                let vinylCollection = res.data.user.vinylCollection || [];
+
                 this.setState({
-                    vinylCollection: res.data.collection.vinylCollection || [],
-                    wishlist: res.data.collection.wishlist || []
+                    shouldShowSelling: res.data.user.shouldShowSelling,
+                    favoriteStyles: res.data.user.favoriteStyles,
+                    vinylCollection,
+                    wishlist: res.data.user.wishlist || []
                 }, () => {
                     if (shouldResetReleaseStatus) {
                         this.setReleaseStatus(this.state.currentRelease, this.state.vinylCollection, this.state.wishlist);
@@ -414,7 +433,7 @@ class App extends Component {
                 });
 
                 if (shouldResetCurrentRelease) {
-                    this.resetSpecificResult(res.data.collection.vinylCollection, currentReleaseId);
+                    this.resetSpecificResult(res.data.user.vinylCollection, currentReleaseId);
                 }
             }
 
@@ -494,7 +513,9 @@ class App extends Component {
             collectionType,
             isSearchItemInCollection,
             isSearchItemForSale,
-            isSearchItemInWishlist
+            isSearchItemInWishlist,
+            shouldShowSelling,
+            favoriteStyles
         } = this.state;
 
         const { location, history } = this.props;
@@ -520,7 +541,7 @@ class App extends Component {
                             className={`router-container${isOnAuthRoute ? ' auth' : ''}${isNavBarOpened ? ' opened-navbar' : ''}`}>
                             {isLightboxOpened && <LightboxWrapper closeLightbox={this.closeLightbox}
                                                                   isLightboxOpened={isLightboxOpened}
-                                                         Collection         images={lightboxImages}/>}
+                                                                  images={lightboxImages}/>}
                             <div id="player"></div>
                             <Switch>
                                 <Route exact path="/"
@@ -556,12 +577,15 @@ class App extends Component {
                                 <Route exact path={ROUTE_COLLECTION}
                                        render={() => <Collection getSpecificResult={this.getSpecificResult}
                                                                  history={history}
+                                                                 shouldShowSelling={shouldShowSelling}
                                                                  requestPending={requestPending}
                                                                  collectionType={COLLECTION_TYPE_COLLECTION}
                                                                  clearCurrentRelease={this.clearCurrentRelease}
                                                                  currentRelease={currentRelease}
                                                                  setSpecificResult={this.setSpecificResult}
-                                                                 data={vinylCollection}/>}/>
+                                                                 data={shouldShowSelling
+                                                                     ? vinylCollection
+                                                                     : vinylCollection.filter(release => !release.forSale)}/>}/>
                                 <Route path={`${ROUTE_COLLECTION}${ROUTE_RELEASE}`}
                                        render={() => <ReleaseFull openLightbox={this.openLightbox}
                                                                   closeLightbox={this.closeLightbox}
@@ -629,7 +653,9 @@ class App extends Component {
                                                                   getCollection={this.getCollection}
                                                                   release={currentRelease}/>}/>
                                 <Route path={ROUTE_ACCOUNT}
-                                       render={() => <Account vinylCollection={vinylCollection} openSnackbar={this.openSnackbar}/>}/>
+                                       render={() => <Account vinylCollection={vinylCollection}
+                                                              getSpecificUser={this.getSpecificUser}
+                                                              openSnackbar={this.openSnackbar}/>}/>
                                 <Route exact path="/404" render={() => null}/>
                                 <Route exact path={`${ROUTE_USERS}`}
                                        render={() => <Users requestPending={requestPending}

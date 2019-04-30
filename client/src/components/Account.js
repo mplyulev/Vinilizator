@@ -6,7 +6,7 @@ import DropdownComponent from '../components/common/Dropdown';
 import {
     GENRES,
     RESPONSE_STATUS_SUCCESS,
-    SNACKBAR_TYPE_SUCCESS,
+    SNACKBAR_TYPE_SUCCESS
 } from "../constants";
 
 class Account extends Component {
@@ -23,7 +23,8 @@ class Account extends Component {
             isFormOpened: false,
             favoriteStyles: [],
             userTracks: null,
-            youtubeSrc: ''
+            youtubeSrc: '',
+            shouldShowSelling: true
         };
 
         this.timeout = null;
@@ -31,17 +32,22 @@ class Account extends Component {
     }
 
     componentDidMount() {
-        axios.get('/api/controllers/accountSettings/getFavoriteStyles', {
-        params: {
-            userId: localStorage.getItem('userId')}
-        }).then((res) => {
-            this.setState({ favoriteStyles: res.data.favoriteStyles}, () => {
-                const childNodesArray = Array.from(this.favoritesWrapper.current.childNodes);
-                childNodesArray.map(child => child.classList.add('visible'));
-            });
+        axios.get('/api/controllers/collection/getUser',  {params: {
+                userId: localStorage.getItem('userId')
+            }}).then((res) => {
+            this.setState({requestPending: false});
+            if (res.status === RESPONSE_STATUS_SUCCESS) {
+                this.setState({
+                    shouldShowSelling: res.data.user.shouldShowSelling,
+                    favoriteStyles: res.data.user.favoriteStyles
+                }, () => {
+                    const childNodesArray = Array.from(this.favoritesWrapper.current.childNodes);
+                    childNodesArray.map(child => child.classList.add('visible'));
+                })
+            }
         });
 
-        this.props.vinylCollection.map(vinyl => console.log(vinyl.tracklist));
+        // this.props.vinylCollection.map(vinyl => console.log(vinyl.tracklist));
 
         // const youtubeSrc = `https://www.youtube.com/embed?listType=search&list=${release.tracklist[0] && release.tracklist[0].artists ? release.tracklist[0].artists[0].name : release.artists[0].name}+${release.tracklist[0].title}`
 
@@ -70,7 +76,6 @@ class Account extends Component {
         const { oldPassword, newPassword, repeatPassword } = this.state;
 
         if (newPassword !== repeatPassword) {
-            console.log(newPassword, repeatPassword);
             this.setState({ repeatPasswordError: "The passwords don't match" });
             return;
         }
@@ -89,10 +94,8 @@ class Account extends Component {
     };
 
     componentWillUnmount() {
-        this.saveFavorites();
         window.removeEventListener('beforeunload', this.saveFavorites); // remove the event handler for normal unmounting
     }
-
 
     saveFavorites = () => {
         const { favoriteStyles } = this.state;
@@ -102,11 +105,20 @@ class Account extends Component {
         });
     };
 
+    toggleSellVisibility = () => {
+        this.setState(prevState => ({ shouldShowSelling: !prevState.shouldShowSelling }), () => {
+            const { shouldShowSelling } = this.state;
+            axios.post('/api/controllers/accountSettings/toggleSellingVisibility', {
+                shouldShowSelling,
+                userId: localStorage.getItem('userId')
+            });
+        })
+    };
 
     toggleStyle = (style, isRemoving, event) => {
-
         let favoriteStyles = [...this.state.favoriteStyles];
         clearTimeout(this.timeout);
+
         if (isRemoving) {
             const styleIndex = favoriteStyles.indexOf(style);
             event.target.classList.remove("visible", "selected");
@@ -125,8 +137,6 @@ class Account extends Component {
             }, 0)
         }
     };
-
-
 
     render() {
         let allStyles = [];
@@ -166,12 +176,6 @@ class Account extends Component {
                             />
                             <span className="error">{oldPasswordError}</span>
                         </FormGroup>
-                        <div class="pretty p-default">
-                            <input type="checkbox" />
-                            <div class="state">
-                                <label>Check</label>
-                            </div>
-                        </div>
                         <FormGroup className="new-password-form">
                             <Label for="newPassword">New Password</Label>
                             <Input
@@ -218,10 +222,10 @@ class Account extends Component {
                         key={style}
                         onClick={(event) => this.toggleStyle(style, true, event)}>{style}</span>)}
                 </div>
-                <div className="checkbox-wrapper">
-                    <div className="pretty  p-round p-fill  checkbox">
-                        <input type="checkbox" />
-                        <div className="state  p-success">
+                <div className="checkbox-wrapper" onChange={this.toggleSellVisibility}>
+                    <div className="pretty p-round p-fill checkbox">
+                        <input checked={!this.state.shouldShowSelling} type="checkbox"/>
+                        <div className= 'state p-success'>
                             <label>Don't show releases marked for sale in my collection</label>
                         </div>
                     </div>

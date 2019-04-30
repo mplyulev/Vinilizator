@@ -117,8 +117,6 @@ class Collection extends Component {
         if (prevProps.collectionType !== this.props.collectionType) {
             this.setSelectedGenre('');
             this.setState({ filteredCollection: null })
-
-
         }
     }
 

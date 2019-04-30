@@ -14,11 +14,21 @@ router.post('/saveFavorites', function(req, res) {
     });
 });
 
-//Remove style from favorites
-// router.post('/toggleSellingVisibility', function(req, res) {
+//Toggle visibility of records marked for sell in private collection
+router.post('/toggleSellingVisibility', function(req, res) {
+    User.findById(req.body.userId, function(err, user) {
+        if (user) {
+            user.shouldShowSelling = req.body.shouldShowSelling;
+            user.save();
+        }
+    });
+});
+
+//Toggle visibility  of collection
+// router.post('/toggleCollectionVisibility', function(req, res) {
 //     User.findById(req.body.userId, function(err, user) {
 //         if (user) {
-//
+//             user.shouldShowCollection = req.body.shouldShowCollection
 //         }
 //     });
 // });

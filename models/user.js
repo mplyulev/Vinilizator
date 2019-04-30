@@ -22,7 +22,10 @@ const userSchema = new Schema({
     favoriteStyles: {
         type: Array
     },
-    hideSellingFromCollection: {
+    shouldShowSelling: {
+        type: Boolean
+    },
+    shouldShowCollection: {
         type: Boolean
     },
     hash: String,
