@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import _ from 'lodash';
 import SearchItem from "./SearchItem";
 import {
@@ -18,7 +18,7 @@ import {
     DropdownToggle,
     DropdownMenu,
     DropdownItem,
-    Button, ModalFooter
+    Button
 } from 'reactstrap';
 
 class Collection extends Component {
@@ -95,13 +95,15 @@ class Collection extends Component {
 
     setSelectedStyle = (style) => {
         const { data } = this.props;
+        const { selectedGenre, filteredByGenre } = this.state;
+
         this.setState({ selectedStyle: style });
-        const filteredCollection = (this.state.filteredByGenre || data).filter(vinyl =>
+        const filteredCollection =  (filteredByGenre && filteredByGenre.length > 0 ? filteredByGenre : data).filter(vinyl =>
             vinyl.styles && vinyl.styles.includes(style)
         );
 
-        if (this.state.selectedGenre && this.state.selectedGenre !== GENRES_ALL && style === STYLES_ALL) {
-            this.setSelectedGenre(this.state.selectedGenre);
+        if (selectedGenre && selectedGenre !== GENRES_ALL && style === STYLES_ALL) {
+            this.setSelectedGenre(selectedGenre);
         } else {
             this.setState({ filteredCollection: style === STYLES_ALL ? data : filteredCollection });
         }
@@ -109,6 +111,15 @@ class Collection extends Component {
 
     componentDidMount() {
         ReactTooltip.rebuild();
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        if (prevProps.collectionType !== this.props.collectionType) {
+            this.setSelectedGenre('');
+            this.setState({ filteredCollection: null })
+
+
+        }
     }
 
     render () {
@@ -136,7 +147,7 @@ class Collection extends Component {
             });
         });
 
-        (filteredByGenre || data).map(release => {
+        (filteredByGenre && filteredByGenre.length > 0 ? filteredByGenre : data).map(release => {
             release.styles && release.styles.map(style => {
                 styles.push(style);
             });

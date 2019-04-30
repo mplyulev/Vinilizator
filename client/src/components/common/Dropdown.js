@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Dropdown, DropdownMenu, DropdownToggle } from 'reactstrap';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { GENRES_ALL, STYLES_ALL } from '../../constants';
 
 class DropdownComponent extends Component {
     constructor(props) {

@@ -427,11 +427,6 @@ class App extends Component {
         const nextPath = this.props.location.pathname;
 
         if (nextPath !== prevPath) {
-            // if (nextPath === ROUTE_SEARCH && prevPath !== `${ROUTE_RELEASE}/`) {
-            //     console.log('asdasd')
-            //     this.setState({searchQuery: ''});
-            // }
-
             if (nextPath === ROUTE_COLLECTION
                 || nextPath === ROUTE_WISHLIST
                 || nextPath === ROUTE_FOR_SELL
@@ -634,7 +629,7 @@ class App extends Component {
                                                                   getCollection={this.getCollection}
                                                                   release={currentRelease}/>}/>
                                 <Route path={ROUTE_ACCOUNT}
-                                       render={() => <Account openSnackbar={this.openSnackbar}/>}/>
+                                       render={() => <Account vinylCollection={vinylCollection} openSnackbar={this.openSnackbar}/>}/>
                                 <Route exact path="/404" render={() => null}/>
                                 <Route exact path={`${ROUTE_USERS}`}
                                        render={() => <Users requestPending={requestPending}

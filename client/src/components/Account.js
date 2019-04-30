@@ -6,7 +6,6 @@ import DropdownComponent from '../components/common/Dropdown';
 import {
     GENRES,
     RESPONSE_STATUS_SUCCESS,
-    SNACKBAR_TYPE_FAIL,
     SNACKBAR_TYPE_SUCCESS,
 } from "../constants";
 
@@ -22,7 +21,9 @@ class Account extends Component {
             repeatPasswordError: '',
             serverError: '',
             isFormOpened: false,
-            favoriteStyles: []
+            favoriteStyles: [],
+            userTracks: null,
+            youtubeSrc: ''
         };
 
         this.timeout = null;
@@ -39,6 +40,10 @@ class Account extends Component {
                 childNodesArray.map(child => child.classList.add('visible'));
             });
         });
+
+        this.props.vinylCollection.map(vinyl => console.log(vinyl.tracklist));
+
+        // const youtubeSrc = `https://www.youtube.com/embed?listType=search&list=${release.tracklist[0] && release.tracklist[0].artists ? release.tracklist[0].artists[0].name : release.artists[0].name}+${release.tracklist[0].title}`
 
         window.addEventListener('beforeunload', this.saveFavorites);
     }
@@ -161,6 +166,12 @@ class Account extends Component {
                             />
                             <span className="error">{oldPasswordError}</span>
                         </FormGroup>
+                        <div class="pretty p-default">
+                            <input type="checkbox" />
+                            <div class="state">
+                                <label>Check</label>
+                            </div>
+                        </div>
                         <FormGroup className="new-password-form">
                             <Label for="newPassword">New Password</Label>
                             <Input
@@ -200,10 +211,20 @@ class Account extends Component {
                                    dropdownTitle='Choose favorite styles'
                                    showSelected={false}
                                    selected={favoriteStyles} />
-                <div className={`favorite-styles-wrapper ${favoriteStyles.length > 0 ? 'visible' : ''}`} ref={this.favoritesWrapper}>
-                    {favoriteStyles.map((style, index) => <span ref={index === favoriteStyles.length -1 ? (node) => this.lastStyle = node : null}
-                                                                key={style}
-                                                                onClick={(event) => this.toggleStyle(style, true, event)}>{style}</span>)}
+                <div className={`favorite-styles-wrapper ${favoriteStyles.length > 0 ? 'visible' : ''}`}
+                     ref={this.favoritesWrapper}>
+                    {favoriteStyles.map((style, index) => <span
+                        ref={index === favoriteStyles.length - 1 ? (node) => this.lastStyle = node : null}
+                        key={style}
+                        onClick={(event) => this.toggleStyle(style, true, event)}>{style}</span>)}
+                </div>
+                <div className="checkbox-wrapper">
+                    <div className="pretty  p-round p-fill  checkbox">
+                        <input type="checkbox" />
+                        <div className="state  p-success">
+                            <label>Don't show releases marked for sale in my collection</label>
+                        </div>
+                    </div>
                 </div>
             </div>
 
