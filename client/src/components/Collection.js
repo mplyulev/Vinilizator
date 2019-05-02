@@ -132,9 +132,10 @@ class Collection extends Component {
             collectionType,
             requestPending,
             getSpecificUser,
-            isOtherUserCollection
+            isOtherUserCollection,
+            hideCollection
         } = this.props;
-
+        console.log('asd', collectionType, hideCollection)
         const { filteredCollection, selectedGenre, selectedStyle, filteredByGenre } = this.state;
         let genres = [];
         let styles = [];
@@ -224,7 +225,7 @@ class Collection extends Component {
                     }
                     {!requestPending
                         ?
-                        !_.isEmpty(data)
+                        !_.isEmpty(data) && (!hideCollection || collectionType !== COLLECTION_TYPE_COLLECTION)
                             ? (filteredCollection || data).map(result => {
                                 return (
                                     <SearchItem history={history}
@@ -248,18 +249,23 @@ class Collection extends Component {
                                         ? <p>YOU HAVE NO RECORDS IN YOU WISHLIST</p>
                                         : <p>USER HAS NO RECORDS IN HIS WISHLIST</p>
                                     : null}
-                                {collectionType === COLLECTION_TYPE_COLLECTION
+                                {collectionType === COLLECTION_TYPE_COLLECTION && !hideCollection
                                     ? !isOtherUserCollection
                                         ? <p>YOU HAVE NO RECORDS IN YOUR COLLECTION</p>
                                         : <p>USER HAS NO RECORDS IN HIS COLLECTION</p>
                                     : null}
+                                {collectionType === COLLECTION_TYPE_COLLECTION && hideCollection
+
+                                    ? <p>THIS USER'S COLLECTION IS HIDDEN</p>
+                                    : null
+                                }
                                 {collectionType === COLLECTION_TYPE_FOR_SELL
                                     ? !isOtherUserCollection
                                         ? <p>YOU HAVE NO RECORDS FOR SALE</p>
                                         : <p>USER HAS NO RECORDS FOR SALE</p>
                                     : null}
                                 {collectionType === COLLECTION_TYPE_MARKET ? <p>THE MARKET IS EMPTY</p> : null}
-                                {!isOtherUserCollection && !collectionType ? <Button color="success"
+                                {!isOtherUserCollection &&  collectionType ? <Button color="success"
                                                                   onClick={() => this.props.history.push(ROUTE_SEARCH)}>
                                     SEARCH FOR RECORDS
                                 </Button> : null}

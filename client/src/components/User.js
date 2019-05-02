@@ -1,5 +1,4 @@
 import React, {Component, Fragment} from 'react';
-import ReactTooltip from 'react-tooltip';
 import Collection from './Collection';
 import { COLLECTION_TYPE_COLLECTION, COLLECTION_TYPE_FOR_SELL, COLLECTION_TYPE_WISHLIST } from '../constants';
 
@@ -59,6 +58,7 @@ class User extends Component {
                     </div>
                     <Collection isOtherUserCollection={true}
                                 data={data}
+                                hideCollection={user.hideCollection}
                                 setSpecificResult={setSpecificResult}
                                 collectionType={collectionType} />
                 </div>

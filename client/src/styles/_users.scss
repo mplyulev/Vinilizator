@@ -26,6 +26,12 @@
       box-shadow: 0px 2px 50px 5px $background-color-red;
     }
 
+    .user-info-wrapper {
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
     .username {
       font-size: 25px;
       font-weight: 600;

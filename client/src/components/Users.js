@@ -72,10 +72,13 @@ class Users extends Component {
                         console.log(user)
                         return (
                             <div className="user" key={user.username} onClick={() => getSpecificUser(user._id)}>
-                                <span className="username">{user.username}</span>
-                                <span>Items in collection: {user.vinylCollection.length}</span>
-                                <span>Items for sale: {this.getItemsForSell(user) ? this.getItemsForSell(user).length : 0}</span>
-                                <span>Items in wishlist: {user.wishlist.length}</span>
+                                <div className="user-info-wrapper">
+                                    <span className="username">{user.username}</span>
+                                    {!user.hideCollection &&
+                                    <span>Items in collection: {user.vinylCollection.length}</span>}
+                                    <span>Items for sale: {this.getItemsForSell(user) ? this.getItemsForSell(user).length : 0}</span>
+                                    <span>Items in wishlist: {user.wishlist.length}</span>
+                                </div>
                             </div>
                         );
                     })}

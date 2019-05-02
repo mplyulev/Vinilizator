@@ -21,11 +21,22 @@
                 font-weight: 500;
             }
         }
+    }
 
+    .player-settings-wrapper {
+        width: 60%;
+        margin: 50px auto;
+        padding: 20px;
+        box-shadow: 3px 2px 17px 2px #696969;
+        text-align: center;
 
+        .title {
+            font-weight: 800;
+        }
     }
 
     .checkbox-wrapper {
+        margin: 10px;
         text-align: center;
         cursor: pointer;
     }

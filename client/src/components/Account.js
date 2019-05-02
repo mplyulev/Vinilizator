@@ -24,7 +24,8 @@ class Account extends Component {
             favoriteStyles: [],
             userTracks: null,
             youtubeSrc: '',
-            shouldShowSelling: true
+            shouldShowSelling: true,
+            hideCollection: false
         };
 
         this.timeout = null;
@@ -39,6 +40,7 @@ class Account extends Component {
             if (res.status === RESPONSE_STATUS_SUCCESS) {
                 this.setState({
                     shouldShowSelling: res.data.user.shouldShowSelling,
+                    hideCollection: res.data.user.hideCollection,
                     favoriteStyles: res.data.user.favoriteStyles
                 }, () => {
                     const childNodesArray = Array.from(this.favoritesWrapper.current.childNodes);
@@ -115,6 +117,17 @@ class Account extends Component {
         })
     };
 
+    toggleCollectionVisibility = () => {
+        this.setState(prevState => ({ hideCollection: !prevState.hideCollection }), () => {
+            const { hideCollection } = this.state;
+            axios.post('/api/controllers/accountSettings/toggleCollectionVisibility', {
+                hideCollection,
+                userId: localStorage.getItem('userId')
+            });
+        })
+    };
+
+
     toggleStyle = (style, isRemoving, event) => {
         let favoriteStyles = [...this.state.favoriteStyles];
         clearTimeout(this.timeout);
@@ -145,7 +158,6 @@ class Account extends Component {
                 allStyles = allStyles.concat(genre.styles);
             }
         });
-        console.log(this.state.favoriteStyles);
 
         const dedupedStyles = [...new Set(allStyles)].sort();
 
@@ -159,7 +171,8 @@ class Account extends Component {
             </DropdownItem>
         );
 
-        const { oldPasswordError, repeatPasswordError, serverError, isFormOpened, favoriteStyles } = this.state;
+        const { oldPasswordError, repeatPasswordError, serverError, isFormOpened, favoriteStyles, shouldShowSelling, hideCollection } = this.state;
+        const { playTracksFromCollection, playTracksFromFavorites, togglePlayer } = this.props;
 
         return (
             <div className={'account-wrapper'}>
@@ -222,16 +235,46 @@ class Account extends Component {
                         key={style}
                         onClick={(event) => this.toggleStyle(style, true, event)}>{style}</span>)}
                 </div>
-                <div className="checkbox-wrapper" onChange={this.toggleSellVisibility}>
-                    <div className="pretty p-round p-fill checkbox">
-                        <input checked={!this.state.shouldShowSelling} type="checkbox"/>
-                        <div className= 'state p-success'>
-                            <label>Don't show releases marked for sale in my collection</label>
+
+
+
+                <div className="player-settings-wrapper">
+                    <span className="title">GENERAL SETTINGS</span>
+                    <div className="checkbox-wrapper" onChange={this.toggleSellVisibility}>
+                        <div className="pretty p-round p-fill checkbox">
+                            <input checked={!shouldShowSelling} type="checkbox" />
+                            <div className='state p-success'>
+                                <label>Don't show releases marked for sale in my collection</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="checkbox-wrapper" onChange={this.toggleCollectionVisibility}>
+                        <div className="pretty p-round p-fill checkbox">
+                            <input checked={hideCollection} type="checkbox" />
+                            <div className='state p-success'>
+                                <label>Don't show my collection to other users</label>
+                            </div>
+                        </div>
+                    </div>
+                    <span className='title'>PLAYER SETTINGS</span>
+                    <div className="checkbox-wrapper" onChange={() => togglePlayer(true)}>
+                        <div className="pretty p-round p-fill checkbox">
+                            <input checked={playTracksFromCollection} type="checkbox" />
+                            <div className='state p-success'>
+                                <label>Play a random track from my collection and wishlist</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="checkbox-wrapper" onChange={() => togglePlayer(false)}>
+                        <div className="pretty p-round p-fill checkbox">
+                            <input checked={playTracksFromFavorites} type="checkbox" />
+                            <div className='state p-success'>
+                                <label>Play a random track from my favorite styles</label>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
         );
     }
 }

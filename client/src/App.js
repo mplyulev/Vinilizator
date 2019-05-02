@@ -90,7 +90,9 @@ class App extends Component {
             userInfo: null,
             genre: '',
             style: '',
-            shouldShowSelling: true
+            shouldShowSelling: true,
+            playTracksFromCollection: false,
+            playTracksFromFavorites: false
         };
 
         this.getCollection = this.getCollection.bind(this);
@@ -418,11 +420,14 @@ class App extends Component {
                 userId: localStorage.getItem('userId')
             }
         }).then((res) => {
-            if (res.status === RESPONSE_STATUS_SUCCESS) {
+            if (res.status === RESPONSE_STATUS_SUCCESS && res.data.user) {
                 let vinylCollection = res.data.user.vinylCollection || [];
 
                 this.setState({
                     shouldShowSelling: res.data.user.shouldShowSelling,
+                    showPlayer: res.data.user.playTracksFromCollection || res.data.user.playTracksFromFavorites,
+                    playTracksFromCollection: res.data.user.playTracksFromCollection,
+                    playTracksFromFavorites: res.data.user.playTracksFromFavorites,
                     favoriteStyles: res.data.user.favoriteStyles,
                     vinylCollection,
                     wishlist: res.data.user.wishlist || []
@@ -493,6 +498,25 @@ class App extends Component {
         this.setState({ currentRelease: null });
     };
 
+    togglePlayer = (playTracksFromCollection) => {
+        this.setState(prevState => ({
+            playTracksFromCollection: playTracksFromCollection ? !prevState.playTracksFromCollection : false,
+            playTracksFromFavorites: !playTracksFromCollection ? !prevState.playTracksFromFavorites  : false
+        }), () => {
+            if (this.state.playTracksFromFavorites || this.state.playTracksFromCollection) {
+                this.setState({ showPlayer: true });
+            } else if (!this.state.playTracksFromFavorites || !this.state.playTracksFromCollection) {
+                this.setState({ showPlayer: false });
+            }
+
+            axios.post('/api/controllers/accountSettings/togglePlayer', {
+                playTracksFromCollection: this.state.playTracksFromCollection,
+                playTracksFromFavorites: this.state.playTracksFromFavorites,
+                userId: localStorage.getItem('userId')
+            });
+        });
+    };
+
     render() {
         const {
             currentQueryResult,
@@ -515,7 +539,9 @@ class App extends Component {
             isSearchItemForSale,
             isSearchItemInWishlist,
             shouldShowSelling,
-            favoriteStyles
+            showPlayer,
+            playTracksFromCollection,
+            playTracksFromFavorites
         } = this.state;
 
         const { location, history } = this.props;
@@ -534,6 +560,7 @@ class App extends Component {
                                                          currentRelease={currentRelease}
                                                          isSellModalOpened={isSellModalOpened}/>}
                         <AppNavBar isNavBarOpened={isNavBarOpened}
+                                   showPlayer={showPlayer}
                                    isVisible={location.pathname !== ROUTE_SIGN_UP && location.pathname !== ROUTE_SIGN_IN}
                                    toggleNavBar={this.toggleNavBar}
                                    logout={this.logout}/>
@@ -654,6 +681,9 @@ class App extends Component {
                                                                   release={currentRelease}/>}/>
                                 <Route path={ROUTE_ACCOUNT}
                                        render={() => <Account vinylCollection={vinylCollection}
+                                                              togglePlayer={this.togglePlayer}
+                                                              playTracksFromFavorites={playTracksFromFavorites}
+                                                              playTracksFromCollection={playTracksFromCollection}
                                                               getSpecificUser={this.getSpecificUser}
                                                               openSnackbar={this.openSnackbar}/>}/>
                                 <Route exact path="/404" render={() => null}/>
