@@ -28,7 +28,7 @@ class AppNavBar extends Component {
         super(props);
 
         this.state = {
-            isPlayerPlaying: false,
+            isPlayerPlaying: true,
             isPlayerMuted: false
         };
     }
@@ -36,7 +36,7 @@ class AppNavBar extends Component {
 
     play = () => {
         player.playVideo();
-        this.setState({ isPlaying: true });
+        this.setState({ isPlayerPlaying: true });
     };
 
     mute = () => {
@@ -51,17 +51,15 @@ class AppNavBar extends Component {
 
     pause = () => {
         player.pauseVideo();
-        this.setState({ isPlaying: false });
+        this.setState({ isPlayerPlaying: false });
     };
 
     playNext = () => {
-        player.loadPlaylist({
-            list: 'sting',
-            // listType:String,
-            index: 0,
-            startSeconds: 0
-
-        });
+        // player.loadPlaylist({list:String,
+        //     listType:String,
+        //     index:Number,
+        //     startSeconds:Number,
+        //     })
     };
 
     onReady = (e) => {
@@ -70,11 +68,14 @@ class AppNavBar extends Component {
 
     render() {
         const opts = {
-            height: '0',
-            width: '0'
+            height: '220',
+            width: '220',
+            playerVars: {
+                autoplay: 1
+            }
         };
 
-        const { showPlayer } = this.props;
+        const { showPlayer, playerSrc, playerTitle, playerRelease } = this.props;
 
         return (
             <div>
@@ -119,12 +120,13 @@ class AppNavBar extends Component {
                         </Nav>
                     </Collapse>
                     <YouTube
-                        videoId="2g811Eo7K8U"
+
                         opts={opts}
                         onReady={this.onReady}
                     />
-                    {showPlayer && <div className="player-controls-wrapper">
-                        {!this.state.isPlaying
+                    <span className="player-title">{playerTitle}</span>
+                    <div className={`player-controls-wrapper${showPlayer ? ' visible' : ''}`}>
+                        {!this.state.isPlayerPlaying
                             ? <FaPlayCircle onClick={this.play} className="player-icon"></FaPlayCircle>
                             : <FaPauseCircle onClick={this.pause} className="player-icon"></FaPauseCircle>
                         }
@@ -134,7 +136,6 @@ class AppNavBar extends Component {
                             : <FaVolume onClick={this.mute} className="player-icon"></FaVolume>
                         }
                     </div>
-                    }
                 </Navbar>
             </div>
         );

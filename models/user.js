@@ -25,7 +25,13 @@ const userSchema = new Schema({
     shouldShowSelling: {
         type: Boolean
     },
-    shouldShowCollection: {
+    hideCollection: {
+        type: Boolean
+    },
+    playTracksFromCollection: {
+        type: Boolean
+    },
+    playTracksFromFavorites: {
         type: Boolean
     },
     hash: String,

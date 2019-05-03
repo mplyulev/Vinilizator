@@ -24,14 +24,26 @@ router.post('/toggleSellingVisibility', function(req, res) {
     });
 });
 
-//Toggle visibility  of collection
-// router.post('/toggleCollectionVisibility', function(req, res) {
-//     User.findById(req.body.userId, function(err, user) {
-//         if (user) {
-//             user.shouldShowCollection = req.body.shouldShowCollection
-//         }
-//     });
-// });
+router.post('/togglePlayer', function(req, res) {
+    User.findById(req.body.userId, function(err, user) {
+        if (user) {
+            console.log(req.body);
+            user.playTracksFromCollection = req.body.playTracksFromCollection;
+            user.playTracksFromFavorites = req.body.playTracksFromFavorites;
+            user.save();
+        }
+    });
+});
+
+router.post('/toggleCollectionVisibility', function(req, res) {
+    User.findById(req.body.userId, function(err, user) {
+        if (user) {
+            user.hideCollection = req.body.hideCollection;
+            user.save();
+        }
+    });
+});
+
 
 //Remove style from favorites
 router.get('/getFavoriteStyles', function(req, res) {

@@ -92,7 +92,9 @@ class App extends Component {
             style: '',
             shouldShowSelling: true,
             playTracksFromCollection: false,
-            playTracksFromFavorites: false
+            playTracksFromFavorites: false,
+            playerTitle: '',
+            playerRelease: null
         };
 
         this.getCollection = this.getCollection.bind(this);
@@ -221,19 +223,6 @@ class App extends Component {
             this.toggleNavBar(true);
         }
     };
-    //
-    // getAccountSettings = () => {
-    //     axios.get('/api/controllers/collection/getUser',  {params: {
-    //             userId: localStorage.getItem('userId')
-    //         }}).then((res) => {
-    //         this.setState({requestPending: false});
-    //         if (res.status === RESPONSE_STATUS_SUCCESS) {
-    //             console.log(res.data.user);
-    //             this.setState({
-    //                 shouldShowSelling: res.data.user.shouldShowSelling,
-    //                 favoriteStyles: res.data.user.favoriteStyles
-    //             }, () => {
-    // }
 
     componentDidMount() {
         document.addEventListener('click', this.closeOnOutsideClick);
@@ -246,7 +235,7 @@ class App extends Component {
         }
 
         if (token) {
-            this.getCollection();
+           this.getCollection();
         }
 
         let pathname = location.pathname;
@@ -421,15 +410,13 @@ class App extends Component {
             }
         }).then((res) => {
             if (res.status === RESPONSE_STATUS_SUCCESS && res.data.user) {
-                let vinylCollection = res.data.user.vinylCollection || [];
-
                 this.setState({
                     shouldShowSelling: res.data.user.shouldShowSelling,
                     showPlayer: res.data.user.playTracksFromCollection || res.data.user.playTracksFromFavorites,
                     playTracksFromCollection: res.data.user.playTracksFromCollection,
                     playTracksFromFavorites: res.data.user.playTracksFromFavorites,
                     favoriteStyles: res.data.user.favoriteStyles,
-                    vinylCollection,
+                    vinylCollection: res.data.user.vinylCollection || [],
                     wishlist: res.data.user.wishlist || []
                 }, () => {
                     if (shouldResetReleaseStatus) {
@@ -472,7 +459,11 @@ class App extends Component {
                         this.makeSearchRequest(this.state.searchQuery || '');
                 }
             }
+        }
 
+        if (prevState.showPlayer !== this.state.showPlayer && this.state.showPlayer) {
+            console.log('asdasd');
+            this.getRandomTrack(this.state.playTracksFromCollection);
         }
 
         const { searchQuery, token, lastRequestedRoute, genre } = this.state;
@@ -496,6 +487,17 @@ class App extends Component {
 
     clearCurrentRelease = () => {
         this.setState({ currentRelease: null });
+    };
+
+    getRandomTrack = (shouldPlayFromCollection) => {
+        if (shouldPlayFromCollection) {
+            const releaseList = this.state.vinylCollection.concat(this.state.wishlist);
+            const release = releaseList[Math.floor(Math.random()*releaseList.length)];
+            const track = release.tracklist[Math.floor(Math.random() * release.tracklist.length)];
+            const trackTitle = `${track && track.artists ? track.artists[0].name : release.artists[0].name} - ${track.title}`;
+            const playerSrc = `https://www.youtube.com/embed?listType=search&list=${track && track.artists ? track.artists[0].name : release.artists[0].name}+${track.title}`
+            this.setState({ playerTitle: trackTitle, playerRelease: release, playerSrc});
+        }
     };
 
     togglePlayer = (playTracksFromCollection) => {
@@ -541,7 +543,10 @@ class App extends Component {
             shouldShowSelling,
             showPlayer,
             playTracksFromCollection,
-            playTracksFromFavorites
+            playTracksFromFavorites,
+            playerTitle,
+            playerSrc,
+            playerRelease
         } = this.state;
 
         const { location, history } = this.props;
@@ -561,6 +566,9 @@ class App extends Component {
                                                          isSellModalOpened={isSellModalOpened}/>}
                         <AppNavBar isNavBarOpened={isNavBarOpened}
                                    showPlayer={showPlayer}
+                                   playerTitle={playerTitle}
+                                   playerSrc={playerSrc}
+                                   playerRelease={playerRelease}
                                    isVisible={location.pathname !== ROUTE_SIGN_UP && location.pathname !== ROUTE_SIGN_IN}
                                    toggleNavBar={this.toggleNavBar}
                                    logout={this.logout}/>

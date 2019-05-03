@@ -49,10 +49,6 @@ class Account extends Component {
             }
         });
 
-        // this.props.vinylCollection.map(vinyl => console.log(vinyl.tracklist));
-
-        // const youtubeSrc = `https://www.youtube.com/embed?listType=search&list=${release.tracklist[0] && release.tracklist[0].artists ? release.tracklist[0].artists[0].name : release.artists[0].name}+${release.tracklist[0].title}`
-
         window.addEventListener('beforeunload', this.saveFavorites);
     }
 

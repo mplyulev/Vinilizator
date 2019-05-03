@@ -13,6 +13,20 @@
     display: block;
   }
 
+  .player-title {
+    font-weight: 700;
+    cursor: pointer;
+  }
+  
+  .player-controls-wrapper {
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+
+    &.visible {
+      opacity: 1;
+    }
+  }
+
   .player-icon {
     margin: 15px;
     font-size: 20px;
