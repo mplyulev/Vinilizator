@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import YouTube from 'react-youtube';
-import { FaPauseCircle, FaVolumeMute, FaStepForward, FaStepBackward , FaVolume, FaPlayCircle } from 'react-icons/fa';
+import { FaPauseCircle, FaVolumeMute, FaStepForward, FaVolume, FaPlayCircle } from 'react-icons/fa';
 
 import {
     Collapse,
@@ -18,7 +18,7 @@ import {
     ROUTE_ACCOUNT,
     ROUTE_FOR_SELL,
     ROUTE_MARKET,
-    ROUTE_USERS
+    ROUTE_USERS, COLLECTION_TYPE_COLLECTION
 } from '../constants';
 
 let player = null;
@@ -31,11 +31,14 @@ class AppNavBar extends Component {
             isPlayerPlaying: true,
             isPlayerMuted: false
         };
+
+
     }
 
 
     play = () => {
         player.playVideo();
+        console.log(player)
         this.setState({ isPlayerPlaying: true });
     };
 
@@ -50,16 +53,9 @@ class AppNavBar extends Component {
     };
 
     pause = () => {
+        player.getVideoEmbedCode()
         player.pauseVideo();
         this.setState({ isPlayerPlaying: false });
-    };
-
-    playNext = () => {
-        // player.loadPlaylist({list:String,
-        //     listType:String,
-        //     index:Number,
-        //     startSeconds:Number,
-        //     })
     };
 
     onReady = (e) => {
@@ -70,12 +66,15 @@ class AppNavBar extends Component {
         const opts = {
             height: '220',
             width: '220',
+            videoId: this.props.videoId,
+            videoEmbeddable: true,
             playerVars: {
-                autoplay: 1
+                autoplay: 1,
+                videoEmbeddable: true,
             }
         };
 
-        const { showPlayer, playerSrc, playerTitle, playerRelease } = this.props;
+        const { showPlayer, playerTitle, playerRelease, setSpecificResult, getRandomTrack, videoId, playTracksFromCollection } = this.props;
 
         return (
             <div>
@@ -120,17 +119,19 @@ class AppNavBar extends Component {
                         </Nav>
                     </Collapse>
                     <YouTube
-
+                        className="player"
+                        videoId={videoId}
                         opts={opts}
+                        onError={() => getRandomTrack(playTracksFromCollection)}
                         onReady={this.onReady}
                     />
-                    <span className="player-title">{playerTitle}</span>
+                    <span className="player-title" onClick={() => setSpecificResult(playerRelease, COLLECTION_TYPE_COLLECTION)}>{playerTitle}</span>
                     <div className={`player-controls-wrapper${showPlayer ? ' visible' : ''}`}>
                         {!this.state.isPlayerPlaying
                             ? <FaPlayCircle onClick={this.play} className="player-icon"></FaPlayCircle>
                             : <FaPauseCircle onClick={this.pause} className="player-icon"></FaPauseCircle>
                         }
-                        <FaStepForward onClick={this.playNext} className="player-icon"></FaStepForward>
+                        <FaStepForward onClick={() => getRandomTrack(playTracksFromCollection)} className="player-icon"></FaStepForward>
                         {this.state.isPlayerMuted
                             ? <FaVolumeMute onClick={this.unmute} className="player-icon"></FaVolumeMute>
                             : <FaVolume onClick={this.mute} className="player-icon"></FaVolume>

@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { withRouter } from "react-router-dom";
 import axios from 'axios';
 import { Scrollbars } from 'react-custom-scrollbars';
+import YouTubeApi from 'simple-youtube-api';
 
 import {
     Redirect,
@@ -51,6 +52,7 @@ import {
     ROUTE_USERS, COLLECTION_TYPE_OTHER_USER
 } from './constants';
 
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -94,13 +96,14 @@ class App extends Component {
             playTracksFromCollection: false,
             playTracksFromFavorites: false,
             playerTitle: '',
-            playerRelease: null
+            playerRelease: null,
+            videoId: '',
         };
 
         this.getCollection = this.getCollection.bind(this);
         this.searchQuery = _.debounce(this.searchQuery, DEBOUNCE_TIME);
         this.getSpecificResult = this.getSpecificResult.bind(this);
-        this.releaseAnimationTimeout = null
+        this.releaseAnimationTimeout = null;
     }
 
     toggleNavBar = (shouldClose) => {
@@ -235,7 +238,7 @@ class App extends Component {
         }
 
         if (token) {
-           this.getCollection();
+            this.getCollection();
         }
 
         let pathname = location.pathname;
@@ -257,6 +260,8 @@ class App extends Component {
             case ROUTE_SEARCH:
                 this.makeSearchRequest('');
         }
+
+        this.getRandomTrack(this.state.playTracksFromCollection);
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -462,7 +467,10 @@ class App extends Component {
         }
 
         if (prevState.showPlayer !== this.state.showPlayer && this.state.showPlayer) {
-            console.log('asdasd');
+            this.getRandomTrack(this.state.playTracksFromCollection);
+        }
+
+        if (this.state.videoId === '' &&  this.state.showPlayer) {
             this.getRandomTrack(this.state.playTracksFromCollection);
         }
 
@@ -493,10 +501,22 @@ class App extends Component {
         if (shouldPlayFromCollection) {
             const releaseList = this.state.vinylCollection.concat(this.state.wishlist);
             const release = releaseList[Math.floor(Math.random()*releaseList.length)];
-            const track = release.tracklist[Math.floor(Math.random() * release.tracklist.length)];
+            const track = release && release.tracklist[Math.floor(Math.random() * release.tracklist.length)];
             const trackTitle = `${track && track.artists ? track.artists[0].name : release.artists[0].name} - ${track.title}`;
-            const playerSrc = `https://www.youtube.com/embed?listType=search&list=${track && track.artists ? track.artists[0].name : release.artists[0].name}+${track.title}`
-            this.setState({ playerTitle: trackTitle, playerRelease: release, playerSrc});
+            const query = `${track && track.artists ? track.artists[0].name : release && release.artists[0].name}+${track.title}`;
+            const youtube = new YouTubeApi('AIzaSyD7RCqRPOd_IFf0MHE-pgR6Qy_nq13VBOE');
+
+            youtube.searchVideos(query, 1, {
+                format: 5
+            })
+                .then(results => {
+                    results[0] ? this.setState({
+                        videoId: results[0].id,
+                        playerTitle: trackTitle,
+                        playerRelease: release
+                    }) : this.setState({ videoId: '' })
+                })
+                .catch(console.log);
         }
     };
 
@@ -545,10 +565,10 @@ class App extends Component {
             playTracksFromCollection,
             playTracksFromFavorites,
             playerTitle,
-            playerSrc,
+            videoId,
             playerRelease
         } = this.state;
-
+        console.log(videoId);
         const { location, history } = this.props;
         const isOnAuthRoute = location.pathname === ROUTE_SIGN_IN || location.pathname === ROUTE_SIGN_UP;
 
@@ -566,8 +586,11 @@ class App extends Component {
                                                          isSellModalOpened={isSellModalOpened}/>}
                         <AppNavBar isNavBarOpened={isNavBarOpened}
                                    showPlayer={showPlayer}
+                                   playTracksFromCollection={playTracksFromCollection}
+                                   getRandomTrack={this.getRandomTrack}
                                    playerTitle={playerTitle}
-                                   playerSrc={playerSrc}
+                                   videoId={videoId}
+                                   setSpecificResult={this.setSpecificResult}
                                    playerRelease={playerRelease}
                                    isVisible={location.pathname !== ROUTE_SIGN_UP && location.pathname !== ROUTE_SIGN_IN}
                                    toggleNavBar={this.toggleNavBar}
@@ -588,7 +611,7 @@ class App extends Component {
                                        render={() => <Authentication setToken={this.setToken}
                                                                      isLoginFormActive={false}/>}/>
                                 <Route path={ROUTE_RELEASE}
-                                       render={() => <ReleaseFull openLightbox={this.openLightbox}
+                                            render={() => <ReleaseFull openLightbox={this.openLightbox}
                                                                   closeLightbox={this.closeLightbox}
                                                                   getCollection={this.getCollection}
                                                                   toggleSellModal={this.toggleSellModal}
