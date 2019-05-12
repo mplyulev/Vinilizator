@@ -27,8 +27,6 @@ router.post('/toggleSellingVisibility', function(req, res) {
 router.post('/togglePlayer', function(req, res) {
     User.findById(req.body.userId, function(err, user) {
         if (user) {
-            console.log(req.body);
-            user.playTracksFromCollection = req.body.playTracksFromCollection;
             user.playTracksFromFavorites = req.body.playTracksFromFavorites;
             user.save();
         }

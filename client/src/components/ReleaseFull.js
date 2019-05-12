@@ -243,7 +243,7 @@ class ReleaseFull extends Component {
                         </p>}
                         {formats.length && formats[0] &&
                         <p>Format: {formats[0].qty > 1 ? formats[0].qty + ' x ' : ''}
-                            <span>{formats[0].name}</span> {formatDescription} </p>}
+                            <span> {formats[0].name}</span> {formatDescription} </p>}
                         {country && <p>Country: <span>{country}</span></p>}
                         {genres && <p>Genre: {genres}</p>}
                         {styles && <p>Style: <span>{styles}</span></p>}

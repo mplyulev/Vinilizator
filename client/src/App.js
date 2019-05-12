@@ -180,6 +180,40 @@ class App extends Component {
         }));
     };
 
+    getRandomTrack = () => {
+        console.log(this.state.favoriteStyles);
+        const { favoriteStyles } = this.state;
+        const style =   favoriteStyles[Math.floor(Math.random() * favoriteStyles.length)];
+        console.log(style);
+        axios.get(`${DOGS_SEARCH_URL}?q=&type=${DATA_TYPE_RELEASE}&style=${style}&format=Vinyl&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`).then(res => {
+            console.log(res);
+        })
+        //     .then(response => {
+        //         this.setState({ queryResult: response.data });
+        //         this.setState({ requestPending: false });
+        //     })
+        //     .catch(error => {
+        //         this.setState({ requestPending: false });
+        //     });
+
+        // const release = releaseList[Math.floor(Math.random()*releaseList.length)];
+        // const track = release && release.tracklist[Math.floor(Math.random() * release.tracklist.length)];
+        // const trackTitle = `${track && track.artists ? track.artists[0].name : release.artists[0].name} - ${track.title}`;
+        // const query = `${track && track.artists ? track.artists[0].name : release && release.artists[0].name}+${track.title}`;
+        const youtube = new YouTubeApi('AIzaSyD7RCqRPOd_IFf0MHE-pgR6Qy_nq13VBOE');
+        //
+        // youtube.searchVideos(query, 1)
+        //     .then(results => {
+        //         results[0] ? this.setState({
+        //             videoId: results[0].id,
+        //             playerTitle: trackTitle,
+        //             playerRelease: release
+        //         }) : this.setState({ videoId: '' })
+        //     })
+        //     .catch(console.log);
+
+    };
+
     makeSearchRequest = (searchQuery, genre, style) => {
         this.setState({requestPending: true});
         axios.get(`${DOGS_SEARCH_URL}?q=${searchQuery}&type=${DATA_TYPE_RELEASE}${genre ? `&genre=${genre}`: ''}${style ? `&style=${style}` : ''}&format=Vinyl&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
@@ -228,6 +262,7 @@ class App extends Component {
     };
 
     componentDidMount() {
+        console.log(process.env);
         document.addEventListener('click', this.closeOnOutsideClick);
         const { token } = this.state;
         const { location } = this.props;
@@ -260,8 +295,6 @@ class App extends Component {
             case ROUTE_SEARCH:
                 this.makeSearchRequest('');
         }
-
-        this.getRandomTrack(this.state.playTracksFromCollection);
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -407,7 +440,7 @@ class App extends Component {
         });
     };
 
-    async getCollection (shouldResetReleaseStatus, shouldResetCurrentRelease, currentReleaseId) {
+     async getCollection (shouldResetReleaseStatus, shouldResetCurrentRelease, currentReleaseId) {
         this.setState({requestPending: true});
         axios.get('/api/controllers/collection/getUser', {
             params: {
@@ -467,12 +500,12 @@ class App extends Component {
         }
 
         if (prevState.showPlayer !== this.state.showPlayer && this.state.showPlayer) {
-            this.getRandomTrack(this.state.playTracksFromCollection);
+            this.getRandomTrack();
         }
-
-        if (this.state.videoId === '' &&  this.state.showPlayer) {
-            this.getRandomTrack(this.state.playTracksFromCollection);
-        }
+        //
+        // if (this.state.videoId === '' &&  this.state.showPlayer) {
+        //     this.getRandomTrack();
+        // }
 
         const { searchQuery, token, lastRequestedRoute, genre } = this.state;
         if (prevState.token !== token && lastRequestedRoute !== ROUTE_SIGN_IN) {
@@ -497,42 +530,13 @@ class App extends Component {
         this.setState({ currentRelease: null });
     };
 
-    getRandomTrack = (shouldPlayFromCollection) => {
-        if (shouldPlayFromCollection) {
-            const releaseList = this.state.vinylCollection.concat(this.state.wishlist);
-            const release = releaseList[Math.floor(Math.random()*releaseList.length)];
-            const track = release && release.tracklist[Math.floor(Math.random() * release.tracklist.length)];
-            const trackTitle = `${track && track.artists ? track.artists[0].name : release.artists[0].name} - ${track.title}`;
-            const query = `${track && track.artists ? track.artists[0].name : release && release.artists[0].name}+${track.title}`;
-            const youtube = new YouTubeApi('AIzaSyD7RCqRPOd_IFf0MHE-pgR6Qy_nq13VBOE');
-
-            youtube.searchVideos(query, 1, {
-                format: 5
-            })
-                .then(results => {
-                    results[0] ? this.setState({
-                        videoId: results[0].id,
-                        playerTitle: trackTitle,
-                        playerRelease: release
-                    }) : this.setState({ videoId: '' })
-                })
-                .catch(console.log);
-        }
-    };
-
-    togglePlayer = (playTracksFromCollection) => {
+    togglePlayer = () => {
         this.setState(prevState => ({
-            playTracksFromCollection: playTracksFromCollection ? !prevState.playTracksFromCollection : false,
-            playTracksFromFavorites: !playTracksFromCollection ? !prevState.playTracksFromFavorites  : false
+            playTracksFromFavorites: !prevState.playTracksFromFavorites
         }), () => {
-            if (this.state.playTracksFromFavorites || this.state.playTracksFromCollection) {
-                this.setState({ showPlayer: true });
-            } else if (!this.state.playTracksFromFavorites || !this.state.playTracksFromCollection) {
-                this.setState({ showPlayer: false });
-            }
+            this.state.playTracksFromFavorites ? this.setState({ showPlayer: true }) : this.setState({ showPlayer: false });
 
             axios.post('/api/controllers/accountSettings/togglePlayer', {
-                playTracksFromCollection: this.state.playTracksFromCollection,
                 playTracksFromFavorites: this.state.playTracksFromFavorites,
                 userId: localStorage.getItem('userId')
             });
@@ -568,7 +572,7 @@ class App extends Component {
             videoId,
             playerRelease
         } = this.state;
-        console.log(videoId);
+
         const { location, history } = this.props;
         const isOnAuthRoute = location.pathname === ROUTE_SIGN_IN || location.pathname === ROUTE_SIGN_UP;
 

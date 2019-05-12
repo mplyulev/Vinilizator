@@ -168,7 +168,7 @@ class Account extends Component {
         );
 
         const { oldPasswordError, repeatPasswordError, serverError, isFormOpened, favoriteStyles, shouldShowSelling, hideCollection } = this.state;
-        const { playTracksFromCollection, playTracksFromFavorites, togglePlayer } = this.props;
+        const { playTracksFromFavorites, togglePlayer } = this.props;
 
         return (
             <div className={'account-wrapper'}>
@@ -253,15 +253,7 @@ class Account extends Component {
                         </div>
                     </div>
                     <span className='title'>PLAYER SETTINGS</span>
-                    <div className="checkbox-wrapper" onChange={() => togglePlayer(true)}>
-                        <div className="pretty p-round p-fill checkbox">
-                            <input checked={playTracksFromCollection} type="checkbox" />
-                            <div className='state p-success'>
-                                <label>Play a random track from my collection and wishlist</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="checkbox-wrapper" onChange={() => togglePlayer(false)}>
+                    <div className="checkbox-wrapper" onChange={togglePlayer}>
                         <div className="pretty p-round p-fill checkbox">
                             <input checked={playTracksFromFavorites} type="checkbox" />
                             <div className='state p-success'>

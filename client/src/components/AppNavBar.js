@@ -122,7 +122,7 @@ class AppNavBar extends Component {
                         className="player"
                         videoId={videoId}
                         opts={opts}
-                        onError={() => getRandomTrack(playTracksFromCollection)}
+                        onError={getRandomTrack}
                         onReady={this.onReady}
                     />
                     <span className="player-title" onClick={() => setSpecificResult(playerRelease, COLLECTION_TYPE_COLLECTION)}>{playerTitle}</span>
@@ -131,7 +131,7 @@ class AppNavBar extends Component {
                             ? <FaPlayCircle onClick={this.play} className="player-icon"></FaPlayCircle>
                             : <FaPauseCircle onClick={this.pause} className="player-icon"></FaPauseCircle>
                         }
-                        <FaStepForward onClick={() => getRandomTrack(playTracksFromCollection)} className="player-icon"></FaStepForward>
+                        <FaStepForward onClick={getRandomTrack} className="player-icon"></FaStepForward>
                         {this.state.isPlayerMuted
                             ? <FaVolumeMute onClick={this.unmute} className="player-icon"></FaVolumeMute>
                             : <FaVolume onClick={this.mute} className="player-icon"></FaVolume>
