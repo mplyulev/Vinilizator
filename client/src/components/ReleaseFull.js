@@ -17,13 +17,29 @@ import {withRouter} from "react-router-dom";
 class ReleaseFull extends Component {
     constructor(props) {
         super(props);
-        const { release } = props;
 
         this.state = {
-            youtubeSrc:  `https://www.youtube.com/embed?listType=search&list=${release.tracklist[0] && release.tracklist[0].artists ? release.tracklist[0].artists[0].name : release.artists[0].name}+${release.tracklist[0].title}`
-        };
+            youtubeSrc: ''
+        }
     }
-    
+
+    componentDidMount() {
+        const { release } = this.props;
+        this.setState ({
+            youtubeSrc:  `https://www.youtube.com/embed?listType=search&list=${release.tracklist[0] && release.tracklist[0].artists ? release.tracklist[0].artists[0].name : release.artists[0].name}+${release.tracklist[0].title}`
+        });
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        const { release } = prevProps;
+        const newRelease = this.props.release;
+        const oldYoutubeSrc = `https://www.youtube.com/embed?listType=search&list=${release.tracklist[0] && release.tracklist[0].artists ? release.tracklist[0].artists[0].name : release.artists[0].name}+${release.tracklist[0].title}`
+        const newYoutubeSrc = `https://www.youtube.com/embed?listType=search&list=${newRelease.tracklist[0] && newRelease.tracklist[0].artists ? newRelease.tracklist[0].artists[0].name : newRelease.artists[0].name}+${newRelease.tracklist[0].title}`
+        if (oldYoutubeSrc !== newYoutubeSrc) {
+            this.setState({ youtubeSrc: newYoutubeSrc });
+        }
+    }
+
     addToCollection = (release, shouldResetReleaseStatus) => {
         const userId = localStorage.getItem('userId');
         axios.post('/api/controllers/collection/addToCollection', { release, userId})
@@ -213,7 +229,7 @@ class ReleaseFull extends Component {
                 </div>
             );
         });
-
+        console.log('asd', youtubeSrc, release);
         return (
             <Fragment>
                 <div className="release-data-container">

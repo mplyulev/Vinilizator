@@ -89,7 +89,13 @@
   width: 215px;
 }
 
+.dropdown-toggle {
+  background-color: $background-color-black;
 
+  &:hover {
+    background-color: $background-color-dimgray;
+  }
+}
 
 .router-container {
   position: absolute;

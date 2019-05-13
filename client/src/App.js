@@ -181,36 +181,37 @@ class App extends Component {
     };
 
     getRandomTrack = () => {
-        console.log(this.state.favoriteStyles);
         const { favoriteStyles } = this.state;
         const style =   favoriteStyles[Math.floor(Math.random() * favoriteStyles.length)];
-        console.log(style);
-        axios.get(`${DOGS_SEARCH_URL}?q=&type=${DATA_TYPE_RELEASE}&style=${style}&format=Vinyl&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`).then(res => {
-            console.log(res);
-        })
-        //     .then(response => {
-        //         this.setState({ queryResult: response.data });
-        //         this.setState({ requestPending: false });
-        //     })
-        //     .catch(error => {
-        //         this.setState({ requestPending: false });
-        //     });
+        let release = null;
 
-        // const release = releaseList[Math.floor(Math.random()*releaseList.length)];
-        // const track = release && release.tracklist[Math.floor(Math.random() * release.tracklist.length)];
-        // const trackTitle = `${track && track.artists ? track.artists[0].name : release.artists[0].name} - ${track.title}`;
-        // const query = `${track && track.artists ? track.artists[0].name : release && release.artists[0].name}+${track.title}`;
-        const youtube = new YouTubeApi('AIzaSyD7RCqRPOd_IFf0MHE-pgR6Qy_nq13VBOE');
-        //
-        // youtube.searchVideos(query, 1)
-        //     .then(results => {
-        //         results[0] ? this.setState({
-        //             videoId: results[0].id,
-        //             playerTitle: trackTitle,
-        //             playerRelease: release
-        //         }) : this.setState({ videoId: '' })
-        //     })
-        //     .catch(console.log);
+        axios.get(`${DOGS_SEARCH_URL}?q=&type=${DATA_TYPE_RELEASE}&style=${style}&format=Vinyl&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`).then(res => {
+            const randomPage = Math.floor(Math.random() * res.data.pagination.pages) + 1;
+            axios.get(`${DOGS_SEARCH_URL}?q=&type=${DATA_TYPE_RELEASE}&style=${style}&format=Vinyl&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}&page=${randomPage}`).then(res => {
+                const randomRelease = res.data.results[Math.floor(Math.random() * res.data.results.length)];
+                axios.get(`${DOGS_GET_ITEM_URL[randomRelease.type]}/${randomRelease.id}?key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`).then((res) => {
+                    release = res.data;
+                    console.log(release);
+                    const track = release && release.tracklist[Math.floor(Math.random() * release.tracklist.length)];
+                    const trackTitle = `${track && track.artists ? track.artists[0].name : release.artists[0].name} - ${track.title}`;
+                    const query = `${track && track.artists ? track.artists[0].name : release && release.artists[0].name}+${track.title}`;
+                    const youtube = new YouTubeApi('AIzaSyD7RCqRPOd_IFf0MHE-pgR6Qy_nq13VBOE');
+
+                    youtube.searchVideos(query, 1)
+                        .then(results => {
+                            results[0] ? this.setState({
+                                videoId: results[0].id,
+                                playerTitle: trackTitle,
+                                playerRelease: release
+                            }) : this.setState({ videoId: '' })
+                        })
+                        .catch(console.log);
+                });
+            });
+        });
+
+
+
 
     };
 
@@ -359,7 +360,7 @@ class App extends Component {
 
     setSpecificResult = (release, collectionType, isOtherUserCollection) => {
         this.clearCurrentRelease();
-
+        console.log(release);
         const { currentUser } = this.state;
 
         this.setState({ currentRelease: release }, () => {
@@ -385,6 +386,8 @@ class App extends Component {
                 case COLLECTION_TYPE_OTHER_USER:
                     this.props.history.push(`${ROUTE_USERS}/${currentUser && currentUser.username}${ROUTE_RELEASE}/${release.id}`);
                     break;
+                    default:
+                        this.props.history.push(`${ROUTE_RELEASE}/${release.id}`);
                 }
             }, 600);
         })
@@ -406,7 +409,6 @@ class App extends Component {
                 }
             }
         });
-
 
         wishlist.map(vinyl => {
             if (vinyl.id === release.id) {

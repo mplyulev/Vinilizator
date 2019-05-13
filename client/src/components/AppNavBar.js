@@ -69,12 +69,12 @@ class AppNavBar extends Component {
             videoId: this.props.videoId,
             videoEmbeddable: true,
             playerVars: {
-                autoplay: 1,
+                autoplay: this.state.isPlayerPlaying ? 1 : 0,
                 videoEmbeddable: true,
             }
         };
 
-        const { showPlayer, playerTitle, playerRelease, setSpecificResult, getRandomTrack, videoId, playTracksFromCollection } = this.props;
+        const { showPlayer, playerTitle, playerRelease, setSpecificResult, getRandomTrack, videoId } = this.props;
 
         return (
             <div>
@@ -125,7 +125,7 @@ class AppNavBar extends Component {
                         onError={getRandomTrack}
                         onReady={this.onReady}
                     />
-                    <span className="player-title" onClick={() => setSpecificResult(playerRelease, COLLECTION_TYPE_COLLECTION)}>{playerTitle}</span>
+                    <span className="player-title" onClick={() => setSpecificResult(playerRelease)}>{playerTitle}</span>
                     <div className={`player-controls-wrapper${showPlayer ? ' visible' : ''}`}>
                         {!this.state.isPlayerPlaying
                             ? <FaPlayCircle onClick={this.play} className="player-icon"></FaPlayCircle>

@@ -5,7 +5,7 @@ const nodeExternals = require('webpack-node-externals');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
-    entry: { main: './src/index.js' },
+    entry: { main: './client/src/index.js' },
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'main.js'
@@ -39,7 +39,7 @@ module.exports = {
         new HtmlWebpackPlugin({
             inject: false,
             hash: true,
-            template: './src/index.html',
+            template: './client/src/index.html',
             filename: 'index.html'
         })
     ]
