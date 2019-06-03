@@ -8,37 +8,66 @@
         padding: 10px;
         box-shadow: 3px 2px 17px 2px $background-color-dimgray;
 
+        button {
+            background-color: $background-color-black;
+
+            &:hover {
+                background-color: $background-color-dimgray;
+            }
+        }
+
+        .btn-secondary.disabled:hover {
+            background-color: $background-color-black;
+        }
+
         .sign-up-form {
             height: 0;
             overflow: hidden;
             transition: height 0.5s ease;
 
             &.opened {
-                height: 315px;
+                height: 330px;
             }
 
             label {
-                font-weight: 500;
+                font-weight: 700;
             }
         }
     }
 
     .player-settings-wrapper {
-        width: 60%;
+        opacity: 0;
+        width:0;
         margin: 50px auto;
         padding: 20px;
         box-shadow: 3px 2px 17px 2px #696969;
         text-align: center;
+        transition: all 1s ease;
+
+        &.visible {
+            opacity: 1;
+            width: 75%;
+            overflow: hidden;
+
+            .checkbox-wrapper,
+            .title {
+                opacity: 1;
+            }
+        }
 
         .title {
+            opacity: 0;
             font-weight: 800;
+            transition: opacity 3s ease;
         }
     }
 
     .checkbox-wrapper {
+        opacity: 0;
         margin: 10px;
         text-align: center;
         cursor: pointer;
+        transition: opacity 3s ease
     }
 
     .favorite-styles-wrapper {
@@ -50,7 +79,7 @@
         margin: 50px auto;
         padding: 10px;
         box-shadow: 3px 2px 17px 2px $background-color-dimgray;
-        transition: all 2s ease;
+        transition: all 1s ease;
 
         &.visible {
             opacity: 1;

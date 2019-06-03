@@ -47,7 +47,13 @@ class SearchItem extends Component {
 
     render () {
         ReactTooltip.rebuild();
-        const {release, collectionType, getSpecificUser} = this.props;
+        const {
+            release,
+            collectionType,
+            getSpecificUser,
+            requestPending
+        } = this.props;
+
         const title = release.title;
         let label = release.label ? <span key={release.label[0] + Math.random()}>{release.label[0] +  ' - ' + release.catno}</span> : null;
 
@@ -76,10 +82,10 @@ class SearchItem extends Component {
         if (!release.cover_image && !collectionReleaseImage) {
             coverUrl = NoImagePlaceholder;
         }
-
+        console.log('still dre');
         return (
             <Fragment>
-                <div className="search-item-container"
+                <div className={`search-item-container${requestPending ? '' : ' visible'}`} // there is a bug from request pending in release getting
                      ref={node => this.item = node}
                      onClick={() => this.getRelease(release.type, release.id)}>
                     {collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL

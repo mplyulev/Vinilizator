@@ -25,7 +25,8 @@ class Account extends Component {
             userTracks: null,
             youtubeSrc: '',
             shouldShowSelling: true,
-            hideCollection: false
+            hideCollection: false,
+            mounted: false
         };
 
         this.timeout = null;
@@ -41,7 +42,8 @@ class Account extends Component {
                 this.setState({
                     shouldShowSelling: res.data.user.shouldShowSelling,
                     hideCollection: res.data.user.hideCollection,
-                    favoriteStyles: res.data.user.favoriteStyles
+                    favoriteStyles: res.data.user.favoriteStyles,
+                    mounted: true
                 }, () => {
                     const childNodesArray = Array.from(this.favoritesWrapper.current.childNodes);
                     childNodesArray.map(child => child.classList.add('visible'));
@@ -92,7 +94,12 @@ class Account extends Component {
     };
 
     componentWillUnmount() {
-        window.removeEventListener('beforeunload', this.saveFavorites); // remove the event handler for normal unmounting
+        const { favoriteStyles } = this.state;
+        axios.post('/api/controllers/accountSettings/saveFavorites', {
+            favoriteStyles,
+            userId: localStorage.getItem('userId')
+        });
+        window.removeEventListener('beforeunload', this.saveFavorites);
     }
 
     saveFavorites = () => {
@@ -167,9 +174,19 @@ class Account extends Component {
             </DropdownItem>
         );
 
-        const { oldPasswordError, repeatPasswordError, serverError, isFormOpened, favoriteStyles, shouldShowSelling, hideCollection } = this.state;
-        const { playTracksFromFavorites, togglePlayer } = this.props;
+        const {
+            oldPasswordError,
+            repeatPasswordError,
+            serverError,
+            isFormOpened,
+            favoriteStyles,
+            shouldShowSelling,
+            hideCollection,
+            mounted
+        } = this.state;
 
+        const { playTracksFromFavorites, togglePlayer } = this.props;
+        console.log('favoriteStyles', favoriteStyles);
         return (
             <div className={'account-wrapper'}>
                 <div className={`sign-up-wrapper change-password-wrapper${isFormOpened ? ' opened' : ''}`}>
@@ -232,9 +249,7 @@ class Account extends Component {
                         onClick={(event) => this.toggleStyle(style, true, event)}>{style}</span>)}
                 </div>
 
-
-
-                <div className="player-settings-wrapper">
+                <div className={`player-settings-wrapper ${mounted ? 'visible' : ''}`}>
                     <span className="title">GENERAL SETTINGS</span>
                     <div className="checkbox-wrapper" onChange={this.toggleSellVisibility}>
                         <div className="pretty p-round p-fill checkbox">
@@ -249,6 +264,7 @@ class Account extends Component {
                             <input checked={hideCollection} type="checkbox" />
                             <div className='state p-success'>
                                 <label>Don't show my collection to other users</label>
+                                <label>collection to other users</label>
                             </div>
                         </div>
                     </div>

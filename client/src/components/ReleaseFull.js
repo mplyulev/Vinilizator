@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Button } from 'reactstrap/dist/reactstrap.es'
 import axios from 'axios';
+import YouTube from 'react-youtube';
 
 import {
     CONDITION,
@@ -13,30 +14,50 @@ import {
     TOOLTIP_DELAY_SHOW
 } from '../constants';
 import {withRouter} from "react-router-dom";
+import YouTubeApi from 'simple-youtube-api';
+const youtube = new YouTubeApi('AIzaSyD7RCqRPOd_IFf0MHE-pgR6Qy_nq13VBOE');
 
 class ReleaseFull extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            youtubeSrc: ''
+            videoId: ''
         }
     }
 
     componentDidMount() {
-        const { release } = this.props;
-        this.setState ({
-            youtubeSrc:  `https://www.youtube.com/embed?listType=search&list=${release.tracklist[0] && release.tracklist[0].artists ? release.tracklist[0].artists[0].name : release.artists[0].name}+${release.tracklist[0].title}`
-        });
+        const { release } = this.props
+
+        const track = release && release.tracklist[0];
+        const trackTitle = `${track && track.artists ? track.artists[0].name : release.artists[0].name} - ${track.title}`;
+        const query = `${track && track.artists ? track.artists[0].name : release && release.artists[0].name}+${track.title}`;
+
+        youtube.searchVideos(query, 1)
+            .then(results => {
+                results[0] ? this.setState({
+                    videoId: results[0].id,
+                    playerTitle: trackTitle,
+                    playerRelease: release
+                }) : this.setState({ videoId: '' })
+            })
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         const { release } = prevProps;
         const newRelease = this.props.release;
-        const oldYoutubeSrc = `https://www.youtube.com/embed?listType=search&list=${release.tracklist[0] && release.tracklist[0].artists ? release.tracklist[0].artists[0].name : release.artists[0].name}+${release.tracklist[0].title}`
-        const newYoutubeSrc = `https://www.youtube.com/embed?listType=search&list=${newRelease.tracklist[0] && newRelease.tracklist[0].artists ? newRelease.tracklist[0].artists[0].name : newRelease.artists[0].name}+${newRelease.tracklist[0].title}`
-        if (oldYoutubeSrc !== newYoutubeSrc) {
-            this.setState({ youtubeSrc: newYoutubeSrc });
+        const track = release.tracklist[0];
+        const newTrack = newRelease.tracklist[0];
+        const query = `${track && track.artists ? track.artists[0].name : release && release.artists[0].name}+${track.title}`;
+        const newQuery =  `${newTrack && newTrack.artists ? newTrack.artists[0].name : newRelease && newRelease.artists[0].name}+${newTrack.title}`;
+
+        if (query !== newQuery) {
+            youtube.searchVideos(newQuery, 1)
+                .then(results => {
+                    results[0] ? this.setState({
+                        videoId: results[0].id,
+                    }) : this.setState({ videoId: '' })
+                })
         }
     }
 
@@ -144,8 +165,18 @@ class ReleaseFull extends Component {
             });
     };
 
-    setYoutubeSrc = (release, track) => {
-        this.setState({ youtubeSrc: `https://www.youtube.com/embed??modestbranding=1&showinfo=1&listType=search&list=${track.artists ? track.artists[0].name : release.artists[0].name}+${track.title}`})
+    playTrack = (release, track) => {
+        const trackTitle = `${track && track.artists ? track.artists[0].name : release.artists[0].name} - ${track.title}`;
+        const query = `${track && track.artists ? track.artists[0].name : release && release.artists[0].name}+${track.title}`;
+
+        youtube.searchVideos(query, 1)
+            .then(results => {
+                results[0] ? this.setState({
+                    videoId: results[0].id,
+                    playerTitle: trackTitle,
+                    playerRelease: release
+                }) : this.setState({ videoId: '' })
+            })
     };
 
     render () {
@@ -220,7 +251,7 @@ class ReleaseFull extends Component {
         const tracklistTemplate = tracklist.map(track => {
 
             return (
-                <div key={track.title} className="track" onClick={() => this.setYoutubeSrc(release, track)}>
+                <div key={track.title} className="track" onClick={() => this.playTrack(release, track)}>
                     <span>{track.position}.</span>
                     {track.artists && <Fragment><span>{track.artists[0].name}</span>
                         <span>-</span></Fragment>}
@@ -229,7 +260,19 @@ class ReleaseFull extends Component {
                 </div>
             );
         });
-        console.log('asd', youtubeSrc, release);
+
+        const opts = {
+            height: '220',
+            width: '220',
+            videoId: this.props.videoId,
+            videoEmbeddable: true,
+            playerVars: {
+                controls: true,
+                autoplay: this.state.isPlayerPlaying ? 1 : 0,
+                videoEmbeddable: true
+            }
+        };
+
         return (
             <Fragment>
                 <div className="release-data-container">
@@ -271,13 +314,16 @@ class ReleaseFull extends Component {
                             <h3 className="title">Tracklist</h3>
                             {tracklistTemplate}
                         </div>
-                        <iframe id="ytplayer" type="text/html" width="640" height="360"
-                                src={youtubeSrc}
-                                controls
-                                frameBorder="0">
-                        </iframe>
-                        {/*when my site has an url add ?origin=http://mywebsite.com to src so i and remake it on component
-                               did mount and check respone to see if anything is loaded if not hide iframe */}
+                        {/*<iframe id="ytplayer" type="text/html" width="640" height="360"*/}
+                        {/*        src={youtubeSrc}*/}
+                        {/*        controls*/}
+                        {/*        frameBorder="0">*/}
+                        {/*</iframe>*/}
+                        <YouTube
+                            className="ytplayer"
+                            videoId={this.state.videoId}
+                            opts={opts}
+                        />
                     </div>
                     <div className="buttons-wrapper">
                         {!isInCollection && !isInMarket && !isInWishlist && !isForSell && !isOtherUserCollection

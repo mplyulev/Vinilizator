@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import YouTube from 'react-youtube';
 import { FaPauseCircle, FaVolumeMute, FaStepForward, FaVolume, FaPlayCircle } from 'react-icons/fa';
+import Slider, { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
 
 import {
     Collapse,
@@ -18,7 +20,7 @@ import {
     ROUTE_ACCOUNT,
     ROUTE_FOR_SELL,
     ROUTE_MARKET,
-    ROUTE_USERS, COLLECTION_TYPE_COLLECTION
+    ROUTE_USERS
 } from '../constants';
 
 let player = null;
@@ -29,27 +31,44 @@ class AppNavBar extends Component {
 
         this.state = {
             isPlayerPlaying: true,
-            isPlayerMuted: false
+            isPlayerMuted: false,
+            volume: 50,
+            savedVolume: 50
         };
-
-
     }
 
+    setVolume = (volume) => {
+        if (volume === 0)  {
+            this.setState({ isPlayerMuted: true });
+        } else if (volume !== 0 && this.state.isPlayerMuted) {
+            this.setState({ isPlayerMuted: false });
+            player.unMute();
+        }
+
+        this.setState({ volume: volume });
+        player.setVolume(volume);
+    };
 
     play = () => {
         player.playVideo();
-        console.log(player)
         this.setState({ isPlayerPlaying: true });
     };
 
     mute = () => {
+
+        console.log(this.state.volume);
+        this.setState({ isPlayerMuted: true, savedVolume: this.state.volume});
         player.mute();
-        this.setState({ isPlayerMuted: true });
+        this.setVolume(0)
     };
 
     unmute = () => {
-        player.unMute();
-        this.setState({ isPlayerMuted: false });
+        const { savedVolume } = this.state;
+        if (savedVolume > 0) {
+            player.unMute();
+            this.setState({ isPlayerMuted: false, volume: savedVolume });
+            this.setVolume(savedVolume )
+        }
     };
 
     pause = () => {
@@ -74,16 +93,30 @@ class AppNavBar extends Component {
             }
         };
 
-        const { showPlayer, playerTitle, playerRelease, setSpecificResult, getRandomTrack, videoId } = this.props;
+        const { isPlayerPlaying, isPlayerMuted, volume } = this.state;
+
+        const {
+            showPlayer,
+            playerTitle,
+            playerRelease,
+            isNavBarOpened,
+            setSpecificResult,
+            isVisible,
+            toggleNavBar,
+            getRandomTrack,
+            videoId,
+            logout,
+            randomTrackRequestPending
+        } = this.props;
 
         return (
             <div>
                 <Navbar color="dark"
                         light expand="sm"
-                        className={`mb-5 navbar${this.props.isVisible ? ' visible' : ''}`}>
+                        className={`mb-5 navbar${isVisible ? ' visible' : ''}`}>
                     <NavbarBrand href="/">VYNILIZATOR</NavbarBrand>
-                    <NavbarToggler color="dark" onClick={() => this.props.toggleNavBar(false)} />
-                    <Collapse isOpen={this.props.isNavBarOpened} navbar>
+                    <NavbarToggler color="dark" onClick={() => toggleNavBar(false)} />
+                    <Collapse isOpen={isNavBarOpened} navbar>
                         <Nav className="ml-auto" navbar>
                             <NavLink to={ROUTE_SEARCH}
                                      activeClassName="selected">
@@ -113,7 +146,7 @@ class AppNavBar extends Component {
                                      activeClassName="selected">
                                 USERS
                             </NavLink>
-                            <a href={ROUTE_SIGN_IN} onClick={this.props.logout}>
+                            <a href={ROUTE_SIGN_IN} onClick={logout}>
                                 LOGOUT
                             </a>
                         </Nav>
@@ -124,18 +157,33 @@ class AppNavBar extends Component {
                         opts={opts}
                         onError={getRandomTrack}
                         onReady={this.onReady}
+                        // onPlay={() => {console.log('play')}}                     // defaults -> noop
+                        // onPause={() => {console.log('onPause')}}                   // defaults -> noop
+                        // onEnd={() => {console.log('onEnd')}}                        // defaults -> noop
+                        // onError={() => {console.log('play')}}                    // defaults -> noop
+                        // onStateChange={(e) => {console.log(player.getPlayerState())}}
                     />
-                    <span className="player-title" onClick={() => setSpecificResult(playerRelease)}>{playerTitle}</span>
-                    <div className={`player-controls-wrapper${showPlayer ? ' visible' : ''}`}>
-                        {!this.state.isPlayerPlaying
-                            ? <FaPlayCircle onClick={this.play} className="player-icon"></FaPlayCircle>
-                            : <FaPauseCircle onClick={this.pause} className="player-icon"></FaPauseCircle>
-                        }
-                        <FaStepForward onClick={getRandomTrack} className="player-icon"></FaStepForward>
-                        {this.state.isPlayerMuted
-                            ? <FaVolumeMute onClick={this.unmute} className="player-icon"></FaVolumeMute>
-                            : <FaVolume onClick={this.mute} className="player-icon"></FaVolume>
-                        }
+                    <div className={`player-wrapper${showPlayer ? ' visible' : ''}`}>
+                        <div className={randomTrackRequestPending ? 'loading' : ''} onClick={() => setSpecificResult(playerRelease)} >
+                            <img className="release-thumbnail" src={playerRelease && playerRelease.thumb} />
+                            <span className="player-title">{playerTitle}</span>
+                        </div>
+                        <div className={`player-controls-wrapper${showPlayer ? ' visible' : ''}`}>
+                            {!isPlayerPlaying
+                                ? <FaPlayCircle onClick={this.play} className="player-icon"></FaPlayCircle>
+                                : <FaPauseCircle onClick={this.pause} className="player-icon"></FaPauseCircle>
+                            }
+                            <FaStepForward onClick={getRandomTrack} className="player-icon"></FaStepForward>
+                            {isPlayerMuted
+                                ? <FaVolumeMute onClick={this.unmute} className="player-icon volume"></FaVolumeMute>
+                                : <FaVolume onClick={this.mute} className="player-icon volume"></FaVolume>
+                            }
+                            <Slider className="volume-slider"
+                                    min={0} max={100}
+                                    value={volume}
+                                    onChange={(volume) => this.setVolume(volume)}
+                                    defaultValue={50}   />
+                        </div>
                     </div>
                 </Navbar>
             </div>

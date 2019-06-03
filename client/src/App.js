@@ -98,6 +98,7 @@ class App extends Component {
             playerTitle: '',
             playerRelease: null,
             videoId: '',
+            randomTrackRequestPending: false
         };
 
         this.getCollection = this.getCollection.bind(this);
@@ -184,7 +185,7 @@ class App extends Component {
         const { favoriteStyles } = this.state;
         const style =   favoriteStyles[Math.floor(Math.random() * favoriteStyles.length)];
         let release = null;
-
+        this.setState({ randomTrackRequestPending: true });
         axios.get(`${DOGS_SEARCH_URL}?q=&type=${DATA_TYPE_RELEASE}&style=${style}&format=Vinyl&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`).then(res => {
             const randomPage = Math.floor(Math.random() * res.data.pagination.pages) + 1;
             axios.get(`${DOGS_SEARCH_URL}?q=&type=${DATA_TYPE_RELEASE}&style=${style}&format=Vinyl&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}&page=${randomPage}`).then(res => {
@@ -199,6 +200,7 @@ class App extends Component {
 
                     youtube.searchVideos(query, 1)
                         .then(results => {
+                            this.setState({ randomTrackRequestPending: false });
                             results[0] ? this.setState({
                                 videoId: results[0].id,
                                 playerTitle: trackTitle,
@@ -387,7 +389,7 @@ class App extends Component {
                     this.props.history.push(`${ROUTE_USERS}/${currentUser && currentUser.username}${ROUTE_RELEASE}/${release.id}`);
                     break;
                     default:
-                        this.props.history.push(`${ROUTE_RELEASE}/${release.id}`);
+                    this.props.history.push(`${ROUTE_RELEASE}/${release.id}`);
                 }
             }, 600);
         })
@@ -467,9 +469,8 @@ class App extends Component {
                 if (shouldResetCurrentRelease) {
                     this.resetSpecificResult(res.data.user.vinylCollection, currentReleaseId);
                 }
+                this.setState({ requestPending: false });
             }
-
-            this.setState({ requestPending: false });
         });
     };
 
@@ -572,7 +573,8 @@ class App extends Component {
             playTracksFromFavorites,
             playerTitle,
             videoId,
-            playerRelease
+            playerRelease,
+            randomTrackRequestPending
         } = this.state;
 
         const { location, history } = this.props;
@@ -598,6 +600,7 @@ class App extends Component {
                                    videoId={videoId}
                                    setSpecificResult={this.setSpecificResult}
                                    playerRelease={playerRelease}
+                                   randomTrackRequestPending={randomTrackRequestPending}
                                    isVisible={location.pathname !== ROUTE_SIGN_UP && location.pathname !== ROUTE_SIGN_IN}
                                    toggleNavBar={this.toggleNavBar}
                                    logout={this.logout}/>

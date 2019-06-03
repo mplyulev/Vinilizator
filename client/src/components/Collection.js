@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import _ from 'lodash';
 import SearchItem from "./SearchItem";
 import {
@@ -109,6 +109,22 @@ class Collection extends Component {
         }
     };
 
+
+    sortBy = (sortType) => {
+        const SORT_TYPE_PRICE = 'price';
+        const SORT_TYPE_ALPHABET = 'alphabetical';
+        const SORT_TYPE_SOLDBY_ALPHABET = 'user-alphabetical';
+
+        const { filteredCollection } = this.state;
+        const { data, collectionType } = this.props;
+        const dataForFiltering = filteredCollection || data;
+
+        dataForFiltering.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+        console.log(dataForFiltering);
+        this.setState({ filteredCollection: dataForFiltering });
+
+    };
+
     componentDidMount() {
         ReactTooltip.rebuild();
     }
@@ -116,7 +132,9 @@ class Collection extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.collectionType !== this.props.collectionType) {
             this.setSelectedGenre('');
-            this.setState({ filteredCollection: null })
+
+            this.setState({ filteredCollection: null });
+
         }
     }
 
@@ -135,8 +153,15 @@ class Collection extends Component {
             isOtherUserCollection,
             hideCollection
         } = this.props;
-        console.log('asd', collectionType, hideCollection)
-        const { filteredCollection, selectedGenre, selectedStyle, filteredByGenre } = this.state;
+
+        const {
+            filteredCollection,
+            selectedGenre,
+            selectedStyle,
+            filteredByGenre,
+            switchingCollection
+        } = this.state;
+
         let genres = [];
         let styles = [];
 
@@ -213,7 +238,8 @@ class Collection extends Component {
                             {styleDropdownOptions}
                         </DropdownMenu>
                     </Dropdown>
-                </div>
+                    <button onClick={() => console.log(this.sortBy())}>Sort</button>
+                </div>5
                 <div
                     className={`results-container collection${collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL ? ' bigger-height' : ''}`}>
                     {requestPending ?
@@ -223,54 +249,55 @@ class Collection extends Component {
                         </div>
                         : null
                     }
-                    {!requestPending
-                        ?
-                        !_.isEmpty(data) && (!hideCollection || collectionType !== COLLECTION_TYPE_COLLECTION)
-                            ? (filteredCollection || data).map(result => {
-                                return (
-                                    <SearchItem history={history}
-                                                isOtherUserCollection={isOtherUserCollection}
-                                                release={result}
-                                                currentRelease={currentRelease}
-                                                clearCurrentRelease={clearCurrentRelease}
-                                                collectionType={collectionType}
-                                                filterType={DATA_TYPE_RELEASE}
-                                                getSpecificUser={getSpecificUser}
-                                                getSpecificResult={getSpecificResult}
-                                                setSpecificResult={setSpecificResult}
-                                                key={result.id}>
-                                    </SearchItem>
-                                );
-                            })
-                            :
-                            <div className="no-results">
-                                {collectionType === COLLECTION_TYPE_WISHLIST
-                                    ? !isOtherUserCollection
-                                        ? <p>YOU HAVE NO RECORDS IN YOU WISHLIST</p>
-                                        : <p>USER HAS NO RECORDS IN HIS WISHLIST</p>
-                                    : null}
-                                {collectionType === COLLECTION_TYPE_COLLECTION && !hideCollection
-                                    ? !isOtherUserCollection
-                                        ? <p>YOU HAVE NO RECORDS IN YOUR COLLECTION</p>
-                                        : <p>USER HAS NO RECORDS IN HIS COLLECTION</p>
-                                    : null}
-                                {collectionType === COLLECTION_TYPE_COLLECTION && hideCollection
+                        <Fragment>
+                            {!_.isEmpty(data) && (!hideCollection || collectionType !== COLLECTION_TYPE_COLLECTION)
+                                ? (filteredCollection || data).map(result => {
+                                    return (
+                                        <SearchItem history={history}
+                                                    isOtherUserCollection={isOtherUserCollection}
+                                                    release={result}
+                                                    currentRelease={currentRelease}
+                                                    requestPending={requestPending}
+                                                    clearCurrentRelease={clearCurrentRelease}
+                                                    collectionType={collectionType}
+                                                    filterType={DATA_TYPE_RELEASE}
+                                                    getSpecificUser={getSpecificUser}
+                                                    getSpecificResult={getSpecificResult}
+                                                    setSpecificResult={setSpecificResult}
+                                                    key={result.id + new Date()}>
+                                        </SearchItem>
+                                    );
+                                })
+                                :
+                                <div className="no-results">
+                                    {collectionType === COLLECTION_TYPE_WISHLIST
+                                        ? !isOtherUserCollection
+                                            ? <p>YOU HAVE NO RECORDS IN YOU WISHLIST</p>
+                                            : <p>USER HAS NO RECORDS IN HIS WISHLIST</p>
+                                        : null}
+                                    {collectionType === COLLECTION_TYPE_COLLECTION && !hideCollection
+                                        ? !isOtherUserCollection
+                                            ? <p>YOU HAVE NO RECORDS IN YOUR COLLECTION</p>
+                                            : <p>USER HAS NO RECORDS IN HIS COLLECTION</p>
+                                        : null}
+                                    {collectionType === COLLECTION_TYPE_COLLECTION && hideCollection
 
-                                    ? <p>THIS USER'S COLLECTION IS HIDDEN</p>
-                                    : null
-                                }
-                                {collectionType === COLLECTION_TYPE_FOR_SELL
-                                    ? !isOtherUserCollection
-                                        ? <p>YOU HAVE NO RECORDS FOR SALE</p>
-                                        : <p>USER HAS NO RECORDS FOR SALE</p>
-                                    : null}
-                                {collectionType === COLLECTION_TYPE_MARKET ? <p>THE MARKET IS EMPTY</p> : null}
-                                {!isOtherUserCollection &&  collectionType ? <Button color="success"
-                                                                  onClick={() => this.props.history.push(ROUTE_SEARCH)}>
-                                    SEARCH FOR RECORDS
-                                </Button> : null}
-                            </div>
-                        : null}
+                                        ? <p>THIS USER'S COLLECTION IS HIDDEN</p>
+                                        : null
+                                    }
+                                    {collectionType === COLLECTION_TYPE_FOR_SELL
+                                        ? !isOtherUserCollection
+                                            ? <p>YOU HAVE NO RECORDS FOR SALE</p>
+                                            : <p>USER HAS NO RECORDS FOR SALE</p>
+                                        : null}
+                                    {collectionType === COLLECTION_TYPE_MARKET ? <p>THE MARKET IS EMPTY</p> : null}
+                                    {!isOtherUserCollection && collectionType ? <Button color="success"
+                                                                                        onClick={() => this.props.history.push(ROUTE_SEARCH)}>
+                                        SEARCH FOR RECORDS
+                                    </Button> : null}
+                                </div>
+                            }
+                        </Fragment>
                 </div>
             </div>
         );

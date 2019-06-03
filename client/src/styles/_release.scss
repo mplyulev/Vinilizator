@@ -82,8 +82,10 @@
     width: 100%;
     clear: both;
 
-    #ytplayer {
+    .ytplayer {
         width: 95%;
+        height: 400px;
+        box-shadow: 6px 6px 16px rgba($background-color-black, 0.8);
     }
 }
 

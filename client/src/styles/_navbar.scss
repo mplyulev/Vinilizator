@@ -13,17 +13,61 @@
     display: block;
   }
 
+  .player {
+    display: none;
+  }
+  
+  .player-wrapper {
+    margin-top: 50px;
+    text-align: center;
+  }
+
+  .loading {
+    left: 0;
+    right: 0;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    background: url('../assets/authentication-background.png') no-repeat local center;
+    background-size: contain;
+    animation: spin 5s linear infinite;
+
+    .release-thumbnail, .player-title {
+      display: none;
+    }
+  }
+
+  .release-thumbnail {
+    cursor: pointer;
+  }
+  
   .player-title {
     font-weight: 700;
     cursor: pointer;
   }
   
-  .player-controls-wrapper {
+  .player-controls-wrapper, .player-wrapper {
     opacity: 0;
     transition: opacity 0.5s ease-in;
 
     &.visible {
       opacity: 1;
+    }
+  }
+
+  .volume-slider {
+    position: relative;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 150px;
+
+    .rc-slider-handle, .rc-slider-track {
+      background-color: $background-color-red;
+    }
+
+    .rc-slider-handle {
+      border: none;
     }
   }
 

@@ -60,7 +60,7 @@ class Users extends Component {
                     <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
                     <Input onChange={this.onChange} />
                 </InputGroup>
-                <div className="users-wrapper" >
+                <div className={`users-wrapper${requestPending ? '' : ' visible'}`} >
                     {requestPending ?
                         <div className="loader-wrapper">
                             <div className="loading"></div>
@@ -68,10 +68,9 @@ class Users extends Component {
                         </div>
                         : null
                     }
-                    {!requestPending && users && (searchQuery && filteredUsers ? filteredUsers : users).map(user => {
-                        console.log(user)
+                    {users && (searchQuery && filteredUsers ? filteredUsers : users).map(user => {
                         return (
-                            <div className="user" key={user.username} onClick={() => getSpecificUser(user._id)}>
+                            <div className={`user${requestPending ? '' : ' visible'}`}  key={user.username} onClick={() => getSpecificUser(user._id)}>
                                 <div className="user-info-wrapper">
                                     <span className="username">{user.username}</span>
                                     {!user.hideCollection &&
