@@ -1,0 +1,120 @@
+@import '../styles/variables';
+
+.navbar {
+  position: fixed;
+  z-index: 1000;
+  display: none;
+  width: 200px;
+  height: 100%;
+  background-color: black !important;
+  color: white !important;
+
+  &.visible {
+    display: block;
+  }
+
+  .player {
+    display: none;
+  }
+  
+  .player-wrapper {
+    margin-top: 50px;
+    text-align: center;
+  }
+
+  .loading {
+    left: 0;
+    right: 0;
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    background: url('../assets/authentication-background.png') no-repeat local center;
+    background-size: contain;
+    animation: spin 5s linear infinite;
+
+    .release-thumbnail, .player-title {
+      display: none;
+    }
+  }
+
+  .release-thumbnail {
+    cursor: pointer;
+  }
+  
+  .player-title {
+    font-weight: 700;
+    cursor: pointer;
+  }
+  
+  .player-controls-wrapper, .player-wrapper {
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
+
+    &.visible {
+      opacity: 1;
+    }
+  }
+
+  .volume-slider {
+    position: relative;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 150px;
+
+    .rc-slider-handle, .rc-slider-track {
+      background-color: $background-color-red;
+    }
+
+    .rc-slider-handle {
+      border: none;
+    }
+  }
+
+  .player-icon {
+    margin: 15px;
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgb(255, 255, 255)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+  }
+  
+  .navbar-nav {
+    flex-direction: column;
+    margin-left: 0 !important;
+  }
+
+  .navbar-brand {
+    color: white;
+    font-weight: 1000;
+
+    &:hover, &:focus {
+      color: white !important;
+    }
+  }
+
+  a {
+    margin: 0 15px;
+    color: $font-color-darkgray;
+    text-decoration: none;
+
+    &:hover {
+      color: $font-color-white;
+    }
+
+    &.selected {
+      color: $font-color-red;
+    }
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .navbar {
+    display: flex !important;
+    flex-direction: row;
+    width: 100%;
+    height: auto;
+  }
+}

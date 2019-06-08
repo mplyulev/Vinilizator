@@ -1,0 +1,129 @@
+@import './variables';
+
+// RELEASE
+.search-item-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  opacity: 0;
+  margin: 20px 0;
+  padding: 15px;
+  text-align: center;
+  transition: opacity 1s ease-in-out;
+
+  &.visible {
+    opacity: 1;
+  }
+
+  &.opened {
+    .cover-wrapper .half-vinyl {
+      margin-left: 0;
+    }
+  }
+}
+
+
+.condition {
+  margin-bottom: 0rem;
+  cursor: pointer;
+}
+
+.info-icon {
+  position: relative;
+  left: 20px;
+  bottom: 2px;
+}
+
+#collection-page-tooltip {
+  max-width: 300px;
+}
+
+.divider {
+  color: black;
+}
+
+.bigger-height .search-item-container {
+  height: 350px;
+}
+
+.selling-info {
+  margin: 10px 0;
+
+  span, .condition {
+    display: block;
+    font-weight: 600;
+    color: $font-color-black;
+    line-height: 18px;
+  }
+
+  .seller, .sold-by {
+    display: inline;
+  }
+}
+
+.price-tag {
+  position: absolute;
+  right: 100px;
+  z-index: 10;
+  width: 150px;
+  height: 150px;
+  color: white;
+
+  span {
+    font-weight: 600;
+    display: block;
+  }
+}
+
+.cover-wrapper {
+  display: flex;
+
+  .cover-fix-wrapper {
+    position: relative;
+    left: 35px;
+  }
+
+  .half-vinyl {
+    display: block;
+    height: 199px;
+    margin-left: -65px;
+    transition: margin 0.6s ease-in;
+  }
+
+  .search-item-cover {
+    position: relative;
+    left: 50%;
+    top: 100px;
+    z-index: 2;
+    display: block;
+    width: 200px;
+    height: 200px;
+    margin-bottom: 50px;
+    background: $background-color-darkgray;
+    cursor: pointer;
+    box-shadow: 6px 6px 16px rgba($background-color-black, 0.8);
+    transform: translate(-50%, -50%);
+  }
+
+}
+ 
+.search-item-info-wrapper {
+  position: relative;
+  z-index: 1;
+  margin-top: -30px;
+  line-height: 15px;
+
+  .search-item-title, .search-item-info {
+    display: block;
+    margin-bottom: 5px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .search-item-info {
+    font-weight: 500;
+  }
+}

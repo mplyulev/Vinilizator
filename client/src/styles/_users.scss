@@ -1,0 +1,75 @@
+.users-wrapper {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 70px 30px;
+  text-align: center;
+
+
+  .user {
+    width: 250px;
+    height: 250px;
+    margin: 30px;
+    opacity: 0;
+    background: url('../assets/user-vinyl.png') no-repeat local center;
+    background-size: 251px;
+    box-shadow: 0px 2px 17px 0px $background-color-black;
+    color: $font-color-black;
+    cursor: pointer;
+    transition: opacity 1s ease-in;
+
+    &.visible {
+      opacity: 1;
+    }
+
+    &:hover {
+      box-shadow: 0px 2px 50px 5px $background-color-green;
+    }
+
+    &:active {
+      box-shadow: 0px 2px 50px 5px $background-color-red;
+    }
+
+    .user-info-wrapper {
+      position: relative;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .username {
+      font-size: 25px;
+      font-weight: 600;
+    }
+    
+    span {
+      display: block;
+    }
+  }
+}
+
+.user-wrapper {
+  text-align: center;
+  
+  .user {
+    font-weight: 500;
+    font-size: 24px;
+  }
+
+  .username {
+    font-size: 24px;
+    font-weight: 900;
+  }
+
+  .user-navigation-item {
+    margin: 20px;
+    font-weight: 600;
+    cursor: pointer;
+
+    &.selected {
+      color: $font-color-red;
+    }
+  }
+}
