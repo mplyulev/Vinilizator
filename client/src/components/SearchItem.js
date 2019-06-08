@@ -15,9 +15,14 @@ class SearchItem extends Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            isVisible: false
+        };
+
         this.item = null;
         this.getRelease = this.getRelease.bind(this);
-        this.timeout = null
+        this.timeout = null;
+        this.mountTimeout = null;
     }
 
     async getRelease (type, id){
@@ -33,7 +38,7 @@ class SearchItem extends Component {
             } else {
             this.timeout = setTimeout(() => {
                 this.props.setSpecificResult(this.props.release, collectionType, isOtherUserCollection);
-            }, 300);
+            }, 700);
         }
     };
 
@@ -41,8 +46,17 @@ class SearchItem extends Component {
         clearTimeout(this.timeout);
     }
 
+
+    componentDidMount() {
+        clearTimeout(this.mountTimeout);
+    }
+
     componentDidMount() {
         ReactTooltip.rebuild();
+        clearTimeout(this.mountTimeout);
+        this.mountTimeout = setTimeout(() => {
+            this.setState({ isVisible: true });
+        },100);
     }
 
     render () {
@@ -50,9 +64,10 @@ class SearchItem extends Component {
         const {
             release,
             collectionType,
-            getSpecificUser,
-            requestPending
+            getSpecificUser
         } = this.props;
+
+        const { isVisible } = this.state;
 
         const title = release.title;
         let label = release.label ? <span key={release.label[0] + Math.random()}>{release.label[0] +  ' - ' + release.catno}</span> : null;
@@ -82,10 +97,9 @@ class SearchItem extends Component {
         if (!release.cover_image && !collectionReleaseImage) {
             coverUrl = NoImagePlaceholder;
         }
-        console.log('still dre');
         return (
             <Fragment>
-                <div className={`search-item-container${requestPending ? '' : ' visible'}`} // there is a bug from request pending in release getting
+                <div className={`search-item-container${isVisible ? ' visible' : ''}`} // there is a bug from request pending in release getting
                      ref={node => this.item = node}
                      onClick={() => this.getRelease(release.type, release.id)}>
                     {collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL

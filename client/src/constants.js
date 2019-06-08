@@ -97,8 +97,18 @@ export const CONDITION = {
 //DROPDOWN TYPES
 export const GENRE_DROPDOWN = 'genre';
 export const STYLE_DROPDOWN = 'style';
+export const SORT_DROPDOWN = 'sort';
 export const STYLES_ALL = 'All Styles';
 export const GENRES_ALL = 'All Genres';
+
+//SORT TYPES
+export const SORT_TYPE_PRICE = 'price';
+export const SORT_TYPE_ALPHABET = 'alphabetical';
+
+export const SORT_TYPE_SOLDBY_ALPHABET = 'user-alphabetical';
+export const SORT_BY_COLLECTION_NUMBER = 'number-collection';
+export const SORT_BY_SOLD_NUMBER = 'number-sold';
+export const SORT_BY_AVERAGE_SALE_PRICE = 'average-price';
 
 //GENRES
 export const GENRES = {

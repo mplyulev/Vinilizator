@@ -157,11 +157,6 @@ class AppNavBar extends Component {
                         opts={opts}
                         onError={getRandomTrack}
                         onReady={this.onReady}
-                        // onPlay={() => {console.log('play')}}                     // defaults -> noop
-                        // onPause={() => {console.log('onPause')}}                   // defaults -> noop
-                        // onEnd={() => {console.log('onEnd')}}                        // defaults -> noop
-                        // onError={() => {console.log('play')}}                    // defaults -> noop
-                        // onStateChange={(e) => {console.log(player.getPlayerState())}}
                     />
                     <div className={`player-wrapper${showPlayer ? ' visible' : ''}`}>
                         <div className={randomTrackRequestPending ? 'loading' : ''} onClick={() => setSpecificResult(playerRelease)} >

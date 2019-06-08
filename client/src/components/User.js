@@ -49,7 +49,6 @@ class User extends Component {
         return (
             <Fragment>
                 <div className="user-wrapper">
-                    {/*<span className="user">User - </span>*/}
                     <span className="username">{user.username}'s</span>
                     <div className="user-navigation-bar">
                         <span className="user-navigation-item selected" onClick={(event) => this.renderCollection(event, COLLECTION_TYPE_COLLECTION)}>COLLECTION</span>
