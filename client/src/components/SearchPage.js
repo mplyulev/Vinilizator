@@ -80,6 +80,7 @@ class SearchPage extends Component {
     };
 
     render () {
+        console.log('rendering');
         const {
             getNextPageResult,
             requestPending,
@@ -91,7 +92,7 @@ class SearchPage extends Component {
         } = this.props;
 
         const { selectedGenre, selectedStyle, isGenreDropdownOpen, isStyleDropdownOpen } = this.state;
-
+        console.log(queryResult);
         ReactTooltip.rebuild();
         const dropdownOptions = Object.values(GENRES).map(genre =>
             <DropdownItem onClick={() => this.setSelectedGenre(genre)}
@@ -180,10 +181,11 @@ class SearchPage extends Component {
                                 : null
                             }
                             <ReactTooltip id="search-page-tooltip" />
-                            {!requestPending && !_.isEmpty(queryResult.results) && queryResult.results.map(result => {
+                            {!_.isEmpty(queryResult.results) && !requestPending && queryResult.results.map(result => {
                                 return (
                                     <SearchItem history={history}
                                                 release={result}
+                                                requestPending={requestPending}
                                                 currentRelease={currentRelease}
                                                 clearCurrentRelease={clearCurrentRelease}
                                                 getSpecificResult={getSpecificResult}

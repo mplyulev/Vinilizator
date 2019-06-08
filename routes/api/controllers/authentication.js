@@ -48,7 +48,7 @@ router.post('/login',function(req, res) {
         ]
     }, function(err, user) {
         if (err) throw err;
-       
+
         if (!user) {
             res.json({success: false, msg: 'Wrong username/email or password'});
         } else {

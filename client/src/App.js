@@ -359,39 +359,35 @@ class App extends Component {
                 }
             });
     };
-
+a
     setSpecificResult = (release, collectionType, isOtherUserCollection) => {
         this.clearCurrentRelease();
-        console.log(release);
         const { currentUser } = this.state;
-
         this.setState({ currentRelease: release }, () => {
-            this.releaseAnimationTimeout = setTimeout(() => {
-                if (isOtherUserCollection) {
-                    this.props.history.push(`${ROUTE_USERS}/${currentUser && currentUser.username}${ROUTE_COLLECTION}${ROUTE_RELEASE}/${release.id}`);
-                    return
-                }
-                this.setState({collectionType: collectionType});
-                switch (collectionType) {
-                case COLLECTION_TYPE_COLLECTION:
-                    this.props.history.push(`${ROUTE_COLLECTION}${ROUTE_RELEASE}/${release.id}`);
-                    break;
-                case COLLECTION_TYPE_WISHLIST:
-                    this.props.history.push(`${ROUTE_WISHLIST}${ROUTE_RELEASE}/${release.id}`);
-                    break;
-                case COLLECTION_TYPE_FOR_SELL:
-                    this.props.history.push(`${ROUTE_FOR_SELL}${ROUTE_RELEASE}/${release.id}`);
-                    break;
-                case COLLECTION_TYPE_MARKET:
-                    this.props.history.push(`${ROUTE_MARKET}${ROUTE_RELEASE}/${release.id}`);
-                    break;
-                case COLLECTION_TYPE_OTHER_USER:
-                    this.props.history.push(`${ROUTE_USERS}/${currentUser && currentUser.username}${ROUTE_RELEASE}/${release.id}`);
-                    break;
-                    default:
-                    this.props.history.push(`${ROUTE_RELEASE}/${release.id}`);
-                }
-            }, 600);
+            if (isOtherUserCollection) {
+                this.props.history.push(`${ROUTE_USERS}/${currentUser && currentUser.username}${ROUTE_COLLECTION}${ROUTE_RELEASE}/${release.id}`);
+                return
+            }
+            this.setState({collectionType: collectionType});
+            switch (collectionType) {
+            case COLLECTION_TYPE_COLLECTION:
+                this.props.history.push(`${ROUTE_COLLECTION}${ROUTE_RELEASE}/${release.id}`);
+                break;
+            case COLLECTION_TYPE_WISHLIST:
+                this.props.history.push(`${ROUTE_WISHLIST}${ROUTE_RELEASE}/${release.id}`);
+                break;
+            case COLLECTION_TYPE_FOR_SELL:
+                this.props.history.push(`${ROUTE_FOR_SELL}${ROUTE_RELEASE}/${release.id}`);
+                break;
+            case COLLECTION_TYPE_MARKET:
+                this.props.history.push(`${ROUTE_MARKET}${ROUTE_RELEASE}/${release.id}`);
+                break;
+            case COLLECTION_TYPE_OTHER_USER:
+                this.props.history.push(`${ROUTE_USERS}/${currentUser && currentUser.username}${ROUTE_RELEASE}/${release.id}`);
+                break;
+                default:
+                this.props.history.push(`${ROUTE_RELEASE}/${release.id}`);
+            }
         })
     };
 
@@ -424,6 +420,7 @@ class App extends Component {
         clearTimeout(this.releaseAnimationTimeout);
         axios.get(`${DOGS_GET_ITEM_URL[type]}/${id}?key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
+                console.log(response);
                 this.setState({currentRelease: response.data}, () => {
                     this.releaseAnimationTimeout = setTimeout(() => {
                         this.setReleaseStatus(response.data, this.state.vinylCollection, this.state.wishlist);

@@ -4,10 +4,16 @@ import SearchItem from "./SearchItem";
 import {
     COLLECTION_TYPE_COLLECTION,
     COLLECTION_TYPE_FOR_SELL,
-    COLLECTION_TYPE_MARKET, COLLECTION_TYPE_WISHLIST,
+    COLLECTION_TYPE_MARKET,
+    COLLECTION_TYPE_WISHLIST,
     DATA_TYPE_RELEASE,
     GENRE_DROPDOWN,
-    GENRES, GENRES_ALL, ROUTE_SEARCH, STYLE_DROPDOWN, STYLES_ALL
+    GENRES_ALL,
+    ROUTE_SEARCH,
+    STYLE_DROPDOWN,
+    STYLES_ALL,
+    SORT_TYPE_PRICE,
+    SORT_TYPE_ALPHABET, SORT_DROPDOWN
 } from '../constants';
 import ReactTooltip from 'react-tooltip';
 import {
@@ -29,18 +35,22 @@ class Collection extends Component {
             searchQuery: '',
             filteredCollection: null,
             isGenreDropdownOpen: false,
+            isSortDropdownOpen: false,
             isStyleDropdownOpen: false,
             filteredByGenre: null,
             selectedGenre: '',
-            selectedStyle: ''
+            selectedStyle: '',
+            selectedSortType: ''
         };
+
+        this.searchItemTimeout = null;
     }
 
     onChange = (event) => {
         const { data } = this.props;
         const { filteredCollection, searchQuery, selectedGenre, selectedStyle } = this.state;
         this.setState({ searchQuery: event.target.value.split(' ').join('')});
-
+        console.log(filteredCollection);
         const dataForFiltering = filteredCollection || data;
         const newFiltered = dataForFiltering.filter(vinyl => {
             const artistName = vinyl.artists[0].name.toLowerCase().split(' ').join('');
@@ -77,6 +87,14 @@ class Collection extends Component {
                 isStyleDropdownOpen: !prevState.isStyleDropdownOpen,
                 isGenreDropdownOpen: false,
             }));
+
+        if (type === SORT_DROPDOWN) {
+            this.setState(prevState => ({
+                isStyleDropdownOpen: false,
+                isGenreDropdownOpen: false,
+                isSortDropdownOpen: true
+            }));
+        }
     };
 
     setSelectedGenre = (genre) => {
@@ -111,10 +129,6 @@ class Collection extends Component {
 
 
     sortBy = (sortType) => {
-        const SORT_TYPE_PRICE = 'price';
-        const SORT_TYPE_ALPHABET = 'alphabetical';
-        const SORT_TYPE_SOLDBY_ALPHABET = 'user-alphabetical';
-
         const { filteredCollection } = this.state;
         const { data, collectionType } = this.props;
         const dataForFiltering = filteredCollection || data;
@@ -132,7 +146,6 @@ class Collection extends Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (prevProps.collectionType !== this.props.collectionType) {
             this.setSelectedGenre('');
-
             this.setState({ filteredCollection: null });
 
         }
@@ -151,15 +164,15 @@ class Collection extends Component {
             requestPending,
             getSpecificUser,
             isOtherUserCollection,
-            hideCollection
+            hideCollection,
         } = this.props;
 
         const {
             filteredCollection,
             selectedGenre,
             selectedStyle,
-            filteredByGenre,
-            switchingCollection
+            selectedSortType,
+            filteredByGenre
         } = this.state;
 
         let genres = [];
@@ -238,17 +251,26 @@ class Collection extends Component {
                             {styleDropdownOptions}
                         </DropdownMenu>
                     </Dropdown>
-                    <button onClick={() => console.log(this.sortBy())}>Sort</button>
-                </div>5
+                    <Dropdown isOpen={this.state.isSortDropdownOpen}
+                              toggle={() => this.toggle(SORT_DROPDOWN)}>
+                        <DropdownToggle caret>
+                            {`Sort by: ${selectedSortType}` || 'Sort by:'}
+                        </DropdownToggle>
+                        <DropdownMenu>
+                            {styleDropdownOptions}
+                        </DropdownMenu>
+                    </Dropdown>
+                    <Button onClick={() => this.sortBy(SORT_TYPE_PRICE)}>Sort</Button>
+                </div>
                 <div
                     className={`results-container collection${collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL ? ' bigger-height' : ''}`}>
-                    {requestPending ?
+                    {requestPending
+                        ?
                         <div className="loader-wrapper">
                             <div className="loading"></div>
                             <span className="loading-text">LOADING...</span>
                         </div>
-                        : null
-                    }
+                        :
                         <Fragment>
                             {!_.isEmpty(data) && (!hideCollection || collectionType !== COLLECTION_TYPE_COLLECTION)
                                 ? (filteredCollection || data).map(result => {
@@ -298,6 +320,7 @@ class Collection extends Component {
                                 </div>
                             }
                         </Fragment>
+                    }
                 </div>
             </div>
         );

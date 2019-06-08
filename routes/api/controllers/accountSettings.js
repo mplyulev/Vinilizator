@@ -28,7 +28,7 @@ router.post('/togglePlayer', function(req, res) {
     User.findById(req.body.userId, function(err, user) {
         if (user) {
             user.playTracksFromFavorites = req.body.playTracksFromFavorites;
-            user.save();
+            user.save();    
         }
     });
 });

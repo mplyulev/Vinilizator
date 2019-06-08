@@ -2,6 +2,8 @@ import React, {Component, Fragment} from 'react';
 import ReactTooltip from 'react-tooltip';
 import { Input, InputGroup, InputGroupAddon } from 'reactstrap';
 
+import UserItem from './UserItem'
+
 class Users extends Component {
     constructor(props) {
         super(props);
@@ -68,17 +70,9 @@ class Users extends Component {
                         </div>
                         : null
                     }
-                    {users && (searchQuery && filteredUsers ? filteredUsers : users).map(user => {
+                    {users && (searchQuery && !requestPending && filteredUsers ? filteredUsers : users).map(user => {
                         return (
-                            <div className={`user${requestPending ? '' : ' visible'}`}  key={user.username} onClick={() => getSpecificUser(user._id)}>
-                                <div className="user-info-wrapper">
-                                    <span className="username">{user.username}</span>
-                                    {!user.hideCollection &&
-                                    <span>Items in collection: {user.vinylCollection.length}</span>}
-                                    <span>Items for sale: {this.getItemsForSell(user) ? this.getItemsForSell(user).length : 0}</span>
-                                    <span>Items in wishlist: {user.wishlist.length}</span>
-                                </div>
-                            </div>
+                           <UserItem getItemsForSell={this.getItemsForSell} getSpecificUser={getSpecificUser} user={user}></UserItem>
                         );
                     })}
                 </div>

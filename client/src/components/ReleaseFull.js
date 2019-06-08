@@ -308,6 +308,7 @@ class ReleaseFull extends Component {
                         {styles && <p>Style: <span>{styles}</span></p>}
                         {released && year ? <p>Released: <span>{released}</span></p> : null}
                         {year && !released ? <p>Year: <span>{year}</span></p> : null}
+                        <p>Lowest price on discogs: {release.lowest_price}$</p>
                     </div>
                     <div className="tracklist-youtube-wrapper">
                         <div className="tracklist-wrapper">
