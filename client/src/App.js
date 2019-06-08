@@ -196,7 +196,7 @@ class App extends Component {
                     const track = release && release.tracklist[Math.floor(Math.random() * release.tracklist.length)];
                     const trackTitle = `${track && track.artists ? track.artists[0].name : release.artists[0].name} - ${track.title}`;
                     const query = `${track && track.artists ? track.artists[0].name : release && release.artists[0].name}+${track.title}`;
-                    const youtube = new YouTubeApi('AIzaSyD7RCqRPOd_IFf0MHE-pgR6Qy_nq13VBOE');
+                    const youtube = new YouTubeApi('AIzaSyCclzAC_wEB6H41XMpsFQuqPwG7JqQzAck');
 
                     youtube.searchVideos(query, 1)
                         .then(results => {

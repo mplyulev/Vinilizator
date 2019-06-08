@@ -13,7 +13,7 @@ import {
     STYLE_DROPDOWN,
     STYLES_ALL,
     SORT_TYPE_PRICE,
-    SORT_TYPE_ALPHABET, SORT_DROPDOWN
+    SORT_TYPE_ALPHABET, SORT_DROPDOWN, SORT_BY_AVERAGE_SALE_PRICE, SORT_BY_COLLECTION_NUMBER
 } from '../constants';
 import ReactTooltip from 'react-tooltip';
 import {
@@ -42,8 +42,6 @@ class Collection extends Component {
             selectedStyle: '',
             selectedSortType: ''
         };
-
-        this.searchItemTimeout = null;
     }
 
     onChange = (event) => {
@@ -92,7 +90,7 @@ class Collection extends Component {
             this.setState(prevState => ({
                 isStyleDropdownOpen: false,
                 isGenreDropdownOpen: false,
-                isSortDropdownOpen: true
+                isSortDropdownOpen: !prevState.isSortDropdownOpen
             }));
         }
     };
@@ -134,7 +132,7 @@ class Collection extends Component {
         const dataForFiltering = filteredCollection || data;
 
         dataForFiltering.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
-        console.log(dataForFiltering);
+        this.setState({ selectedSortType: sortType })
         this.setState({ filteredCollection: dataForFiltering });
 
     };
@@ -178,6 +176,9 @@ class Collection extends Component {
         let genres = [];
         let styles = [];
 
+        const sellingSortTypes = [SORT_TYPE_ALPHABET, SORT_TYPE_PRICE];
+        const userSortTypes = [SORT_BY_AVERAGE_SALE_PRICE, SORT_TYPE_ALPHABET, SORT_BY_COLLECTION_NUMBER]
+
         data.map(release => {
             release.genres && release.genres.map(genre => {
                 genres.push(genre);
@@ -215,6 +216,15 @@ class Collection extends Component {
                           onClick={(event) => this.setSelectedStyle(event.target.innerText)}
                           value={style}>
                 {style}
+            </DropdownItem>
+        );
+
+        const sortDropDownOptions = sellingSortTypes.map(sortType =>
+            <DropdownItem className={selectedSortType === sortType ? 'selected' : ''}
+                          key={sortType}
+                          onClick={() => this.sortBy(sortType)}
+                          value={selectedSortType}>
+                {sortType}
             </DropdownItem>
         );
 
@@ -257,10 +267,9 @@ class Collection extends Component {
                             {`Sort by: ${selectedSortType}` || 'Sort by:'}
                         </DropdownToggle>
                         <DropdownMenu>
-                            {styleDropdownOptions}
+                            {sortDropDownOptions}
                         </DropdownMenu>
                     </Dropdown>
-                    <Button onClick={() => this.sortBy(SORT_TYPE_PRICE)}>Sort</Button>
                 </div>
                 <div
                     className={`results-container collection${collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL ? ' bigger-height' : ''}`}>

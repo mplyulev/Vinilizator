@@ -15,7 +15,7 @@ import {
 } from '../constants';
 import {withRouter} from "react-router-dom";
 import YouTubeApi from 'simple-youtube-api';
-const youtube = new YouTubeApi('AIzaSyD7RCqRPOd_IFf0MHE-pgR6Qy_nq13VBOE');
+const youtube = new YouTubeApi('AIzaSyCclzAC_wEB6H41XMpsFQuqPwG7JqQzAck');
 
 class ReleaseFull extends Component {
     constructor(props) {

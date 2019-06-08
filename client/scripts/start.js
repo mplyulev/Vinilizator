@@ -4,7 +4,7 @@
 process.env.BABEL_ENV = 'development';
 process.env.NODE_ENV = 'development';
 process.env.JWT_SECRET = "12gfhdfgh456dfghdgfhj5e67";
-process.env.YT_API_KEY = "AIzaSyD7RCqRPOd_IFf0MHE-pgR6Qy_nq13VBOE";
+process.env.YT_API_KEY = "AIzaSyCclzAC_wEB6H41XMpsFQuqPwG7JqQzAck";
 
 // Makes the script crash on unhandled rejections instead of silently
 // ignoring them. In the future, promise rejections that are not handled will
