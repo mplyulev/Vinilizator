@@ -13,7 +13,7 @@ import {
     STYLE_DROPDOWN,
     STYLES_ALL,
     SORT_TYPE_PRICE,
-    SORT_TYPE_ALPHABET, SORT_DROPDOWN, SORT_BY_AVERAGE_SALE_PRICE, SORT_BY_COLLECTION_NUMBER
+    SORT_TYPE_ALPHABET, SORT_DROPDOWN, SORT_BY_AVERAGE_SALE_PRICE, SORT_BY_COLLECTION_NUMBER, SORT_TYPE_SOLDBY_ALPHABET
 } from '../constants';
 import ReactTooltip from 'react-tooltip';
 import {
@@ -48,28 +48,29 @@ class Collection extends Component {
         const { data } = this.props;
         const { filteredCollection, searchQuery, selectedGenre, selectedStyle } = this.state;
         this.setState({ searchQuery: event.target.value.split(' ').join('')});
-        console.log(filteredCollection);
+        const searchTerm = event.target.value;
         const dataForFiltering = filteredCollection || data;
         const newFiltered = dataForFiltering.filter(vinyl => {
             const artistName = vinyl.artists[0].name.toLowerCase().split(' ').join('');
             const title = vinyl.title.toLowerCase().split(' ').join('');
-            const searchQuery = event.target.value;
-            if (artistName.includes(searchQuery) || title.includes(searchQuery)) {
+
+            if (artistName.includes(searchTerm) || title.includes(searchTerm)) {
                 return vinyl
             }
         });
+
 
         if (newFiltered.length > 0) {
             this.setState({ filteredCollection : newFiltered });
         }
 
-        if (searchQuery.length === 1 && (selectedGenre || selectedStyle)) {
+        if (searchTerm.length === 0  && (selectedGenre || selectedStyle)) {
             selectedGenre ? this.setSelectedGenre(selectedGenre) : this.setSelectedStyle(selectedStyle);
             if (selectedGenre && selectedStyle) {
                 this.setSelectedStyle(selectedGenre);
                 this.setSelectedStyle(selectedStyle);
             }
-        } else if (searchQuery.length === 1) {
+        } else if (searchTerm.length === 0) {
             this.setState({ filteredCollection : data });
         }
 
@@ -126,19 +127,39 @@ class Collection extends Component {
     };
 
 
-    sortBy = (sortType) => {
+    sortCollection = (sortType) => {
+        console.log(sortType);
         const { filteredCollection } = this.state;
         const { data, collectionType } = this.props;
+        console.log(data);
         const dataForFiltering = filteredCollection || data;
-
-        dataForFiltering.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
-        this.setState({ selectedSortType: sortType })
-        this.setState({ filteredCollection: dataForFiltering });
-
+        this.setState({ selectedSortType: sortType });
+        switch(sortType) {
+            case SORT_TYPE_PRICE:
+                console.log(dataForFiltering);
+                dataForFiltering.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+                console.log(dataForFiltering);
+                this.setState({ filteredCollection: dataForFiltering });
+            case SORT_TYPE_ALPHABET:
+                dataForFiltering.sort((a, b) => {
+                    var artistA = a.artists_sort.toUpperCase();
+                    var artistB = b.artists_sort.toUpperCase();
+                    return (artistA < artistB) ? -1 : (artistA > artistB) ? 1 : 0;
+                });
+                this.setState({ filteredCollection: dataForFiltering });
+            case SORT_TYPE_SOLDBY_ALPHABET:
+                dataForFiltering.sort((a, b) => {
+                    var soldByA = a.soldBy.username.toUpperCase();
+                    var soldByB = b.soldBy.username.toUpperCase();
+                    return (soldByA < soldByB) ? -1 : (soldByA > soldByB) ? 1 : 0;
+                });
+                this.setState({ filteredCollection: dataForFiltering });
+        }
     };
 
     componentDidMount() {
         ReactTooltip.rebuild();
+        console.log('mounting');
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -170,13 +191,14 @@ class Collection extends Component {
             selectedGenre,
             selectedStyle,
             selectedSortType,
-            filteredByGenre
+            filteredByGenre,
+            isStyleDropdownOpen
         } = this.state;
 
         let genres = [];
         let styles = [];
 
-        const sellingSortTypes = [SORT_TYPE_ALPHABET, SORT_TYPE_PRICE];
+        const sellingSortTypes = [SORT_TYPE_ALPHABET, SORT_TYPE_PRICE, SORT_TYPE_SOLDBY_ALPHABET];
         const userSortTypes = [SORT_BY_AVERAGE_SALE_PRICE, SORT_TYPE_ALPHABET, SORT_BY_COLLECTION_NUMBER]
 
         data.map(release => {
@@ -222,11 +244,13 @@ class Collection extends Component {
         const sortDropDownOptions = sellingSortTypes.map(sortType =>
             <DropdownItem className={selectedSortType === sortType ? 'selected' : ''}
                           key={sortType}
-                          onClick={() => this.sortBy(sortType)}
+                          onClick={() => this.sortCollection(sortType)}
                           value={selectedSortType}>
                 {sortType}
             </DropdownItem>
         );
+
+        console.log(!_.isEmpty(data) && !requestPending && (!hideCollection || collectionType !== COLLECTION_TYPE_COLLECTION));
 
         styleDropdownOptions.unshift(<DropdownItem className={selectedStyle === STYLES_ALL ? 'selected' : ''}
                                                    onClick={(event) => this.setSelectedStyle(event.target.innerText)}
@@ -234,7 +258,6 @@ class Collection extends Component {
                                                    value={STYLES_ALL}>
             {STYLES_ALL}
         </DropdownItem>);
-
         return (
             <div>
                 <div>
@@ -279,9 +302,9 @@ class Collection extends Component {
                             <div className="loading"></div>
                             <span className="loading-text">LOADING...</span>
                         </div>
-                        :
-                        <Fragment>
-                            {!_.isEmpty(data) && (!hideCollection || collectionType !== COLLECTION_TYPE_COLLECTION)
+                        : null}
+                         {<Fragment>
+                            {!_.isEmpty(data) &&  !requestPending && (!hideCollection || collectionType !== COLLECTION_TYPE_COLLECTION)
                                 ? (filteredCollection || data).map(result => {
                                     return (
                                         <SearchItem history={history}
@@ -300,7 +323,7 @@ class Collection extends Component {
                                     );
                                 })
                                 :
-                                <div className="no-results">
+                                !requestPending && <div className="no-results">
                                     {collectionType === COLLECTION_TYPE_WISHLIST
                                         ? !isOtherUserCollection
                                             ? <p>YOU HAVE NO RECORDS IN YOU WISHLIST</p>

@@ -44,16 +44,11 @@ class SearchItem extends Component {
 
     componentWillUnmount() {
         clearTimeout(this.timeout);
-    }
-
-
-    componentDidMount() {
         clearTimeout(this.mountTimeout);
     }
 
     componentDidMount() {
         ReactTooltip.rebuild();
-        clearTimeout(this.mountTimeout);
         this.mountTimeout = setTimeout(() => {
             this.setState({ isVisible: true });
         },100);

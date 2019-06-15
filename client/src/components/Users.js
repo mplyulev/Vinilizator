@@ -68,9 +68,9 @@ class Users extends Component {
                             <div className="loading"></div>
                             <span className="loading-text">LOADING...</span>
                         </div>
-                        : null
-                    }
-                    {users && (searchQuery && !requestPending && filteredUsers ? filteredUsers : users).map(user => {
+
+                    :
+                    users && (searchQuery && !requestPending && filteredUsers ? filteredUsers : users).map(user => {
                         return (
                            <UserItem getItemsForSell={this.getItemsForSell} getSpecificUser={getSpecificUser} user={user}></UserItem>
                         );

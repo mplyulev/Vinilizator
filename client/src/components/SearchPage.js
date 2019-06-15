@@ -61,7 +61,7 @@ class SearchPage extends Component {
 
 
     setSelectedStyle = (style) => {
-        const { selectedGenre } = this.state
+        const { selectedGenre } = this.state;
         this.setState({ selectedStyle: style });
 
         this.props.makeSearchRequest(this.props.searchQueryString, selectedGenre && selectedGenre.name !== GENRES_ALL ? selectedGenre.name : '', style)

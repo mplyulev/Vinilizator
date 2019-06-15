@@ -359,7 +359,7 @@ class App extends Component {
                 }
             });
     };
-a
+
     setSpecificResult = (release, collectionType, isOtherUserCollection) => {
         this.clearCurrentRelease();
         const { currentUser } = this.state;
