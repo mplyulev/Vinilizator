@@ -1,8 +1,9 @@
 import React from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter, DropdownMenu } from 'reactstrap';
 import { FormGroup, Label, Input } from 'reactstrap';
 import ReactTooltip from 'react-tooltip';
-
+import { Scrollbars } from 'react-custom-scrollbars';
+import { FaWindowMinimize } from 'react-icons/fa';
 
 class ChatModal extends React.Component {
     constructor(props) {
@@ -34,19 +35,28 @@ class ChatModal extends React.Component {
     };
 
     render() {
-        const { isChatModalOpened, toggleChatModal } = this.props;
+        const { isChatModalOpened, toggleChatModal, messageTo } = this.props;
         const { message } = this.state
         ReactTooltip.rebuild();
 
         return (
             <div>
-                <Modal isOpen={isChatModalOpened} className="sell-modal">
-                    <ModalHeader>Message </ModalHeader>
+                <Modal isOpen={isChatModalOpened} className="chat-modal">
+                    <ModalHeader>Message {messageTo}
+                        <FaWindowMinimize className="minimize"/>
+                    </ModalHeader>
+
                     <ModalBody>
                         <ReactTooltip id="sell-modal"/>
                         <FormGroup>
-                            <Label for="exampleText">Text Area</Label>
-                            <Input value={message} onChange={this.handleChange} type="textarea" name="text" id="notes"/>
+                            <Scrollbars autoHeight
+                                        autoHeightMax={150}
+                                        className="scrollbar"
+                                        autoHideTimeout={1000}
+                                        autoHideDuration={500}
+                                        style={{ width: `100%` }}>
+                                <Input value={message} onChange={this.handleChange} type="textarea" name="text" id="notes"/>
+                            </Scrollbars>
                         </FormGroup>
                     </ModalBody>
                     <ModalFooter>

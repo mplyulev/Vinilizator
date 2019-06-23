@@ -87,6 +87,7 @@ class App extends Component {
             isNavBarOpened: false,
             isSellModalOpened: false,
             isChatModalOpened: false,
+            messageTo: '',
             currentUser: null,
             isSearchItemInCollection: false,
             isSearchItemInWishlist: false,
@@ -148,9 +149,10 @@ class App extends Component {
         });
     };
 
-    toggleChatModal = () => {
+    toggleChatModal = (user) => {
         console.log('toggliung chat');
         this.setState({
+            messageTo: user,
             isChatModalOpened: !this.state.isChatModalOpened
         });
     };
@@ -272,7 +274,6 @@ class App extends Component {
     };
 
     componentDidMount() {
-        console.log(process.env);
         document.addEventListener('click', this.closeOnOutsideClick);
         const { token } = this.state;
         const { location } = this.props;
@@ -292,6 +293,16 @@ class App extends Component {
             pathname = pathname.substring(0, pathname.length - 1)
         }
 
+        // const pathnameParts = pathname.split('/');
+        // pathnameParts.forEach((element, index) => {
+        //     if (element === 'release' && pathnameParts[index+1]) {
+        //         console.log('cmon');
+        //         this.getSpecificResult(DATA_TYPE_RELEASE, pathnameParts[index + 1]);
+        //     } else if () {
+        //
+        //     }
+        // });
+
         switch (pathname) {
             case ROUTE_COLLECTION || ROUTE_WISHLIST || ROUTE_FOR_SELL:
                 this.getCollection();
@@ -304,6 +315,7 @@ class App extends Component {
                 break;
             case ROUTE_SEARCH:
                 this.makeSearchRequest('');
+                break;
         }
     }
 
@@ -311,6 +323,17 @@ class App extends Component {
         const {token} = prevState;
         const prevPath = prevState.prevProps.location.pathname;
         const nextPath = nextProps.location.pathname;
+
+        // const pathnameParts = nextPath.split('/');
+        // pathnameParts.forEach((element, index) => {
+        //     if (element === 'release' && pathnameParts[index+1]) {
+        //         console.log('cmon');
+        //         this.getSpecificResult(DATA_TYPE_RELEASE, pathnameParts[index + 1]);
+        //     } else if {
+        //
+        //     }
+        // });
+
         if (prevPath !== nextPath && nextPath !== ROUTE_SIGN_UP && nextPath !== ROUTE_SIGN_IN) {
             if (!token) {
                 nextProps.history.push(ROUTE_SIGN_IN);
@@ -424,6 +447,7 @@ class App extends Component {
     };
 
     async getSpecificResult(type, id) {
+        console.log('enetering');
         this.clearCurrentRelease();
         clearTimeout(this.releaseAnimationTimeout);
         axios.get(`${DOGS_GET_ITEM_URL[type]}/${id}?key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
@@ -567,6 +591,7 @@ class App extends Component {
             market,
             isNavBarOpened,
             isSellModalOpened,
+            messageTo,
             isChatModalOpened,
             currentUser,
             collectionType,
@@ -599,6 +624,7 @@ class App extends Component {
                                                          currentRelease={currentRelease}
                                                          isSellModalOpened={isSellModalOpened}/>}
                         {isChatModalOpened && <ChatModal toggleChatModal={this.toggleChatModal}
+                                                         messageTo={messageTo}
                                                          isChatModalOpened={isChatModalOpened}/>}
                         <AppNavBar isNavBarOpened={isNavBarOpened}
                                    showPlayer={showPlayer}

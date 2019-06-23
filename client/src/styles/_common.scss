@@ -42,6 +42,43 @@
   }
 }
 
+.chat-modal {
+  height: 100vh;
+  margin: 0 auto;
+
+  .dropdown {
+    text-align: initial;
+  }
+
+  .modal-content {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .btn-success {
+    min-width: 75px;
+  }
+
+  .form-control:focus {
+    border-color: $background-color-green;
+  }
+
+  #notes {
+    height: 150px;
+  }
+
+  .modal-header {
+    color: $font-color-white;
+    background: $background-color-black;
+    text-transform: uppercase;
+
+    .modal-title {
+      font-size: 17px;
+      font-weight: bold;
+    }
+  }
+}
+
 .dropdown {
   margin-bottom: 20px;
   text-align: center;

@@ -309,7 +309,7 @@ class ReleaseFull extends Component {
                         {styles && <p>Style: <span>{styles}</span></p>}
                         {released && year ? <p>Released: <span>{released}</span></p> : null}
                         {year && !released ? <p>Year: <span>{year}</span></p> : null}
-                        <p>Lowest price on Discogs: {release.lowest_price}$</p>
+                        {release.lowest_price && <p>Lowest price on Discogs: {release.lowest_price}$</p>}
                     </div>
                     <div className="tracklist-youtube-wrapper">
                         <div className="tracklist-wrapper">
@@ -414,7 +414,7 @@ class ReleaseFull extends Component {
                         {isInMarket || isOtherUserCollection ?
                             <Fragment>
                                 <Button color="success" className="add-button"
-                                        onClick={toggleChatModal}>
+                                        onClick={() => toggleChatModal(release.soldBy.username)}>
                                     Message {release.soldBy.username}
                                 </Button>
                             </Fragment>
