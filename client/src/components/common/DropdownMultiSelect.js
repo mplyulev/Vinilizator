@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Dropdown, DropdownMenu, DropdownToggle } from 'reactstrap';
 import { Scrollbars } from 'react-custom-scrollbars';
 
-class DropdownComponent extends Component {
+class DropdownMultiSelect extends Component {
     constructor(props) {
         super(props);
 
@@ -20,12 +20,12 @@ class DropdownComponent extends Component {
 
     render() {
         const { isOpen } = this.state;
-        const { selected, dropdownTitle, items, showSelected } = this.props;
+        const { selected, title, items, showSelected } = this.props;
 
         return (
             <Dropdown isOpen={isOpen} toggle={() => this.toggle()}>
                 <DropdownToggle caret>
-                    {selected && showSelected ? selected : dropdownTitle}
+                    {selected && showSelected ? selected : title}
                 </DropdownToggle>
                 <DropdownMenu className="styles-dropdown">
                     <Scrollbars autoHeight
@@ -42,4 +42,4 @@ class DropdownComponent extends Component {
     }
 }
 
-export default DropdownComponent;
+export default DropdownMultiSelect;

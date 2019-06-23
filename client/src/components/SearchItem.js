@@ -92,6 +92,7 @@ class SearchItem extends Component {
         if (!release.cover_image && !collectionReleaseImage) {
             coverUrl = NoImagePlaceholder;
         }
+
         return (
             <Fragment>
                 <div className={`search-item-container${isVisible ? ' visible' : ''}`} // there is a bug from request pending in release getting

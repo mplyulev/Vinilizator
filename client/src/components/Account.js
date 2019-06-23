@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button, DropdownItem, FormGroup, Input, Label } from "reactstrap";
 import axios from 'axios';
-import DropdownComponent from '../components/common/Dropdown';
+import DropdownMultiSelect from './common/DropdownMultiSelect';
 
 import {
     GENRES,
@@ -142,7 +142,12 @@ class Account extends Component {
 
             this.timeout = setTimeout(() => {
                 favoriteStyles.splice(styleIndex, 1);
-                this.setState({ favoriteStyles });
+                this.setState({ favoriteStyles }, () => {
+
+                    if (favoriteStyles.length === 0 && this.props.playTracksFromFavorites) {
+                        this.props.togglePlayer();
+                    }
+                });
             },100);
         } else {
             favoriteStyles.push(style);
@@ -152,6 +157,7 @@ class Account extends Component {
                 this.lastStyle && this.lastStyle.classList.add('visible')
             }, 0)
         }
+
     };
 
     render() {
@@ -237,10 +243,10 @@ class Account extends Component {
                         Change Password
                     </Button>
                 </div>
-                <DropdownComponent items={styleDropdownOptions}
-                                   dropdownTitle='Choose favorite styles'
-                                   showSelected={false}
-                                   selected={favoriteStyles} />
+                <DropdownMultiSelect items={styleDropdownOptions}
+                                     title='Choose favorite styles'
+                                     showSelected={false}
+                                     selected={favoriteStyles} />
                 <div className={`favorite-styles-wrapper ${favoriteStyles.length > 0 ? 'visible' : ''}`}
                      ref={this.favoritesWrapper}>
                     {favoriteStyles.map((style, index) => <span
@@ -271,12 +277,13 @@ class Account extends Component {
                     <span className='title'>PLAYER SETTINGS</span>
                     <div className="checkbox-wrapper" onChange={togglePlayer}>
                         <div className="pretty p-round p-fill checkbox">
-                            <input checked={playTracksFromFavorites} type="checkbox" />
+                            <input disabled={favoriteStyles.length === 0 ? true : false } checked={playTracksFromFavorites} type="checkbox" />
                             <div className='state p-success'>
                                 <label>Play a random track from my favorite styles</label>
                             </div>
                         </div>
                     </div>
+                    {favoriteStyles.length === 0  && <p>(You have to choose at least one style)</p>}
                 </div>
             </div>
         );

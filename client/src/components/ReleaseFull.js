@@ -194,7 +194,8 @@ class ReleaseFull extends Component {
             isSearchItemInCollection,
             isSearchItemForSale,
             isSearchItemInWishlist,
-            getSpecificUser
+            getSpecificUser,
+            toggleChatModal
         } = this.props;
 
         const {
@@ -413,7 +414,7 @@ class ReleaseFull extends Component {
                         {isInMarket || isOtherUserCollection ?
                             <Fragment>
                                 <Button color="success" className="add-button"
-                                        onClick={() => console.log('asd')}>
+                                        onClick={toggleChatModal}>
                                     Message {release.soldBy.username}
                                 </Button>
                             </Fragment>

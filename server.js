@@ -8,12 +8,22 @@ const collection = require('./routes/api/controllers/collection');
 const accountSettings = require('./routes/api/controllers/accountSettings');
 
 const app = express();
-
 app.use(bodyParser.json());
 let router = express.Router();
 app.use(router);
-
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 const db = require('./config/keys').mongoURI;
+io.on('connection', function(socket){
+    console.log('a user connected');
+    socket.on('disconnect', function(){
+        console.log('user disconnected');
+    });
+});
+
+app.get('/', function(req, res){
+    res.sendFile(__dirname + '/index.html');
+});
 
 mongoose
     .connect(db)
@@ -44,5 +54,7 @@ app.use(function(err, req, res, next) {
 
 const port = process.env.PORT || 5000;
 
-app.listen(port, () => console.log(`Server started on port ${port}`));
+http.listen(port, function(){
+    console.log(`listening on *:${port}`);
+});
 

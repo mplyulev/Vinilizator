@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import _ from 'lodash';
 import SearchItem from "./SearchItem";
+import Dropdown from './common/DropdownMultiSelect';
+
 import {
     COLLECTION_TYPE_COLLECTION,
     COLLECTION_TYPE_FOR_SELL,
@@ -10,19 +12,19 @@ import {
     GENRE_DROPDOWN,
     GENRES_ALL,
     ROUTE_SEARCH,
-    STYLE_DROPDOWN,
     STYLES_ALL,
     SORT_TYPE_PRICE,
-    SORT_TYPE_ALPHABET, SORT_DROPDOWN, SORT_BY_AVERAGE_SALE_PRICE, SORT_BY_COLLECTION_NUMBER, SORT_TYPE_SOLDBY_ALPHABET
+    SORT_TYPE_ALPHABET,
+    SORT_DROPDOWN,
+    SORT_BY_AVERAGE_SALE_PRICE,
+    SORT_BY_COLLECTION_NUMBER,
+    SORT_TYPE_SOLDBY_ALPHABET
 } from '../constants';
 import ReactTooltip from 'react-tooltip';
 import {
     InputGroup,
     InputGroupAddon,
     Input,
-    Dropdown,
-    DropdownToggle,
-    DropdownMenu,
     DropdownItem,
     Button
 } from 'reactstrap';
@@ -46,54 +48,36 @@ class Collection extends Component {
 
     onChange = (event) => {
         const { data } = this.props;
-        const { filteredCollection, searchQuery, selectedGenre, selectedStyle } = this.state;
-        this.setState({ searchQuery: event.target.value.split(' ').join('')});
-        const searchTerm = event.target.value;
-        const dataForFiltering = filteredCollection || data;
-        const newFiltered = dataForFiltering.filter(vinyl => {
-            const artistName = vinyl.artists[0].name.toLowerCase().split(' ').join('');
-            const title = vinyl.title.toLowerCase().split(' ').join('');
+        const { filteredCollection, selectedGenre, selectedStyle } = this.state;
+        this.setState({ searchQuery: event.target.value.split(' ').join('')}, () => {
+            const { searchQuery } = this.state;
+            const dataForFiltering = filteredCollection || data;
+            const newFiltered = dataForFiltering.filter(vinyl => {
+                const artistName = vinyl.artists[0].name.toLowerCase().split(' ').join('');
+                const title = vinyl.title.toLowerCase().split(' ').join('');
 
-            if (artistName.includes(searchTerm) || title.includes(searchTerm)) {
-                return vinyl
+                if (artistName.includes(searchQuery) || title.includes(searchQuery)) {
+                    return vinyl
+                }
+            });
+
+
+            if (newFiltered.length > 0) {
+                this.setState({ filteredCollection : newFiltered });
+            }
+
+            if (searchQuery.length === 0  && (selectedGenre || selectedStyle)) {
+                selectedGenre ? this.setSelectedGenre(selectedGenre) : this.setSelectedStyle(selectedStyle);
+                if (selectedGenre && selectedStyle) {
+                    this.setSelectedStyle(selectedGenre);
+                    this.setSelectedStyle(selectedStyle);
+                }
+            } else if (searchQuery.length === 0) {
+                this.setState({ filteredCollection : data });
             }
         });
 
 
-        if (newFiltered.length > 0) {
-            this.setState({ filteredCollection : newFiltered });
-        }
-
-        if (searchTerm.length === 0  && (selectedGenre || selectedStyle)) {
-            selectedGenre ? this.setSelectedGenre(selectedGenre) : this.setSelectedStyle(selectedStyle);
-            if (selectedGenre && selectedStyle) {
-                this.setSelectedStyle(selectedGenre);
-                this.setSelectedStyle(selectedStyle);
-            }
-        } else if (searchTerm.length === 0) {
-            this.setState({ filteredCollection : data });
-        }
-
-    };
-
-    toggle = (type) => {
-        type === GENRE_DROPDOWN
-            ? this.setState(prevState => ({
-                isGenreDropdownOpen: !prevState.isGenreDropdownOpen,
-                isStyleDropdownOpen: false
-            }))
-            : this.setState(prevState => ({
-                isStyleDropdownOpen: !prevState.isStyleDropdownOpen,
-                isGenreDropdownOpen: false,
-            }));
-
-        if (type === SORT_DROPDOWN) {
-            this.setState(prevState => ({
-                isStyleDropdownOpen: false,
-                isGenreDropdownOpen: false,
-                isSortDropdownOpen: !prevState.isSortDropdownOpen
-            }));
-        }
     };
 
     setSelectedGenre = (genre) => {
@@ -159,7 +143,6 @@ class Collection extends Component {
 
     componentDidMount() {
         ReactTooltip.rebuild();
-        console.log('mounting');
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -171,6 +154,7 @@ class Collection extends Component {
     }
 
     render () {
+        console.log('rerender');
         ReactTooltip.rebuild();
         const {
             history,
@@ -192,7 +176,6 @@ class Collection extends Component {
             selectedStyle,
             selectedSortType,
             filteredByGenre,
-            isStyleDropdownOpen
         } = this.state;
 
         let genres = [];
@@ -266,33 +249,9 @@ class Collection extends Component {
                         <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
                         <Input onChange={this.onChange} />
                     </InputGroup>
-                    <Dropdown isOpen={this.state.isGenreDropdownOpen}
-                              toggle={() => this.toggle(GENRE_DROPDOWN)}>
-                        <DropdownToggle caret>
-                            {selectedGenre || 'Filter by genre'}
-                        </DropdownToggle>
-                        <DropdownMenu>
-                            {genreDropdownOptions}
-                        </DropdownMenu>
-                    </Dropdown>
-                    <Dropdown isOpen={this.state.isStyleDropdownOpen}
-                              toggle={() => this.toggle(STYLE_DROPDOWN)}>
-                        <DropdownToggle caret>
-                            {selectedStyle || 'Filter by style'}
-                        </DropdownToggle>
-                        <DropdownMenu>
-                            {styleDropdownOptions}
-                        </DropdownMenu>
-                    </Dropdown>
-                    <Dropdown isOpen={this.state.isSortDropdownOpen}
-                              toggle={() => this.toggle(SORT_DROPDOWN)}>
-                        <DropdownToggle caret>
-                            {`Sort by: ${selectedSortType}` || 'Sort by:'}
-                        </DropdownToggle>
-                        <DropdownMenu>
-                            {sortDropDownOptions}
-                        </DropdownMenu>
-                    </Dropdown>
+                    <Dropdown items={genreDropdownOptions} title={selectedGenre || 'Filter by genre'}></Dropdown>
+                    <Dropdown items={styleDropdownOptions} title={selectedStyle || 'Filter by style'}></Dropdown>
+                    <Dropdown items={sortDropDownOptions} title={`Sort by: ${selectedSortType}` || 'Sort by:'}></Dropdown>
                 </div>
                 <div
                     className={`results-container collection${collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL ? ' bigger-height' : ''}`}>

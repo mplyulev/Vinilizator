@@ -19,6 +19,7 @@ import Collection from './components/Collection';
 import ReleaseFull from './components/ReleaseFull';
 import Account from './components/Account';
 import SellModal from './components/SellModal';
+import ChatModal from './components/ChatModal';
 import Snackbar from './components/common/Snackbar';
 import Authentication from "./components/Authentication";
 import LightboxWrapper from './components/common/LightboxWrapper';
@@ -85,6 +86,7 @@ class App extends Component {
             market: [],
             isNavBarOpened: false,
             isSellModalOpened: false,
+            isChatModalOpened: false,
             currentUser: null,
             isSearchItemInCollection: false,
             isSearchItemInWishlist: false,
@@ -146,6 +148,13 @@ class App extends Component {
         });
     };
 
+    toggleChatModal = () => {
+        console.log('toggliung chat');
+        this.setState({
+            isChatModalOpened: !this.state.isChatModalOpened
+        });
+    };
+
     searchQuery = (value, genre, style) => {
         if (value.length > 0) {
             this.setState({
@@ -183,38 +192,36 @@ class App extends Component {
 
     getRandomTrack = () => {
         const { favoriteStyles } = this.state;
-        const style =   favoriteStyles[Math.floor(Math.random() * favoriteStyles.length)];
+        // const style = favoriteStyles[Math.floor(Math.random() * favoriteStyles.length)];
+
         let release = null;
-        this.setState({ randomTrackRequestPending: true });
-        axios.get(`${DOGS_SEARCH_URL}?q=&type=${DATA_TYPE_RELEASE}&style=${style}&format=Vinyl&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`).then(res => {
-            const randomPage = Math.floor(Math.random() * res.data.pagination.pages) + 1;
-            axios.get(`${DOGS_SEARCH_URL}?q=&type=${DATA_TYPE_RELEASE}&style=${style}&format=Vinyl&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}&page=${randomPage}`).then(res => {
-                const randomRelease = res.data.results[Math.floor(Math.random() * res.data.results.length)];
-                axios.get(`${DOGS_GET_ITEM_URL[randomRelease.type]}/${randomRelease.id}?key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`).then((res) => {
-                    release = res.data;
-                    console.log(release);
-                    const track = release && release.tracklist[Math.floor(Math.random() * release.tracklist.length)];
-                    const trackTitle = `${track && track.artists ? track.artists[0].name : release.artists[0].name} - ${track.title}`;
-                    const query = `${track && track.artists ? track.artists[0].name : release && release.artists[0].name}+${track.title}`;
-                    const youtube = new YouTubeApi('AIzaSyCclzAC_wEB6H41XMpsFQuqPwG7JqQzAck');
-
-                    youtube.searchVideos(query, 1)
-                        .then(results => {
-                            this.setState({ randomTrackRequestPending: false });
-                            results[0] ? this.setState({
-                                videoId: results[0].id,
-                                playerTitle: trackTitle,
-                                playerRelease: release
-                            }) : this.setState({ videoId: '' })
-                        })
-                        .catch(console.log);
-                });
-            });
-        });
-
-
-
-
+        // this.setState({ randomTrackRequestPending: true });
+        // axios.get(`${DOGS_SEARCH_URL}?q=&type=${DATA_TYPE_RELEASE}&style=${style}&format=Vinyl&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`).then(res => {
+        //     const randomPage = Math.floor(Math.random() * res.data.pagination.pages) + 1;
+        //     axios.get(`${DOGS_SEARCH_URL}?q=&type=${DATA_TYPE_RELEASE}&style=${style}&format=Vinyl&key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}&page=${randomPage}`).then(res => {
+        //         console.log('reposne', res);
+        //         const randomRelease = res.data.results[Math.floor(Math.random() * res.data.results.length)];
+        //         axios.get(`${DOGS_GET_ITEM_URL[randomRelease.type]}/${randomRelease.id}?key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`).then((res) => {
+        //             release = res.data;
+        //             console.log(release);
+        //             const track = release && release.tracklist[Math.floor(Math.random() * release.tracklist.length)];
+        //             const trackTitle = `${track && track.artists ? track.artists[0].name : release.artists[0].name} - ${track.title}`;
+        //             const query = `${track && track.artists ? track.artists[0].name : release && release.artists[0].name}+${track.title}`;
+        //             const youtube = new YouTubeApi('AIzaSyCclzAC_wEB6H41XMpsFQuqPwG7JqQzAck');
+        //
+        //             youtube.searchVideos(query, 1)
+        //                 .then(results => {
+        //                     this.setState({ randomTrackRequestPending: false });
+        //                     results[0] ? this.setState({
+        //                         videoId: results[0].id,
+        //                         playerTitle: trackTitle,
+        //                         playerRelease: release
+        //                     }) : this.setState({ videoId: '' })
+        //                 })
+        //                 .catch(console.log);
+        //         });
+        //     });
+        // });
     };
 
     makeSearchRequest = (searchQuery, genre, style) => {
@@ -346,6 +353,7 @@ class App extends Component {
 
     getSpecificUser = (userId) => {
         this.setState({requestPending: true});
+        console.log(userId);
         axios.get('/api/controllers/collection/getUser',  {params: {
             userId
         }}).then((res) => {
@@ -559,6 +567,7 @@ class App extends Component {
             market,
             isNavBarOpened,
             isSellModalOpened,
+            isChatModalOpened,
             currentUser,
             collectionType,
             isSearchItemInCollection,
@@ -589,6 +598,8 @@ class App extends Component {
                                                          addToSellList={this.addToSellList}
                                                          currentRelease={currentRelease}
                                                          isSellModalOpened={isSellModalOpened}/>}
+                        {isChatModalOpened && <ChatModal toggleChatModal={this.toggleChatModal}
+                                                         isChatModalOpened={isChatModalOpened}/>}
                         <AppNavBar isNavBarOpened={isNavBarOpened}
                                    showPlayer={showPlayer}
                                    playTracksFromCollection={playTracksFromCollection}
@@ -714,6 +725,7 @@ class App extends Component {
                                                                   isInMarket={true}
                                                                   getSpecificUser={this.getSpecificUser}
                                                                   history={history}
+                                                                  toggleChatModal={this.toggleChatModal}
                                                                   getCollection={this.getCollection}
                                                                   release={currentRelease}/>}/>
                                 <Route path={ROUTE_ACCOUNT}
@@ -735,6 +747,7 @@ class App extends Component {
                                                                   closeLightbox={this.closeLightbox}
                                                                   openSnackbar={this.openSnackbar}
                                                                   history={history}
+                                                                  toggleSellModal={this.toggleSellModal}
                                                                   collectionType={collectionType}
                                                                   isOtherUserCollection={true}
                                                                   getCollection={this.getCollection}

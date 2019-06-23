@@ -1,19 +1,17 @@
 import React, { Component, Fragment } from 'react';
+import Dropdown from './common/DropdownMultiSelect';
+
 import {
     InputGroup,
     InputGroupAddon,
     Input,
-    Dropdown,
-    DropdownToggle ,
-    DropdownMenu,
     DropdownItem
 } from 'reactstrap';
 import _ from 'lodash';
 import ReactTooltip from 'react-tooltip';
 import Pagination from './common/Pagination';
 import SearchItem from "./SearchItem";
-import { GENRE_DROPDOWN, GENRES, GENRES_ALL, STYLE_DROPDOWN } from '../constants';
-import { Scrollbars } from 'react-custom-scrollbars';
+import { GENRES, GENRES_ALL } from '../constants';
 
 class SearchPage extends Component {
     constructor(props) {
@@ -67,20 +65,7 @@ class SearchPage extends Component {
         this.props.makeSearchRequest(this.props.searchQueryString, selectedGenre && selectedGenre.name !== GENRES_ALL ? selectedGenre.name : '', style)
     };
 
-    toggle = (type) => {
-        type === GENRE_DROPDOWN
-            ? this.setState(prevState => ({
-                isGenreDropdownOpen: !prevState.isGenreDropdownOpen,
-                isStyleDropdownOpen: false
-            }))
-            : this.setState(prevState => ({
-                isStyleDropdownOpen: !prevState.isStyleDropdownOpen,
-                isGenreDropdownOpen: false,
-            }));
-    };
-
     render () {
-        console.log('rendering');
         const {
             getNextPageResult,
             requestPending,
@@ -91,10 +76,10 @@ class SearchPage extends Component {
             clearCurrentRelease
         } = this.props;
 
-        const { selectedGenre, selectedStyle, isGenreDropdownOpen, isStyleDropdownOpen } = this.state;
-        console.log(queryResult);
+        const { selectedGenre, selectedStyle} = this.state;
+
         ReactTooltip.rebuild();
-        const dropdownOptions = Object.values(GENRES).map(genre =>
+        const genreDropdownOptions = Object.values(GENRES).map(genre =>
             <DropdownItem onClick={() => this.setSelectedGenre(genre)}
                           className={selectedGenre && selectedGenre.name === genre.name ? 'selected' : ''}
                           value={genre.name}>
@@ -128,7 +113,7 @@ class SearchPage extends Component {
                 </DropdownItem>
             );
 
-
+        console.log('asd', queryResult);
 
         return (
             <div>
@@ -136,29 +121,8 @@ class SearchPage extends Component {
                     <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
                     <Input onChange={this.onChange} value={this.state.searchQueryString} />
                 </InputGroup>
-                <Dropdown isOpen={isGenreDropdownOpen} toggle={() => this.toggle(GENRE_DROPDOWN)}>
-                    <DropdownToggle caret>
-                        {selectedGenre ? selectedGenre.name : `Filter by genre`}
-                    </DropdownToggle>
-                    <DropdownMenu>
-                        {dropdownOptions}
-                    </DropdownMenu>
-                </Dropdown>
-                <Dropdown isOpen={isStyleDropdownOpen} toggle={() => this.toggle(STYLE_DROPDOWN)}>
-                    <DropdownToggle caret>
-                        {selectedStyle ? selectedStyle : `Filter by style`}
-                    </DropdownToggle>
-                    <DropdownMenu className="styles-dropdown">
-                        <Scrollbars autoHeight
-                                    autoHeightMax={300}
-                                    className="scrollbar"
-                                    autoHideTimeout={1000}
-                                    autoHideDuration={500}
-                                    style={{width: `100%`}}>
-                        {styleDropdownOptions}
-                        </Scrollbars>
-                    </DropdownMenu>
-                </Dropdown>
+                <Dropdown items={genreDropdownOptions} title={selectedGenre ? selectedGenre.name : `Filter by genre`}></Dropdown>
+                <Dropdown items={styleDropdownOptions} title={selectedStyle || 'Filter by style'}></Dropdown>
                 {queryResult.pagination.pages > 1 && <Pagination getNextPageResult={getNextPageResult}
                                                                  style={selectedStyle}
                                                                  genre={selectedGenre}
@@ -168,9 +132,12 @@ class SearchPage extends Component {
                 <Fragment>
                     <div className="search-result-container">
                         {!_.isEmpty(queryResult.results) && <div className="filter-container">
-                                <span className="result-filter no-pointer">
-                                    Results: {queryResult.pagination.items}
-                                </span>
+                                {/*<span className="result-filter no-pointer">*/}
+                                {/*    Results: {queryResult.pagination.items}*/}
+                                {/*</span>*/}
+                                <p className="result-filter no-pointer">
+                                    Page: {queryResult.pagination.page} from {queryResult.pagination.pages}
+                                </p>
                         </div>}
                         <div className="results-container">
                             {requestPending ?

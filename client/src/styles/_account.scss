@@ -5,10 +5,15 @@
         top: 100px;
         margin: 0 auto;
         width: 50%;
+        min-width: 320px;
         padding: 10px;
         box-shadow: 3px 2px 17px 2px $background-color-dimgray;
 
         button {
+            width: 300px;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
             background-color: $background-color-black;
 
             &:hover {
