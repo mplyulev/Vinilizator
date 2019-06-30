@@ -101,7 +101,8 @@ class App extends Component {
             playerTitle: '',
             playerRelease: null,
             videoId: '',
-            randomTrackRequestPending: false
+            randomTrackRequestPending: false,
+            pathNameLastPart: ''
         };
 
         this.getCollection = this.getCollection.bind(this);
@@ -273,10 +274,13 @@ class App extends Component {
         }
     };
 
-    componentDidMount() {
+    async componentDidMount() {
+        console.log('mount');
         document.addEventListener('click', this.closeOnOutsideClick);
         const { token } = this.state;
         const { location } = this.props;
+        let pathname = location.pathname;
+
 
         if (!token && location.pathname !== ROUTE_SIGN_UP && location.pathname !== ROUTE_SIGN_IN) {
             this.setState({ lastRequestedRoute: this.props.location.pathname });
@@ -287,21 +291,36 @@ class App extends Component {
             this.getCollection();
         }
 
-        let pathname = location.pathname;
+
 
         if (pathname[pathname.length - 1] === '/') {
             pathname = pathname.substring(0, pathname.length - 1)
         }
 
-        // const pathnameParts = pathname.split('/');
-        // pathnameParts.forEach((element, index) => {
-        //     if (element === 'release' && pathnameParts[index+1]) {
-        //         console.log('cmon');
-        //         this.getSpecificResult(DATA_TYPE_RELEASE, pathnameParts[index + 1]);
-        //     } else if () {
-        //
-        //     }
-        // });
+
+        let pathnameLastPart = '';
+
+        console.log('update');
+        const pathnameParts = pathname.split('/');
+        pathnameParts.forEach((element, index) => {
+            if (element === 'release' && pathnameParts[index+1]) {
+                pathnameLastPart =  pathnameParts[index + 1];
+            }
+        });
+
+        if (ROUTE_COLLECTION && ROUTE_COLLECTION && pathnameLastPart) {
+            console.log('in');
+            await this.getCollection().then(() => {
+                console.log(this.state);
+            });
+            console.log('got it ', test);
+            const currentRelease = this.state.vinylCollection.find(release => release.id === pathnameLastPart);
+            console.log(this.state.vinylCollection, pathnameLastPart);
+            console.log(currentRelease);
+
+            // this.setSpecificResult(this.state.curre, COLLECTION_TYPE_COLLECTION, false);
+
+        }
 
         switch (pathname) {
             case ROUTE_COLLECTION || ROUTE_WISHLIST || ROUTE_FOR_SELL:
@@ -327,12 +346,12 @@ class App extends Component {
         // const pathnameParts = nextPath.split('/');
         // pathnameParts.forEach((element, index) => {
         //     if (element === 'release' && pathnameParts[index+1]) {
-        //         console.log('cmon');
+        //         console.log(pathnameParts[index + 1]);
+        //         this.setState({ pathnameLastPart: pathnameParts[index + 1] });
         //         this.getSpecificResult(DATA_TYPE_RELEASE, pathnameParts[index + 1]);
-        //     } else if {
-        //
         //     }
         // });
+
 
         if (prevPath !== nextPath && nextPath !== ROUTE_SIGN_UP && nextPath !== ROUTE_SIGN_IN) {
             if (!token) {
@@ -392,6 +411,7 @@ class App extends Component {
     };
 
     setSpecificResult = (release, collectionType, isOtherUserCollection) => {
+
         this.clearCurrentRelease();
         const { currentUser } = this.state;
         this.setState({ currentRelease: release }, () => {
@@ -576,6 +596,7 @@ class App extends Component {
     };
 
     render() {
+        console.log('render');
         const {
             currentQueryResult,
             searchQuery,
