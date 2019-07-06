@@ -116,25 +116,32 @@ class Collection extends Component {
         const { data, collectionType } = this.props;
         const dataForFiltering = filteredCollection || data;
         this.setState({ selectedSortType: sortType });
+        console.log('sort type', sortType)
         switch(sortType) {
+        
             case SORT_TYPE_PRICE:
+                console.log('data', dataForFiltering)
                 dataForFiltering.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
-                this.setState({ filteredCollection: dataForFiltering });
+               
+                break;
+              
             case SORT_TYPE_ALPHABET:
                 dataForFiltering.sort((a, b) => {
                     var artistA = a.artists_sort.toUpperCase();
                     var artistB = b.artists_sort.toUpperCase();
                     return (artistA < artistB) ? -1 : (artistA > artistB) ? 1 : 0;
                 });
-                this.setState({ filteredCollection: dataForFiltering });
+                break;
+               
             case SORT_TYPE_SOLDBY_ALPHABET:
                 dataForFiltering.sort((a, b) => {
                     var soldByA = a.soldBy.username.toUpperCase();
                     var soldByB = b.soldBy.username.toUpperCase();
                     return (soldByA < soldByB) ? -1 : (soldByA > soldByB) ? 1 : 0;
                 });
-                this.setState({ filteredCollection: dataForFiltering });
+                
         }
+        this.setState({ filteredCollection: dataForFiltering });
     };
 
     componentDidMount() {
@@ -213,7 +220,7 @@ class Collection extends Component {
         const styleDropdownOptions = representedStyles.map(style =>
             <DropdownItem className={selectedStyle === style ? 'selected' : ''}
                           key={style}
-                          onClick={(event) => this.setSelectedStyle(event.target.innerText)}
+                          onClick={(event) => this.setSecomponentDidMountlectedStyle(event.target.innerText)}
                           value={style}>
                 {style}
             </DropdownItem>
@@ -263,7 +270,7 @@ class Collection extends Component {
                                                     isOtherUserCollection={isOtherUserCollection}
                                                     release={result}
                                                     currentRelease={currentRelease}
-                                                    requestPending={requestPending}
+                                                    requcomponentDidMountestPending={requestPending}
                                                     clearCurrentRelease={clearCurrentRelease}
                                                     collectionType={collectionType}
                                                     filterType={DATA_TYPE_RELEASE}
