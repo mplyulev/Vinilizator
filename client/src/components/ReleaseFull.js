@@ -23,8 +23,11 @@ class ReleaseFull extends Component {
         super(props);
 
         this.state = {
-            videoId: ''
+            videoId: '',
+            noResult: false
         }
+
+        this.timeout = null;
     }
 
     componentDidMount() {
@@ -44,7 +47,13 @@ class ReleaseFull extends Component {
                     }) : this.setState({ videoId: '' })
                 })
         }
-       
+       this.timeout = setTimeout(() => {
+            if (_.isEmpty(release)) {
+                this.setState({ noResult: true });
+            }
+
+            clearTimeout(this.timeout);
+       }, 5000);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -186,7 +195,7 @@ class ReleaseFull extends Component {
     };
 
     render () {
-        const { youtubeSrc } = this.state;
+        const { youtubeSrc, noResult } = this.state;
         
         const {
             release,
@@ -295,7 +304,7 @@ class ReleaseFull extends Component {
 
         return (
             <Fragment>
-                {!_.isEmpty(release) 
+            {!_.isEmpty(release) 
                &&
                 <div className="release-data-container">
                     {isInMarket || isForSell || (isOtherUserCollection && release.forSale) ?
@@ -335,7 +344,7 @@ class ReleaseFull extends Component {
                     <div className="tracklist-youtube-wrapper">
                         <div className="tracklist-wrapper">
                             <h3 className="title">Tracklist</h3>
-                            {tracklistTemplate}
+                            this.props.          {tracklistTemplate}
                         </div>
                         {/*<iframe id="ytplayer" type="text/html" width="640" height="360"*/}
                         {/*        src={youtubeSrc}*/}
@@ -443,11 +452,13 @@ class ReleaseFull extends Component {
                         }
                     </div>
                     </div> }
-           {!requestPending && _.isEmpty(release) &&
+           {!requestPending && _.isEmpty(release) && !noResult &&
                         <div className="loader-wrapper">
                             <div className="loading"></div>
                             <span className="loading-text">LOADING...</span>
                         </div>}
+
+            {noResult && <div className="no-results release"><p>RELEASE NOT FOUND</p></div>}
             </Fragment>
         );
     }
