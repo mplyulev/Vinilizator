@@ -112,17 +112,13 @@ class Collection extends Component {
 
 
     sortCollection = (sortType) => {
-        console.log(sortType);
         const { filteredCollection } = this.state;
         const { data, collectionType } = this.props;
-        console.log(data);
         const dataForFiltering = filteredCollection || data;
         this.setState({ selectedSortType: sortType });
         switch(sortType) {
             case SORT_TYPE_PRICE:
-                console.log(dataForFiltering);
                 dataForFiltering.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
-                console.log(dataForFiltering);
                 this.setState({ filteredCollection: dataForFiltering });
             case SORT_TYPE_ALPHABET:
                 dataForFiltering.sort((a, b) => {
@@ -154,7 +150,6 @@ class Collection extends Component {
     }
 
     render () {
-        console.log('rerender');
         ReactTooltip.rebuild();
         const {
             history,
@@ -232,8 +227,6 @@ class Collection extends Component {
                 {sortType}
             </DropdownItem>
         );
-
-        console.log(!_.isEmpty(data) && !requestPending && (!hideCollection || collectionType !== COLLECTION_TYPE_COLLECTION));
 
         styleDropdownOptions.unshift(<DropdownItem className={selectedStyle === STYLES_ALL ? 'selected' : ''}
                                                    onClick={(event) => this.setSelectedStyle(event.target.innerText)}

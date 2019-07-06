@@ -9,6 +9,24 @@
   }
 }
 
+
+.no-results {
+    position: relative;
+    top: 50%;
+    margin-top: 100px;
+    text-align: center;
+
+    p {
+        font-size: 40px;
+        font-weight: 700;
+    }
+
+    &.release {
+      margin-top: 0;
+      transform: translateY(-50%);
+    }
+}
+
 .sell-modal {
   height: 100vh;
   margin: 0 auto;

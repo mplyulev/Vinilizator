@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { Button } from 'reactstrap/dist/reactstrap.es'
 import axios from 'axios';
 import YouTube from 'react-youtube';
+import _ from 'lodash';
 
 import {
     CONDITION,
@@ -29,35 +30,40 @@ class ReleaseFull extends Component {
     componentDidMount() {
         const { release } = this.props
 
-        const track = release && release.tracklist[0];
-        const trackTitle = `${track && track.artists ? track.artists[0].name : release.artists[0].name} - ${track.title}`;
-        const query = `${track && track.artists ? track.artists[0].name : release && release.artists[0].name}+${track.title}`;
-
-        youtube.searchVideos(query, 1)
-            .then(results => {
-                results[0] ? this.setState({
-                    videoId: results[0].id,
-                    playerTitle: trackTitle,
-                    playerRelease: release
-                }) : this.setState({ videoId: '' })
-            })
+        if (!_.isEmpty(release)) {
+            const track = release && release.tracklist[0];
+            const trackTitle = `${track && track.artists ? track.artists[0].name : release.artists[0].name} - ${track.title}`;
+            const query = `${track && track.artists ? track.artists[0].name : release && release.artists[0].name}+${track.title}`;
+    
+            youtube.searchVideos(query, 1)
+                .then(results => {
+                    results[0] ? this.setState({
+                        videoId: results[0].id,
+                        playerTitle: trackTitle,
+                        playerRelease: release
+                    }) : this.setState({ videoId: '' })
+                })
+        }
+       
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
         const { release } = prevProps;
-        const newRelease = this.props.release;
-        const track = release.tracklist[0];
-        const newTrack = newRelease.tracklist[0];
-        const query = `${track && track.artists ? track.artists[0].name : release && release.artists[0].name}+${track.title}`;
-        const newQuery =  `${newTrack && newTrack.artists ? newTrack.artists[0].name : newRelease && newRelease.artists[0].name}+${newTrack.title}`;
-
-        if (query !== newQuery) {
-            youtube.searchVideos(newQuery, 1)
-                .then(results => {
-                    results[0] ? this.setState({
-                        videoId: results[0].id,
-                    }) : this.setState({ videoId: '' })
-                })
+        if (!_.isEmpty(release)) {
+            const newRelease = this.props.release;
+            const track = release.tracklist[0];
+            const newTrack = newRelease.tracklist[0];
+            const query = `${track && track.artists ? track.artists[0].name : release && release.artists[0].name}+${track.title}`;
+            const newQuery =  `${newTrack && newTrack.artists ? newTrack.artists[0].name : newRelease && newRelease.artists[0].name}+${newTrack.title}`;
+    
+            if (query !== newQuery) {
+                youtube.searchVideos(newQuery, 1)
+                    .then(results => {
+                        results[0] ? this.setState({
+                            videoId: results[0].id,
+                        }) : this.setState({ videoId: '' })
+                    })
+            }
         }
     }
 
@@ -181,9 +187,10 @@ class ReleaseFull extends Component {
 
     render () {
         const { youtubeSrc } = this.state;
-
+        
         const {
             release,
+            requestPending,
             openLightbox,
             isInCollection,
             toggleSellModal,
@@ -197,7 +204,7 @@ class ReleaseFull extends Component {
             getSpecificUser,
             toggleChatModal
         } = this.props;
-
+        console.log('pending',requestPending)
         const {
             title,
             year,
@@ -205,77 +212,91 @@ class ReleaseFull extends Component {
             released,
             formats,
             tracklist
-        } = release;
+        } = release || {};
+       let images;
+       let artists;
+       let genres;
+       let labels;
+       let styles;
+       let formatDescription;
+       let tracklistTemplate;
+       let opts;
 
-        const artists = release.artists && release.artists.map((artist) => {
-            return (
-                <span key={artist.name}>{` ${artist.name}  ${artist.join}`}</span>
-            )
-        });
-
-        const images = release.images && release.images.map(img => {
-            return img.resource_url;
-        });
-
-        const genres = release.genres && release.genres
-            ? release.genres.map((genre, index) => {
+        if (!_.isEmpty(release)) {
+            artists =  release.artists && release.artists.map((artist) => {
                 return (
-                    <span key={genre}>{genre}{index !== release.genres.length - 1 ? ', ' : ''}</span>
+                    <span key={artist.name}>{` ${artist.name}  ${artist.join}`}</span>
                 )
-            })
-            : '';
-
-        const labels = release.labels && release.labels
-            ? release.labels.map((label, index) => {
+            });
+    
+            images = release.images && release.images.map(img => {
+                return img.resource_url;
+            });
+    
+            genres = release.genres && release.genres
+                ? release.genres.map((genre, index) => {
+                    return (
+                        <span key={genre}>{genre}{index !== release.genres.length - 1 ? ', ' : ''}</span>
+                    )
+                })
+                : '';
+    
+            labels = release.labels && release.labels
+                ? release.labels.map((label, index) => {
+                    return (
+                        <span key={label.name}>{label.name}{index !== release.labels.length - 1 ? ', ' : ''}</span>
+                    )
+                })
+                : '';
+    
+            formatDescription = formats && formats[0] && formats[0].descriptions
+                ? formats[0].descriptions.map((description) => {
+                    return (
+                        <span key={description}>,{description}</span>
+                    )
+                })
+                : '';
+    
+            styles = release.styles ?
+                release.styles.map((style, index) => {
+                    return (
+                        <span key={style}>{style}{index !== release.styles.length - 1 ? ', ' : ''}</span>
+                    )
+                })
+                : '';
+    
+            tracklistTemplate = tracklist && tracklist.map(track => {
+    
                 return (
-                    <span key={label.name}>{label.name}{index !== release.labels.length - 1 ? ', ' : ''}</span>
-                )
-            })
-            : '';
+                    <div key={track.title} className="track" onClick={() => this.playTrack(release, track)}>
+                        <span>{track.position}.</span>
+                        {track.artists && <Fragment><span>{track.artists[0].name}</span>
+                            <span>-</span></Fragment>}
+                        <span>{track.title}</span>
+                        <span>{track.duration}</span>
+                    </div>
+                );
+            });
+    
+            opts = {
+                height: '220',
+                width: '220',
+                videoId: this.props.videoId,
+                videoEmbeddable: true,
+                playerVars: {
+                    controls: true,
+                    autoplay: this.state.isPlayerPlaying ? 1 : 0,
+                    videoEmbeddable: true
+                }
+            };
+        }
 
-        const formatDescription = formats[0] && formats[0].descriptions
-            ? formats[0].descriptions.map((description) => {
-                return (
-                    <span key={description}>,{description}</span>
-                )
-            })
-            : '';
-
-        const styles = release.styles ?
-            release.styles.map((style, index) => {
-                return (
-                    <span key={style}>{style}{index !== release.styles.length - 1 ? ', ' : ''}</span>
-                )
-            })
-            : '';
-
-        const tracklistTemplate = tracklist.map(track => {
-
-            return (
-                <div key={track.title} className="track" onClick={() => this.playTrack(release, track)}>
-                    <span>{track.position}.</span>
-                    {track.artists && <Fragment><span>{track.artists[0].name}</span>
-                        <span>-</span></Fragment>}
-                    <span>{track.title}</span>
-                    <span>{track.duration}</span>
-                </div>
-            );
-        });
-
-        const opts = {
-            height: '220',
-            width: '220',
-            videoId: this.props.videoId,
-            videoEmbeddable: true,
-            playerVars: {
-                controls: true,
-                autoplay: this.state.isPlayerPlaying ? 1 : 0,
-                videoEmbeddable: true
-            }
-        };
+       
 
         return (
             <Fragment>
+                {!_.isEmpty(release) 
+               &&
                 <div className="release-data-container">
                     {isInMarket || isForSell || (isOtherUserCollection && release.forSale) ?
                         <div className="selling-info">
@@ -421,7 +442,8 @@ class ReleaseFull extends Component {
                             : null
                         }
                     </div>
-                </div>
+                    </div> }
+           {_.isEmpty(release) && !requestPending ? <div className="no-results release"><p>RELEASE NOT FOUND    </p> </div> : null}
             </Fragment>
         );
     }

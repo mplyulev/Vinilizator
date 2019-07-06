@@ -275,7 +275,6 @@ class App extends Component {
     };
 
     async componentDidMount() {
-        console.log('mount');
         document.addEventListener('click', this.closeOnOutsideClick);
         const { token } = this.state;
         const { location } = this.props;
@@ -291,37 +290,15 @@ class App extends Component {
             this.getCollection();
         }
 
-
-
-        if (pathname[pathname.length - 1] === '/') {
-            pathname = pathname.substring(0, pathname.length - 1)
-        }
-
-
-        let pathnameLastPart = '';
-
-        console.log('update');
-        const pathnameParts = pathname.split('/');
+      const pathnameParts = pathname.split('/');
         pathnameParts.forEach((element, index) => {
             if (element === 'release' && pathnameParts[index+1]) {
-                pathnameLastPart =  pathnameParts[index + 1];
+                console.log(pathnameParts[index + 1]);
+                this.setState({ pathnameLastPart: pathnameParts[index + 1] });
+                this.getSpecificResult(DATA_TYPE_RELEASE, pathnameParts[index + 1], true);
             }
         });
-
-        if (ROUTE_COLLECTION && ROUTE_COLLECTION && pathnameLastPart) {
-            console.log('in');
-            await this.getCollection().then(() => {
-                console.log(this.state);
-            });
-            console.log('got it ', test);
-            const currentRelease = this.state.vinylCollection.find(release => release.id === pathnameLastPart);
-            console.log(this.state.vinylCollection, pathnameLastPart);
-            console.log(currentRelease);
-
-            // this.setSpecificResult(this.state.curre, COLLECTION_TYPE_COLLECTION, false);
-
-        }
-
+ 
         switch (pathname) {
             case ROUTE_COLLECTION || ROUTE_WISHLIST || ROUTE_FOR_SELL:
                 this.getCollection();
@@ -339,18 +316,16 @@ class App extends Component {
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
+        console.log('derived');
         const {token} = prevState;
         const prevPath = prevState.prevProps.location.pathname;
-        const nextPath = nextProps.location.pathname;
+        let nextPath = nextProps.location.pathname;
 
-        // const pathnameParts = nextPath.split('/');
-        // pathnameParts.forEach((element, index) => {
-        //     if (element === 'release' && pathnameParts[index+1]) {
-        //         console.log(pathnameParts[index + 1]);
-        //         this.setState({ pathnameLastPart: pathnameParts[index + 1] });
-        //         this.getSpecificResult(DATA_TYPE_RELEASE, pathnameParts[index + 1]);
-        //     }
-        // });
+   
+
+        if (nextPath[nextPath.length - 1] === '/') {
+            nextPath = nextPath.substring(0, nextPath.length - 1)
+        }
 
 
         if (prevPath !== nextPath && nextPath !== ROUTE_SIGN_UP && nextPath !== ROUTE_SIGN_IN) {
@@ -466,19 +441,21 @@ class App extends Component {
         });
     };
 
-    async getSpecificResult(type, id) {
-        console.log('enetering');
+    async getSpecificResult(type, id, isInitialLoad) {
         this.clearCurrentRelease();
+        this.setState({requestPending:true});
         clearTimeout(this.releaseAnimationTimeout);
         axios.get(`${DOGS_GET_ITEM_URL[type]}/${id}?key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
-                console.log(response);
-                this.setState({currentRelease: response.data}, () => {
+                this.setState({currentRelease: response.data,}, () => {
                     this.releaseAnimationTimeout = setTimeout(() => {
                         this.setReleaseStatus(response.data, this.state.vinylCollection, this.state.wishlist);
-                        this.props.history.push(`${type}/${id}`);
-                    }, 600);
+                        if (!isInitialLoad) {
+                            this.props.history.push(`${type}/${id}`) // there is a prolem with search page blinking - fix it 
+                        }
+                        }, 600);
                 });
+                this.setState({ requestPending: false });
             })
             .catch(error => {
                 console.error(error);
@@ -680,6 +657,7 @@ class App extends Component {
                                                                   getCollection={this.getCollection}
                                                                   toggleSellModal={this.toggleSellModal}
                                                                   openSnackbar={this.openSnackbar}
+                                                                  requestPending={requestPending}
                                                                   isSearchItemInCollection={isSearchItemInCollection}
                                                                   isSearchItemForSale={isSearchItemForSale}
                                                                   isSearchItemInWishlist={isSearchItemInWishlist}
@@ -712,6 +690,7 @@ class App extends Component {
                                        render={() => <ReleaseFull openLightbox={this.openLightbox}
                                                                   closeLightbox={this.closeLightbox}
                                                                   openSnackbar={this.openSnackbar}
+                                                                  requestPending={requestPending}
                                                                   isInCollection={true}
                                                                   getCollection={this.getCollection}
                                                                   toggleSellModal={this.toggleSellModal}
@@ -731,6 +710,7 @@ class App extends Component {
                                                                   closeLightbox={this.closeLightbox}
                                                                   getCollection={this.getCollection}
                                                                   openSnackbar={this.openSnackbar}
+                                                                  requestPending={requestPending}
                                                                   isInWishlist={true}
                                                                   history={history}
                                                                   release={currentRelease}/>}/>
@@ -750,6 +730,7 @@ class App extends Component {
                                        render={() => <ReleaseFull openLightbox={this.openLightbox}
                                                                   closeLightbox={this.closeLightbox}
                                                                   openSnackbar={this.openSnackbar}
+                                                                  requestPending={requestPending}
                                                                   isForSell={true}
                                                                   toggleSellModal={this.toggleSellModal}
                                                                   getCollection={this.getCollection}
@@ -772,6 +753,7 @@ class App extends Component {
                                                                   isInMarket={true}
                                                                   getSpecificUser={this.getSpecificUser}
                                                                   history={history}
+                                                                  requestPending={requestPending}
                                                                   toggleChatModal={this.toggleChatModal}
                                                                   getCollection={this.getCollection}
                                                                   release={currentRelease}/>}/>
@@ -798,6 +780,7 @@ class App extends Component {
                                                                   collectionType={collectionType}
                                                                   isOtherUserCollection={true}
                                                                   getCollection={this.getCollection}
+                                                                  requestPending={requestPending}
                                                                   release={currentRelease}/>}/>
                                 <Redirect to="/404"/>
                             </Switch>
