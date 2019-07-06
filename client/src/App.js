@@ -151,7 +151,6 @@ class App extends Component {
     };
 
     toggleChatModal = (user) => {
-        console.log('toggliung chat');
         this.setState({
             messageTo: user,
             isChatModalOpened: !this.state.isChatModalOpened
@@ -293,7 +292,6 @@ class App extends Component {
       const pathnameParts = pathname.split('/');
         pathnameParts.forEach((element, index) => {
             if (element === 'release' && pathnameParts[index+1]) {
-                console.log(pathnameParts[index + 1]);
                 this.setState({ pathnameLastPart: pathnameParts[index + 1] });
                 this.getSpecificResult(DATA_TYPE_RELEASE, pathnameParts[index + 1], true);
             }
@@ -316,7 +314,6 @@ class App extends Component {
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        console.log('derived');
         const {token} = prevState;
         const prevPath = prevState.prevProps.location.pathname;
         let nextPath = nextProps.location.pathname;
@@ -370,7 +367,6 @@ class App extends Component {
 
     getSpecificUser = (userId) => {
         this.setState({requestPending: true});
-        console.log(userId);
         axios.get('/api/controllers/collection/getUser',  {params: {
             userId
         }}).then((res) => {
@@ -443,7 +439,9 @@ class App extends Component {
 
     async getSpecificResult(type, id, isInitialLoad) {
         this.clearCurrentRelease();
-        this.setState({requestPending:true});
+        if (isInitialLoad) {
+            this.setState({ requestPending: true });
+        }
         clearTimeout(this.releaseAnimationTimeout);
         axios.get(`${DOGS_GET_ITEM_URL[type]}/${id}?key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
             .then(response => {
@@ -455,6 +453,7 @@ class App extends Component {
                         }
                         }, 600);
                 });
+
                 this.setState({ requestPending: false });
             })
             .catch(error => {
@@ -573,7 +572,6 @@ class App extends Component {
     };
 
     render() {
-        console.log('render');
         const {
             currentQueryResult,
             searchQuery,

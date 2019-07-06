@@ -192,7 +192,7 @@ class Account extends Component {
         } = this.state;
 
         const { playTracksFromFavorites, togglePlayer } = this.props;
-        console.log('favoriteStyles', favoriteStyles);
+
         return (
             <div className={'account-wrapper'}>
                 <div className={`sign-up-wrapper change-password-wrapper${isFormOpened ? ' opened' : ''}`}>

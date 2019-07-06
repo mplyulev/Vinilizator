@@ -55,8 +55,6 @@ class AppNavBar extends Component {
     };
 
     mute = () => {
-
-        console.log(this.state.volume);
         this.setState({ isPlayerMuted: true, savedVolume: this.state.volume});
         player.mute();
         this.setVolume(0)

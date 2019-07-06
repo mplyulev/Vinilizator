@@ -204,7 +204,7 @@ class ReleaseFull extends Component {
             getSpecificUser,
             toggleChatModal
         } = this.props;
-        console.log('pending',requestPending)
+
         const {
             title,
             year,
@@ -291,7 +291,7 @@ class ReleaseFull extends Component {
             };
         }
 
-       
+    console.log('relase', release)
 
         return (
             <Fragment>
@@ -443,7 +443,11 @@ class ReleaseFull extends Component {
                         }
                     </div>
                     </div> }
-           {_.isEmpty(release) && !requestPending ? <div className="no-results release"><p>RELEASE NOT FOUND    </p> </div> : null}
+           {!requestPending && _.isEmpty(release) &&
+                        <div className="loader-wrapper">
+                            <div className="loading"></div>
+                            <span className="loading-text">LOADING...</span>
+                        </div>}
             </Fragment>
         );
     }
