@@ -273,6 +273,32 @@ class App extends Component {
         }
     };
 
+    getReleaseOnInitialMount(pathname) {
+        const pathnameParts = pathname.split('/');
+        pathnameParts.forEach(async (element, index) => {
+            if (element === 'release' && pathnameParts[index+1]) {
+                this.setState({ pathnameLastPart: pathnameParts[index + 1] });
+                if (pathnameParts.includes('market')) {
+                    this.setState({requestPending: true});
+                    axios.get('/api/controllers/collection/getMarket')
+                        .then((res) => {
+                            this.setState({requestPending: false});
+                            if (res.status === RESPONSE_STATUS_SUCCESS) {
+                                this.setState({
+                                    market: res.data.collection
+                                });
+                            const market = res.data.collection;
+                            const release = market.find(release => release.id == pathnameParts[index+1]);
+                            this.setSpecificResult(release, COLLECTION_TYPE_MARKET, false);
+                            }
+                        });
+                } else {
+                    this.getSpecificResult(DATA_TYPE_RELEASE, pathnameParts[index + 1], true);
+                }
+            }
+        });
+    }
+
     async componentDidMount() {
         document.addEventListener('click', this.closeOnOutsideClick);
         const { token } = this.state;
@@ -289,21 +315,7 @@ class App extends Component {
             this.getCollection();
         }
 
-      const pathnameParts = pathname.split('/');
-        pathnameParts.forEach(async (element, index) => {
-            if (element === 'release' && pathnameParts[index+1]) {
-                this.setState({ pathnameLastPart: pathnameParts[index + 1] });
-                if (pathnameParts.includes('market')) {
-                    console.log('setting0@');
-                   this.getMarket().then(res => {
-                       console.log(res, this.state.market)
-                   });
-                   this.setSpecificResult(pathnameParts[index + 1], COLLECTION_TYPE_MARKET, false);
-                } else {
-                    this.getSpecificResult(DATA_TYPE_RELEASE, pathnameParts[index + 1], true);
-                }
-            }
-        });
+        this.getReleaseOnInitialMount(pathname)
  
         switch (pathname) {
             case ROUTE_COLLECTION || ROUTE_WISHLIST || ROUTE_FOR_SELL:

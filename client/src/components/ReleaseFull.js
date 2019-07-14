@@ -311,7 +311,7 @@ class ReleaseFull extends Component {
                         <div className="selling-info">
                             {isInMarket && <Fragment>
                                 <span className="sold-by">Sold by: </span>
-                                {/* <span className="seller" onClick={() => getSpecificUser(release.soldBy.userId)}> {release.soldBy.username}</span> */}
+                                <span className="seller" onClick={() => getSpecificUser(release.soldBy.userId)}> {release.soldBy.username}</span>
                             </Fragment>}
                             <span>Price: {release.price} BGN</span>
                             <p className="condition"
