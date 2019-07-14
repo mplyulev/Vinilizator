@@ -19,6 +19,9 @@ const userSchema = new Schema({
     wishlist: {
         type: Array
     },
+    sold: {
+        type: Array
+    },
     favoriteStyles: {
         type: Array
     },

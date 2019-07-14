@@ -43,6 +43,7 @@ router.get('/getUser', function(req, res) {
 router.post('/addToCollection', function(req, res) {
     User.findById(req.body.userId, function(err, user) {
         if (user) {
+            console.log('asd', user)
             const isVinylAlreadyAdded = user.vinylCollection && user.vinylCollection.filter(vinyl => vinyl.id === req.body.release.id).length === 0 ? false : true;
 
             if (isVinylAlreadyAdded) {
@@ -148,6 +149,25 @@ router.post('/addToWishlist', function(req, res) {
                     }
                 });
             }
+        }
+    });
+});
+
+router.post('/addToSold', function(req, res) {
+    User.findById(req.body.userId, function(err, user) {
+        if (user) {
+            user.sold.push(req.body.release);
+            console.log('asd', user.sold);
+            user.save(function(err) {
+                if (err) {
+                    res.send({ success: false, msg: "Could't mark item as sold. Please try again later"});
+                } else {
+                    res.send({
+                        success: true,
+                        msg: req.body.release.artists_sort + ' - ' + req.body.release.title + ' successfully marked as sold!'
+                    })
+                }
+            });
         }
     });
 });

@@ -330,6 +330,7 @@ class App extends Component {
             case ROUTE_SEARCH:
                 this.makeSearchRequest('');
                 break;
+                default:
         }
     }
 
@@ -499,6 +500,7 @@ class App extends Component {
                 userId: localStorage.getItem('userId')
             }
         }).then((res) => {
+            console.log('asd',res)
             if (res.status === RESPONSE_STATUS_SUCCESS && res.data.user) {
                 this.setState({
                     shouldShowSelling: res.data.user.shouldShowSelling,
