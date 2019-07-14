@@ -290,10 +290,18 @@ class App extends Component {
         }
 
       const pathnameParts = pathname.split('/');
-        pathnameParts.forEach((element, index) => {
+        pathnameParts.forEach(async (element, index) => {
             if (element === 'release' && pathnameParts[index+1]) {
                 this.setState({ pathnameLastPart: pathnameParts[index + 1] });
-                this.getSpecificResult(DATA_TYPE_RELEASE, pathnameParts[index + 1], true);
+                if (pathnameParts.includes('market')) {
+                    console.log('setting0@');
+                   this.getMarket().then(res => {
+                       console.log(res, this.state.market)
+                   });
+                   this.setSpecificResult(pathnameParts[index + 1], COLLECTION_TYPE_MARKET, false);
+                } else {
+                    this.getSpecificResult(DATA_TYPE_RELEASE, pathnameParts[index + 1], true);
+                }
             }
         });
  
@@ -339,7 +347,7 @@ class App extends Component {
         return null;
     }
 
-    getMarket = () => {
+    async getMarket () {
         this.setState({requestPending: true});
         axios.get('/api/controllers/collection/getMarket')
             .then((res) => {
@@ -348,6 +356,9 @@ class App extends Component {
                     this.setState({
                         market: res.data.collection
                     });
+
+                    console.log(res.data.collection)
+                    return res.data.collection;
                 }
             });
     };

@@ -193,6 +193,8 @@ class ReleaseFull extends Component {
                 }) : this.setState({ videoId: '' })
             })
     };
+     
+    
 
     render () {
         const { youtubeSrc, noResult } = this.state;
@@ -230,7 +232,6 @@ class ReleaseFull extends Component {
        let formatDescription;
        let tracklistTemplate;
        let opts;
-
         if (!_.isEmpty(release)) {
             artists =  release.artists && release.artists.map((artist) => {
                 return (
@@ -299,8 +300,7 @@ class ReleaseFull extends Component {
                 }
             };
         }
-
-    console.log('relase', release)
+        
 
         return (
             <Fragment>
@@ -311,7 +311,7 @@ class ReleaseFull extends Component {
                         <div className="selling-info">
                             {isInMarket && <Fragment>
                                 <span className="sold-by">Sold by: </span>
-                                <span className="seller" onClick={() => getSpecificUser(release.soldBy.userId)}> {release.soldBy.username}</span>
+                                {/* <span className="seller" onClick={() => getSpecificUser(release.soldBy.userId)}> {release.soldBy.username}</span> */}
                             </Fragment>}
                             <span>Price: {release.price} BGN</span>
                             <p className="condition"
@@ -320,7 +320,7 @@ class ReleaseFull extends Component {
                                data-tip={release.condition && CONDITION.tooltips[release.condition.type]}>
                                 Condition: {release.condition && release.condition.full}
                                 {(isForSell || isInMarket) && release.notes
-                                    ? <span>Item info: {release.notes}</span>
+                                   ? <span>Item info: {release.notes}</span>
                                     : null}
                             </p>
                         </div>
@@ -441,15 +441,15 @@ class ReleaseFull extends Component {
                             </Fragment>
                             : null
                         }
-                        {isInMarket || isOtherUserCollection ?
-                            <Fragment>
-                                <Button color="success" className="add-button"
-                                        onClick={() => toggleChatModal(release.soldBy.username)}>
-                                    Message {release.soldBy.username}
-                                </Button>
-                            </Fragment>
-                            : null
-                        }
+                            {isInMarket || isOtherUserCollection ?
+                                <Fragment>
+                                    <Button color="success" className="add-button"
+                                            onClick={() => toggleChatModal(release.soldBy.username)}>
+                                        Message {release.soldBy.username}
+                                    </Button>
+                                </Fragment>
+                                : null
+                            }
                     </div>
                     </div> }
            {!requestPending && _.isEmpty(release) && !noResult &&
