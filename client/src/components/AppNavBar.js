@@ -17,6 +17,7 @@ import {
     ROUTE_WISHLIST,
     ROUTE_SEARCH,
     ROUTE_SIGN_IN,
+    ROUTE_SOLD,
     ROUTE_ACCOUNT,
     ROUTE_FOR_SELL,
     ROUTE_MARKET,
@@ -131,6 +132,10 @@ class AppNavBar extends Component {
                             <NavLink to={ROUTE_FOR_SELL}
                                      activeClassName="selected">
                                 FOR SELL
+                            </NavLink>
+                            <NavLink to={ROUTE_SOLD}
+                                     activeClassName="selected">
+                                SOLD
                             </NavLink>
                             <NavLink to={ROUTE_MARKET}
                                      activeClassName="selected">

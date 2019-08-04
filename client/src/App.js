@@ -44,6 +44,7 @@ import {
     ROUTE_SIGN_IN,
     ROUTE_SIGN_UP,
     ROUTE_WISHLIST,
+    ROUTE_SOLD,
     ROUTE_ACCOUNT,
     ROUTE_FOR_SELL,
     ROUTE_MARKET,
@@ -464,7 +465,7 @@ class App extends Component {
     async getSpecificResult(type, id, isInitialLoad) {
         this.clearCurrentRelease();
         if (isInitialLoad) {
-            this.setState({ requestPending: true });
+            this.setState({ requestPending: true })
         }
         clearTimeout(this.releaseAnimationTimeout);
         axios.get(`${DOGS_GET_ITEM_URL[type]}/${id}?key=${DISCOGS_KEY}&secret=${DISCOGS_SECRET}`)
@@ -500,7 +501,6 @@ class App extends Component {
                 userId: localStorage.getItem('userId')
             }
         }).then((res) => {
-            console.log('asd',res)
             if (res.status === RESPONSE_STATUS_SUCCESS && res.data.user) {
                 this.setState({
                     shouldShowSelling: res.data.user.shouldShowSelling,
@@ -537,7 +537,7 @@ class App extends Component {
                 || nextPath === ROUTE_USERS) {
                 this.setState({requestPending: false});
                 switch (nextPath) {
-                    case ROUTE_COLLECTION || ROUTE_FOR_SELL || ROUTE_WISHLIST:
+                    case ROUTE_COLLECTION || ROUTE_FOR_SELL || ROUTE_WISHLIST || ROUTE_SOLD:
                         this.getCollection();
                         break;
                     case ROUTE_MARKET:
@@ -548,6 +548,8 @@ class App extends Component {
                         break;
                     case ROUTE_SEARCH:
                         this.makeSearchRequest(this.state.searchQuery || '');
+                        break;
+                        default:
                 }
             }
         }

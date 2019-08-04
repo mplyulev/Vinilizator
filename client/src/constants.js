@@ -19,7 +19,8 @@ export const ROUTE_COLLECTION = '/collection';
 export const ROUTE_WISHLIST = '/wishlist';
 export const ROUTE_RELEASE = '/release';
 export const ROUTE_ACCOUNT = '/account';
-export const ROUTE_FOR_SELL = '/sell';
+export const ROUTE_FOR_SELL = '/forSell';
+export const ROUTE_SOLD = '/sold';
 export const ROUTE_MARKET = '/market';
 export const ROUTE_USERS = '/users';
 
