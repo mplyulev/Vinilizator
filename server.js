@@ -12,16 +12,17 @@ app.use(bodyParser.json());
 let router = express.Router();
 app.use(router);
 const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+// const io = require('socket.io')(http);
 const db = require('./config/keys').mongoURI;
-io.on('connection', function(socket){
-    console.log('a user connected');
-    socket.on('disconnect', function(){
-        console.log('user disconnected');
-    });
-});
 
-app.get('/', function(req, res){
+// io.on('connection', function (socket) {
+//     console.log('a user connected');
+//     socket.on('disconnect', function () {
+//         console.log('user disconnected');
+//     });
+// });
+
+app.get('/', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
@@ -35,14 +36,14 @@ app.use('/api/controllers/authentication', authentication);
 app.use('/api/controllers/collection', collection);
 app.use('/api/controllers/accountSettings', accountSettings);
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     const err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -54,7 +55,7 @@ app.use(function(err, req, res, next) {
 
 const port = process.env.PORT || 5000;
 
-http.listen(port, function(){
+http.listen(port, function () {
     console.log(`listening on *:${port}`);
 });
 

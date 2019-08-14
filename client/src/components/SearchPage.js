@@ -30,7 +30,7 @@ class SearchPage extends Component {
     }
 
     closeDropdowns = () => {
-        this.setState({isGenreDropdownOpen: false, isStyleDropdownOpen: false})
+        this.setState({ isGenreDropdownOpen: false, isStyleDropdownOpen: false })
     };
 
     componentDidMount() {
@@ -65,7 +65,7 @@ class SearchPage extends Component {
         this.props.makeSearchRequest(this.props.searchQueryString, selectedGenre && selectedGenre.name !== GENRES_ALL ? selectedGenre.name : '', style)
     };
 
-    render () {
+    render() {
         const {
             getNextPageResult,
             requestPending,
@@ -76,13 +76,13 @@ class SearchPage extends Component {
             clearCurrentRelease
         } = this.props;
 
-        const { selectedGenre, selectedStyle} = this.state;
+        const { selectedGenre, selectedStyle } = this.state;
 
         ReactTooltip.rebuild();
         const genreDropdownOptions = Object.values(GENRES).map(genre =>
             <DropdownItem onClick={() => this.setSelectedGenre(genre)}
-                          className={selectedGenre && selectedGenre.name === genre.name ? 'selected' : ''}
-                          value={genre.name}>
+                className={selectedGenre && selectedGenre.name === genre.name ? 'selected' : ''}
+                value={genre.name}>
                 {genre.name}
             </DropdownItem>
         );
@@ -99,45 +99,42 @@ class SearchPage extends Component {
             ?
             styleDropdownOptions = allStyles.map(style =>
                 <DropdownItem onClick={() => this.setSelectedStyle(style)}
-                              className={style && style === selectedStyle ? 'selected' : ''}
-                              value={style}>
+                    className={style && style === selectedStyle ? 'selected' : ''}
+                    value={style}>
                     {style}
                 </DropdownItem>
             )
             :
             styleDropdownOptions = selectedGenre.styles && selectedGenre.styles.map(style =>
                 <DropdownItem onClick={() => this.setSelectedStyle(style)}
-                              className={style && style === selectedStyle ? 'selected' : ''}
-                              value={style}>
+                    className={style && style === selectedStyle ? 'selected' : ''}
+                    value={style}>
                     {style}
                 </DropdownItem>
             );
 
-        console.log('asd', queryResult);
-
         return (
-            <div>
+            <div className="search-page">
                 <InputGroup className="search-bar">
                     <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
                     <Input onChange={this.onChange} value={this.state.searchQueryString} />
                 </InputGroup>
-                <Dropdown items={genreDropdownOptions} title={selectedGenre ? selectedGenre.name : `Filter by genre`}></Dropdown>
-                <Dropdown items={styleDropdownOptions} title={selectedStyle || 'Filter by style'}></Dropdown>
+                <div className="dropwdown-wrapper">
+                    <Dropdown items={genreDropdownOptions} title={selectedGenre ? selectedGenre.name : `Filter by genre`}></Dropdown>
+                    <Dropdown items={styleDropdownOptions} title={selectedStyle || 'Filter by style'}></Dropdown>
+                </div>
                 {queryResult.pagination.pages > 1 && <Pagination getNextPageResult={getNextPageResult}
-                                                                 style={selectedStyle}
-                                                                 genre={selectedGenre}
-                                                                 isVisible={!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1}
-                                                                 data={queryResult.pagination} />
+                    style={selectedStyle}
+                    genre={selectedGenre}
+                    isVisible={!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1}
+                    data={queryResult.pagination} />
                 }
                 <Fragment>
                     <div className="search-result-container">
                         {!_.isEmpty(queryResult.results) && <div className="filter-container">
-                                {/*<span className="result-filter no-pointer">*/}
-                                {/*    Results: {queryResult.pagination.items}*/}
-                                {/*</span>*/}
-                                <p className="result-filter no-pointer">
-                                    Page: {queryResult.pagination.page} from {queryResult.pagination.pages}
-                                </p>
+                            <p className="result-filter no-pointer">
+                                Page: {queryResult.pagination.page} from {queryResult.pagination.pages}
+                            </p>
                         </div>}
                         <div className="results-container">
                             {requestPending ?
@@ -151,24 +148,24 @@ class SearchPage extends Component {
                             {!_.isEmpty(queryResult.results) && !requestPending && queryResult.results.map(result => {
                                 return (
                                     <SearchItem history={history}
-                                                release={result}
-                                                requestPending={requestPending}
-                                                currentRelease={currentRelease}
-                                                clearCurrentRelease={clearCurrentRelease}
-                                                getSpecificResult={getSpecificResult}
-                                                key={result.id}>
+                                        release={result}
+                                        requestPending={requestPending}
+                                        currentRelease={currentRelease}
+                                        clearCurrentRelease={clearCurrentRelease}
+                                        getSpecificResult={getSpecificResult}
+                                        key={result.id}>
                                     </SearchItem>
                                 );
                             })
                             }
                         </div>
                         {!requestPending &&
-                        <Pagination getNextPageResult={getNextPageResult}
-                                    isInBottom={true}
-                                    style={selectedStyle}
-                                    genre={selectedGenre}
-                                    isVisible={!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1}
-                                    data={queryResult.pagination} />}
+                            <Pagination getNextPageResult={getNextPageResult}
+                                isInBottom={true}
+                                style={selectedStyle}
+                                genre={selectedGenre}
+                                isVisible={!_.isEmpty(queryResult.results) && queryResult.pagination.pages > 1}
+                                data={queryResult.pagination} />}
                     </div>
                 </Fragment>
             </div>

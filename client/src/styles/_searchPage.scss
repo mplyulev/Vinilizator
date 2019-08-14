@@ -19,8 +19,11 @@
 
 .filter-container {
     position: relative;
-    top: 10px;
+    top: 30px;
     text-align: center;
+    left: 50%;
+    transform: translate(-50%);
+    width: 320px;
 
     .result-filter {
         margin: 20px 10px;
@@ -42,3 +45,10 @@
         }
     }
 }
+
+.search-page {
+    .pagination-wrapper {
+        margin: 30px auto 10px;
+    }
+}
+

@@ -107,10 +107,12 @@
 
     .sign-in-form {
       .email-form {
+        position: relative;
         bottom: 25px;
       }
 
       .password-form {
+        position: relative;
         top: 35px;
       }
 
