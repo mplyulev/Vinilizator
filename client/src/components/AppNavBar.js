@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import YouTube from 'react-youtube';
-import { FaPauseCircle, FaVolumeMute, FaStepForward, FaVolume, FaPlayCircle } from 'react-icons/fa';
+import { FaPauseCircle, FaVolumeMute, FaStepForward, FaVolumeUp, FaPlayCircle } from 'react-icons/fa';
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
@@ -39,7 +39,7 @@ class AppNavBar extends Component {
     }
 
     setVolume = (volume) => {
-        if (volume === 0)  {
+        if (volume === 0) {
             this.setState({ isPlayerMuted: true });
         } else if (volume !== 0 && this.state.isPlayerMuted) {
             this.setState({ isPlayerMuted: false });
@@ -56,7 +56,7 @@ class AppNavBar extends Component {
     };
 
     mute = () => {
-        this.setState({ isPlayerMuted: true, savedVolume: this.state.volume});
+        this.setState({ isPlayerMuted: true, savedVolume: this.state.volume });
         player.mute();
         this.setVolume(0)
     };
@@ -66,7 +66,7 @@ class AppNavBar extends Component {
         if (savedVolume > 0) {
             player.unMute();
             this.setState({ isPlayerMuted: false, volume: savedVolume });
-            this.setVolume(savedVolume )
+            this.setVolume(savedVolume)
         }
     };
 
@@ -111,42 +111,42 @@ class AppNavBar extends Component {
         return (
             <div>
                 <Navbar color="dark"
-                        light expand="sm"
-                        className={`mb-5 navbar${isVisible ? ' visible' : ''}`}>
+                    light expand="sm"
+                    className={`mb-5 navbar${isVisible ? ' visible' : ''}`}>
                     <NavbarBrand href="/">VYNILIZATOR</NavbarBrand>
                     <NavbarToggler color="dark" onClick={() => toggleNavBar(false)} />
                     <Collapse isOpen={isNavBarOpened} navbar>
                         <Nav className="ml-auto" navbar>
                             <NavLink to={ROUTE_SEARCH}
-                                     activeClassName="selected">
+                                activeClassName="selected">
                                 SEARCH
                             </NavLink>
                             <NavLink to={ROUTE_COLLECTION}
-                                     activeClassName="selected">
+                                activeClassName="selected">
                                 COLLECTION
                             </NavLink>
                             <NavLink to={ROUTE_WISHLIST}
-                                     activeClassName="selected">
+                                activeClassName="selected">
                                 WISHLIST
                             </NavLink>
                             <NavLink to={ROUTE_FOR_SELL}
-                                     activeClassName="selected">
+                                activeClassName="selected">
                                 FOR SELL
                             </NavLink>
                             <NavLink to={ROUTE_SOLD}
-                                     activeClassName="selected">
+                                activeClassName="selected">
                                 SOLD
                             </NavLink>
                             <NavLink to={ROUTE_MARKET}
-                                     activeClassName="selected">
+                                activeClassName="selected">
                                 MARKET
                             </NavLink>
                             <NavLink to={ROUTE_ACCOUNT}
-                                     activeClassName="selected">
+                                activeClassName="selected">
                                 ACCOUNT
                             </NavLink>
                             <NavLink to={ROUTE_USERS}
-                                     activeClassName="selected">
+                                activeClassName="selected">
                                 USERS
                             </NavLink>
                             <a href={ROUTE_SIGN_IN} onClick={logout}>
@@ -174,13 +174,13 @@ class AppNavBar extends Component {
                             <FaStepForward onClick={getRandomTrack} className="player-icon"></FaStepForward>
                             {isPlayerMuted
                                 ? <FaVolumeMute onClick={this.unmute} className="player-icon volume"></FaVolumeMute>
-                                : <FaVolume onClick={this.mute} className="player-icon volume"></FaVolume>
+                                : <FaVolumeUp onClick={this.mute} className="player-icon volume"></FaVolumeUp>
                             }
                             <Slider className="volume-slider"
-                                    min={0} max={100}
-                                    value={volume}
-                                    onChange={(volume) => this.setVolume(volume)}
-                                    defaultValue={50}   />
+                                min={0} max={100}
+                                value={volume}
+                                onChange={(volume) => this.setVolume(volume)}
+                                defaultValue={50} />
                         </div>
                     </div>
                 </Navbar>

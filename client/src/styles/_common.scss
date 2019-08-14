@@ -9,6 +9,15 @@
   }
 }
 
+.dropdown-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    .dropdown {
+        margin: 10px;
+    }
+}
 
 .no-results {
     position: relative;

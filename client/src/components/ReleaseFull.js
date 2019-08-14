@@ -14,7 +14,7 @@ import {
     SNACKBAR_TYPE_SUCCESS,
     TOOLTIP_DELAY_SHOW
 } from '../constants';
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import YouTubeApi from 'simple-youtube-api';
 const youtube = new YouTubeApi('AIzaSyCclzAC_wEB6H41XMpsFQuqPwG7JqQzAck');
 
@@ -37,7 +37,7 @@ class ReleaseFull extends Component {
             const track = release && release.tracklist[0];
             const trackTitle = `${track && track.artists ? track.artists[0].name : release.artists[0].name} - ${track.title}`;
             const query = `${track && track.artists ? track.artists[0].name : release && release.artists[0].name}+${track.title}`;
-    
+
             youtube.searchVideos(query, 1)
                 .then(results => {
                     results[0] ? this.setState({
@@ -47,13 +47,15 @@ class ReleaseFull extends Component {
                     }) : this.setState({ videoId: '' })
                 })
         }
-       this.timeout = setTimeout(() => {
+
+        this.timeout = setTimeout(() => {
+            const { release } = this.props
             if (_.isEmpty(release)) {
                 this.setState({ noResult: true });
             }
 
             clearTimeout(this.timeout);
-       }, 5000);
+        }, 5000);
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -63,8 +65,8 @@ class ReleaseFull extends Component {
             const track = release.tracklist[0];
             const newTrack = newRelease.tracklist[0];
             const query = `${track && track.artists ? track.artists[0].name : release && release.artists[0].name}+${track.title}`;
-            const newQuery =  `${newTrack && newTrack.artists ? newTrack.artists[0].name : newRelease && newRelease.artists[0].name}+${newTrack.title}`;
-    
+            const newQuery = `${newTrack && newTrack.artists ? newTrack.artists[0].name : newRelease && newRelease.artists[0].name}+${newTrack.title}`;
+
             if (query !== newQuery) {
                 youtube.searchVideos(newQuery, 1)
                     .then(results => {
@@ -73,15 +75,17 @@ class ReleaseFull extends Component {
                         }) : this.setState({ videoId: '' })
                     })
             }
+
+            // this.setState({ noResult: true });
         }
     }
 
     addToCollection = (release, shouldResetReleaseStatus) => {
         const userId = localStorage.getItem('userId');
-        axios.post('/api/controllers/collection/addToCollection', { release, userId})
+        axios.post('/api/controllers/collection/addToCollection', { release, userId })
             .then((res) => {
                 if (res.status === RESPONSE_STATUS_SUCCESS) {
-                    axios.post('/api/controllers/collection/removeFromWishlist', {release, userId});
+                    axios.post('/api/controllers/collection/removeFromWishlist', { release, userId });
                     this.props.getCollection(shouldResetReleaseStatus).then(() => {
                         this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, res.data.msg);
                     });
@@ -115,7 +119,7 @@ class ReleaseFull extends Component {
                     const msg = res.data.msg;
                     this.props.openSnackbar(res.data.success ? SNACKBAR_TYPE_SUCCESS : SNACKBAR_TYPE_FAIL, msg);
                 })
-                 
+
                 this.props.history.push(ROUTE_FOR_SELL);
             });
         });
@@ -197,12 +201,12 @@ class ReleaseFull extends Component {
                 }) : this.setState({ videoId: '' })
             })
     };
-     
-    
 
-    render () {
+
+
+    render() {
         const { youtubeSrc, noResult } = this.state;
-        
+
         const {
             release,
             requestPending,
@@ -228,25 +232,25 @@ class ReleaseFull extends Component {
             formats,
             tracklist
         } = release || {};
-       let images;
-       let artists;
-       let genres;
-       let labels;
-       let styles;
-       let formatDescription;
-       let tracklistTemplate;
-       let opts;
+        let images;
+        let artists;
+        let genres;
+        let labels;
+        let styles;
+        let formatDescription;
+        let tracklistTemplate;
+        let opts;
         if (!_.isEmpty(release)) {
-            artists =  release.artists && release.artists.map((artist) => {
+            artists = release.artists && release.artists.map((artist) => {
                 return (
                     <span key={artist.name}>{` ${artist.name}  ${artist.join}`}</span>
                 )
             });
-    
+
             images = release.images && release.images.map(img => {
                 return img.resource_url;
             });
-    
+
             genres = release.genres && release.genres
                 ? release.genres.map((genre, index) => {
                     return (
@@ -254,7 +258,7 @@ class ReleaseFull extends Component {
                     )
                 })
                 : '';
-    
+
             labels = release.labels && release.labels
                 ? release.labels.map((label, index) => {
                     return (
@@ -262,7 +266,7 @@ class ReleaseFull extends Component {
                     )
                 })
                 : '';
-    
+
             formatDescription = formats && formats[0] && formats[0].descriptions
                 ? formats[0].descriptions.map((description) => {
                     return (
@@ -270,7 +274,7 @@ class ReleaseFull extends Component {
                     )
                 })
                 : '';
-    
+
             styles = release.styles ?
                 release.styles.map((style, index) => {
                     return (
@@ -278,9 +282,9 @@ class ReleaseFull extends Component {
                     )
                 })
                 : '';
-    
+
             tracklistTemplate = tracklist && tracklist.map(track => {
-    
+
                 return (
                     <div key={track.title} className="track" onClick={() => this.playTrack(release, track)}>
                         <span>{track.position}.</span>
@@ -291,7 +295,7 @@ class ReleaseFull extends Component {
                     </div>
                 );
             });
-    
+
             opts = {
                 height: '220',
                 width: '220',
@@ -304,165 +308,165 @@ class ReleaseFull extends Component {
                 }
             };
         }
-        
+
 
         return (
             <Fragment>
-            {!_.isEmpty(release) 
-               &&
-                <div className="release-data-container">
-                    {isInMarket || isForSell || (isOtherUserCollection && release.forSale) ?
-                        <div className="selling-info">
-                            {isInMarket && <Fragment>
-                                <span className="sold-by">Sold by: </span>
-                                <span className="seller" onClick={() => getSpecificUser(release.soldBy.userId)}> {release.soldBy.username}</span>
-                            </Fragment>}
-                            <span>Price: {release.price} BGN</span>
-                            <p className="condition"
-                               data-for="collection-page-tooltip"
-                               data-delay-show={TOOLTIP_DELAY_SHOW}
-                               data-tip={release.condition && CONDITION.tooltips[release.condition.type]}>
-                                Condition: {release.condition && release.condition.full}
-                                {(isForSell || isInMarket) && release.notes
-                                   ? <span>Item info: {release.notes}</span>
-                                    : null}
-                            </p>
+                {!_.isEmpty(release)
+                    &&
+                    <div className="release-data-container">
+                        {isInMarket || isForSell || (isOtherUserCollection && release.forSale) ?
+                            <div className="selling-info">
+                                {isInMarket && <Fragment>
+                                    <span className="sold-by">Sold by: </span>
+                                    <span className="seller" onClick={() => getSpecificUser(release.soldBy.userId)}> {release.soldBy.username}</span>
+                                </Fragment>}
+                                <span>Price: {release.price} BGN</span>
+                                <p className="condition"
+                                    data-for="collection-page-tooltip"
+                                    data-delay-show={TOOLTIP_DELAY_SHOW}
+                                    data-tip={release.condition && CONDITION.tooltips[release.condition.type]}>
+                                    Condition: {release.condition && release.condition.full}
+                                    {(isForSell || isInMarket) && release.notes
+                                        ? <span>Item info: {release.notes}</span>
+                                        : null}
+                                </p>
+                            </div>
+                            : null}
+                        {images && <img className="release-cover" onClick={() => openLightbox(images)} src={images[0]} />}
+                        <div className="info-wrapper">
+                            <span className="artists">{artists}</span> - <span className="release-title">{title}</span>
+                            {labels &&
+                                <p>Label: {labels}<span>{release.labels[0].catno ? '-' : ''}{release.labels[0].catno}</span>
+                                </p>}
+                            {formats.length && formats[0] &&
+                                <p>Format: {formats[0].qty > 1 ? formats[0].qty + ' x ' : ''}
+                                    <span> {formats[0].name}</span> {formatDescription} </p>}
+                            {country && <p>Country: <span>{country}</span></p>}
+                            {genres && <p>Genre: {genres}</p>}
+                            {styles && <p>Style: <span>{styles}</span></p>}
+                            {released && year ? <p>Released: <span>{released}</span></p> : null}
+                            {year && !released ? <p>Year: <span>{year}</span></p> : null}
+                            {release.lowest_price && <p>Lowest price on Discogs: {release.lowest_price}$</p>}
                         </div>
-                        : null}
-                    {images && <img className="release-cover" onClick={() => openLightbox(images)} src={images[0]} />}
-                    <div className="info-wrapper">
-                        <span className="artists">{artists}</span> - <span className="release-title">{title}</span>
-                        {labels &&
-                        <p>Label: {labels}<span>{release.labels[0].catno ? '-' : ''}{release.labels[0].catno}</span>
-                        </p>}
-                        {formats.length && formats[0] &&
-                        <p>Format: {formats[0].qty > 1 ? formats[0].qty + ' x ' : ''}
-                            <span> {formats[0].name}</span> {formatDescription} </p>}
-                        {country && <p>Country: <span>{country}</span></p>}
-                        {genres && <p>Genre: {genres}</p>}
-                        {styles && <p>Style: <span>{styles}</span></p>}
-                        {released && year ? <p>Released: <span>{released}</span></p> : null}
-                        {year && !released ? <p>Year: <span>{year}</span></p> : null}
-                        {release.lowest_price && <p>Lowest price on Discogs: {release.lowest_price}$</p>}
-                    </div>
-                    <div className="tracklist-youtube-wrapper">
-                        <div className="tracklist-wrapper">
-                            <h3 className="title">Tracklist</h3>
-                            this.props.          {tracklistTemplate}
+                        <div className="tracklist-youtube-wrapper">
+                            <div className="tracklist-wrapper">
+                                <h3 className="title">Tracklist</h3>
+                                {tracklistTemplate}
+                            </div>
+                            {/*<iframe id="ytplayer" type="text/html" width="640" height="360"*/}
+                            {/*        src={youtubeSrc}*/}
+                            {/*        controls*/}
+                            {/*        frameBorder="0">*/}
+                            {/*</iframe>*/}
+                            <YouTube
+                                className="ytplayer"
+                                videoId={this.state.videoId}
+                                opts={opts}
+                            />
                         </div>
-                        {/*<iframe id="ytplayer" type="text/html" width="640" height="360"*/}
-                        {/*        src={youtubeSrc}*/}
-                        {/*        controls*/}
-                        {/*        frameBorder="0">*/}
-                        {/*</iframe>*/}
-                        <YouTube
-                            className="ytplayer"
-                            videoId={this.state.videoId}
-                            opts={opts}
-                        />
-                    </div>
-                    <div className="buttons-wrapper">
-                        {!isInCollection && !isInMarket && !isInWishlist && !isForSell && !isOtherUserCollection
-                            ? <Fragment>
-                                <Button color="success" className="add-button"
+                        <div className="buttons-wrapper">
+                            {!isInCollection && !isInMarket && !isInWishlist && !isForSell && !isOtherUserCollection
+                                ? <Fragment>
+                                    <Button color="success" className="add-button"
                                         onClick={
                                             () => !isSearchItemInCollection
                                                 ? this.addToCollection(release, true)
                                                 : this.removeFromCollection(release, true)}>
-                                    {!isSearchItemInCollection ? 'Add to collection' : 'Remove from collection'}
-                                </Button>
-                                {!isSearchItemInCollection && <Button color="success" className="add-button"
-                                                                      onClick={() => !isSearchItemInWishlist
-                                                                          ? this.addToWishlist(release)
-                                                                          : this.removeFromWishlist(release, true)}>
-                                    {!isSearchItemInWishlist ? 'Add to wishlist' : 'Remove from wishlist'}
-                                </Button>}
-                                <Button color="success" className="add-button"
+                                        {!isSearchItemInCollection ? 'Add to collection' : 'Remove from collection'}
+                                    </Button>
+                                    {!isSearchItemInCollection && <Button color="success" className="add-button"
+                                        onClick={() => !isSearchItemInWishlist
+                                            ? this.addToWishlist(release)
+                                            : this.removeFromWishlist(release, true)}>
+                                        {!isSearchItemInWishlist ? 'Add to wishlist' : 'Remove from wishlist'}
+                                    </Button>}
+                                    <Button color="success" className="add-button"
                                         onClick={() => !isSearchItemForSale
                                             ? toggleSellModal(release)
                                             : this.removeFromSell(release, true)}>
-                                    {!isSearchItemForSale ? 'Add to selling' : 'Remove from selling'}
-                                </Button>
-                                {isSearchItemForSale && <Button color="success" className="add-button"
-                                                                onClick={() => toggleSellModal(release)}>
-                                    Edit sell info
-                                </Button>}
-                            </Fragment>
-                            : null
-                        }
-                        {isInCollection && !isInWishlist && !isOtherUserCollection ?
-                            <Fragment>
-                                <Button color="success" className="add-button"
-                                        onClick={() => this.removeFromCollection(release)}>
-                                    Remove from collection
-                                </Button>
-                                {!release.forSale
-                                    ? <Button color="success" className="add-button"
-                                              onClick={() => toggleSellModal(release)}>
-                                        Add to selling
+                                        {!isSearchItemForSale ? 'Add to selling' : 'Remove from selling'}
                                     </Button>
-                                    :
-                                    <Fragment>
-                                        <Button color="success" className="add-button"
-                                                onClick={() => this.removeFromSell(release, true)}>
-                                            Remove from sell
-                                        </Button>
-                                        <Button color="success" className="add-button"
-                                                onClick={() => toggleSellModal(release)}>
-                                            Edit sell info
-                                        </Button>
-                                    </Fragment>}
-                            </Fragment>
-                            : null
-                        }
-                        {isInWishlist && !isOtherUserCollection ?
-                            <Fragment>
-                                <Button color="success" className="add-button"
-                                        onClick={() => this.removeFromWishlist(release)}>
-                                    Remove from wishlist
-                                </Button>
-                                <Button color="success" className="add-button"
-                                        onClick={() => this.addToCollectionRemoveFromWishlist(release)}>
-                                    Add to collection
-                                </Button>
-                            </Fragment>
-                            : null
-                        }
-                        {isForSell && !isOtherUserCollection ?
-                            <Fragment>
-                                <Button color="success" className="add-button"
-                                        onClick={() => this.removeFromSell(release)}>
-                                    Remove from sell
-                                </Button>
-                                <Button color="success" className="add-button"
-                                        onClick={() => this.markAsSold(release)}>
-                                    Mark as sold
-                                </Button>
-                                <Button color="success" className="add-button"
+                                    {isSearchItemForSale && <Button color="success" className="add-button"
                                         onClick={() => toggleSellModal(release)}>
-                                    Edit sell info
+                                        Edit sell info
+                                </Button>}
+                                </Fragment>
+                                : null
+                            }
+                            {isInCollection && !isInWishlist && !isOtherUserCollection ?
+                                <Fragment>
+                                    <Button color="success" className="add-button"
+                                        onClick={() => this.removeFromCollection(release)}>
+                                        Remove from collection
                                 </Button>
-                            </Fragment>
-                            : null
-                        }
+                                    {!release.forSale
+                                        ? <Button color="success" className="add-button"
+                                            onClick={() => toggleSellModal(release)}>
+                                            Add to selling
+                                    </Button>
+                                        :
+                                        <Fragment>
+                                            <Button color="success" className="add-button"
+                                                onClick={() => this.removeFromSell(release, true)}>
+                                                Remove from sell
+                                        </Button>
+                                            <Button color="success" className="add-button"
+                                                onClick={() => toggleSellModal(release)}>
+                                                Edit sell info
+                                        </Button>
+                                        </Fragment>}
+                                </Fragment>
+                                : null
+                            }
+                            {isInWishlist && !isOtherUserCollection ?
+                                <Fragment>
+                                    <Button color="success" className="add-button"
+                                        onClick={() => this.removeFromWishlist(release)}>
+                                        Remove from wishlist
+                                </Button>
+                                    <Button color="success" className="add-button"
+                                        onClick={() => this.addToCollectionRemoveFromWishlist(release)}>
+                                        Add to collection
+                                </Button>
+                                </Fragment>
+                                : null
+                            }
+                            {isForSell && !isOtherUserCollection ?
+                                <Fragment>
+                                    <Button color="success" className="add-button"
+                                        onClick={() => this.removeFromSell(release)}>
+                                        Remove from sell
+                                </Button>
+                                    <Button color="success" className="add-button"
+                                        onClick={() => this.markAsSold(release)}>
+                                        Mark as sold
+                                </Button>
+                                    <Button color="success" className="add-button"
+                                        onClick={() => toggleSellModal(release)}>
+                                        Edit sell info
+                                </Button>
+                                </Fragment>
+                                : null
+                            }
                             {isInMarket || isOtherUserCollection ?
                                 <Fragment>
                                     <Button color="success" className="add-button"
-                                            onClick={() => toggleChatModal(release.soldBy.username)}>
+                                        onClick={() => toggleChatModal(release.soldBy.username)}>
                                         Message {release.soldBy.username}
                                     </Button>
                                 </Fragment>
                                 : null
                             }
-                    </div>
-                    </div> }
-           {!requestPending && _.isEmpty(release) && !noResult &&
-                        <div className="loader-wrapper">
-                            <div className="loading"></div>
-                            <span className="loading-text">LOADING...</span>
-                        </div>}
+                        </div>
+                    </div>}
+                {!requestPending && _.isEmpty(release) && !noResult &&
+                    <div className="loader-wrapper">
+                        <div className="loading"></div>
+                        <span className="loading-text">LOADING...</span>
+                    </div>}
 
-            {noResult && <div className="no-results release"><p>RELEASE NOT FOUND</p></div>}
+                {noResult && <div className="no-results release"><p>RELEASE NOT FOUND</p></div>}
             </Fragment>
         );
     }

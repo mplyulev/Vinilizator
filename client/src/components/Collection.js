@@ -49,7 +49,7 @@ class Collection extends Component {
     onChange = (event) => {
         const { data } = this.props;
         const { filteredCollection, selectedGenre, selectedStyle } = this.state;
-        this.setState({ searchQuery: event.target.value.split(' ').join('')}, () => {
+        this.setState({ searchQuery: event.target.value.split(' ').join('') }, () => {
             const { searchQuery } = this.state;
             const dataForFiltering = filteredCollection || data;
             const newFiltered = dataForFiltering.filter(vinyl => {
@@ -63,17 +63,17 @@ class Collection extends Component {
 
 
             if (newFiltered.length > 0) {
-                this.setState({ filteredCollection : newFiltered });
+                this.setState({ filteredCollection: newFiltered });
             }
 
-            if (searchQuery.length === 0  && (selectedGenre || selectedStyle)) {
+            if (searchQuery.length === 0 && (selectedGenre || selectedStyle)) {
                 selectedGenre ? this.setSelectedGenre(selectedGenre) : this.setSelectedStyle(selectedStyle);
                 if (selectedGenre && selectedStyle) {
                     this.setSelectedStyle(selectedGenre);
                     this.setSelectedStyle(selectedStyle);
                 }
             } else if (searchQuery.length === 0) {
-                this.setState({ filteredCollection : data });
+                this.setState({ filteredCollection: data });
             }
         });
 
@@ -99,7 +99,7 @@ class Collection extends Component {
         const { selectedGenre, filteredByGenre } = this.state;
 
         this.setState({ selectedStyle: style });
-        const filteredCollection =  (filteredByGenre && filteredByGenre.length > 0 ? filteredByGenre : data).filter(vinyl =>
+        const filteredCollection = (filteredByGenre && filteredByGenre.length > 0 ? filteredByGenre : data).filter(vinyl =>
             vinyl.styles && vinyl.styles.includes(style)
         );
 
@@ -117,14 +117,14 @@ class Collection extends Component {
         const dataForFiltering = filteredCollection || data;
         this.setState({ selectedSortType: sortType });
         console.log('sort type', sortType)
-        switch(sortType) {
-        
+        switch (sortType) {
+
             case SORT_TYPE_PRICE:
                 console.log('data', dataForFiltering)
                 dataForFiltering.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
-               
+
                 break;
-              
+
             case SORT_TYPE_ALPHABET:
                 dataForFiltering.sort((a, b) => {
                     var artistA = a.artists_sort.toUpperCase();
@@ -132,14 +132,14 @@ class Collection extends Component {
                     return (artistA < artistB) ? -1 : (artistA > artistB) ? 1 : 0;
                 });
                 break;
-               
+
             case SORT_TYPE_SOLDBY_ALPHABET:
                 dataForFiltering.sort((a, b) => {
                     var soldByA = a.soldBy.username.toUpperCase();
                     var soldByB = b.soldBy.username.toUpperCase();
                     return (soldByA < soldByB) ? -1 : (soldByA > soldByB) ? 1 : 0;
                 });
-                
+
         }
         this.setState({ filteredCollection: dataForFiltering });
     };
@@ -156,7 +156,7 @@ class Collection extends Component {
         }
     }
 
-    render () {
+    render() {
         ReactTooltip.rebuild();
         const {
             history,
@@ -203,42 +203,42 @@ class Collection extends Component {
 
         const genreDropdownOptions = representedGenres.map(genre =>
             <DropdownItem className={selectedGenre === genre ? 'selected' : ''}
-                          key={genre}
-                          onClick={(event) => this.setSelectedGenre(event.target.innerText)}
-                          value={genre}>
+                key={genre}
+                onClick={(event) => this.setSelectedGenre(event.target.innerText)}
+                value={genre}>
                 {genre}
             </DropdownItem>
         );
 
         genreDropdownOptions.unshift(<DropdownItem className={selectedGenre === <GENRES_ALL></GENRES_ALL> ? 'selected' : ''}
-                                                   key={GENRES_ALL}
-                                                   onClick={(event) => this.setSelectedGenre(event.target.innerText)}
-                                                   value={GENRES_ALL}>
+            key={GENRES_ALL}
+            onClick={(event) => this.setSelectedGenre(event.target.innerText)}
+            value={GENRES_ALL}>
             {GENRES_ALL}
         </DropdownItem>);
 
         const styleDropdownOptions = representedStyles.map(style =>
             <DropdownItem className={selectedStyle === style ? 'selected' : ''}
-                          key={style}
-                          onClick={(event) => this.setSecomponentDidMountlectedStyle(event.target.innerText)}
-                          value={style}>
+                key={style}
+                onClick={(event) => this.setSecomponentDidMountlectedStyle(event.target.innerText)}
+                value={style}>
                 {style}
             </DropdownItem>
         );
 
         const sortDropDownOptions = sellingSortTypes.map(sortType =>
             <DropdownItem className={selectedSortType === sortType ? 'selected' : ''}
-                          key={sortType}
-                          onClick={() => this.sortCollection(sortType)}
-                          value={selectedSortType}>
+                key={sortType}
+                onClick={() => this.sortCollection(sortType)}
+                value={selectedSortType}>
                 {sortType}
             </DropdownItem>
         );
 
         styleDropdownOptions.unshift(<DropdownItem className={selectedStyle === STYLES_ALL ? 'selected' : ''}
-                                                   onClick={(event) => this.setSelectedStyle(event.target.innerText)}
-                                                   key={STYLES_ALL}
-                                                   value={STYLES_ALL}>
+            onClick={(event) => this.setSelectedStyle(event.target.innerText)}
+            key={STYLES_ALL}
+            value={STYLES_ALL}>
             {STYLES_ALL}
         </DropdownItem>);
         return (
@@ -249,9 +249,11 @@ class Collection extends Component {
                         <InputGroupAddon addonType="prepend">Search</InputGroupAddon>
                         <Input onChange={this.onChange} />
                     </InputGroup>
-                    <Dropdown items={genreDropdownOptions} title={selectedGenre || 'Filter by genre'}></Dropdown>
-                    <Dropdown items={styleDropdownOptions} title={selectedStyle || 'Filter by style'}></Dropdown>
-                    <Dropdown items={sortDropDownOptions} title={`Sort by: ${selectedSortType}` || 'Sort by:'}></Dropdown>
+                    <div className="dropdown-wrapper">
+                        <Dropdown items={genreDropdownOptions} title={selectedGenre || 'Filter by genre'}></Dropdown>
+                        <Dropdown items={styleDropdownOptions} title={selectedStyle || 'Filter by style'}></Dropdown>
+                        <Dropdown items={sortDropDownOptions} title={`Sort by: ${selectedSortType}` || 'Sort by:'}></Dropdown>
+                    </div>
                 </div>
                 <div
                     className={`results-container collection${collectionType === COLLECTION_TYPE_MARKET || collectionType === COLLECTION_TYPE_FOR_SELL ? ' bigger-height' : ''}`}>
@@ -262,55 +264,55 @@ class Collection extends Component {
                             <span className="loading-text">LOADING...</span>
                         </div>
                         : null}
-                         {<Fragment>
-                            {!_.isEmpty(data) &&  !requestPending && (!hideCollection || collectionType !== COLLECTION_TYPE_COLLECTION)
-                                ? (filteredCollection || data).map(result => {
-                                    return (
-                                        <SearchItem history={history}
-                                                    isOtherUserCollection={isOtherUserCollection}
-                                                    release={result}
-                                                    currentRelease={currentRelease}
-                                                    requcomponentDidMountestPending={requestPending}
-                                                    clearCurrentRelease={clearCurrentRelease}
-                                                    collectionType={collectionType}
-                                                    filterType={DATA_TYPE_RELEASE}
-                                                    getSpecificUser={getSpecificUser}
-                                                    getSpecificResult={getSpecificResult}
-                                                    setSpecificResult={setSpecificResult}
-                                                    key={result.id + new Date()}>
-                                        </SearchItem>
-                                    );
-                                })
-                                :
-                                !requestPending && <div className="no-results">
-                                    {collectionType === COLLECTION_TYPE_WISHLIST
-                                        ? !isOtherUserCollection
-                                            ? <p>YOU HAVE NO RECORDS IN YOU WISHLIST</p>
-                                            : <p>USER HAS NO RECORDS IN HIS WISHLIST</p>
-                                        : null}
-                                    {collectionType === COLLECTION_TYPE_COLLECTION && !hideCollection
-                                        ? !isOtherUserCollection
-                                            ? <p>YOU HAVE NO RECORDS IN YOUR COLLECTION</p>
-                                            : <p>USER HAS NO RECORDS IN HIS COLLECTION</p>
-                                        : null}
-                                    {collectionType === COLLECTION_TYPE_COLLECTION && hideCollection
+                    {<Fragment>
+                        {!_.isEmpty(data) && !requestPending && (!hideCollection || collectionType !== COLLECTION_TYPE_COLLECTION)
+                            ? (filteredCollection || data).map(result => {
+                                return (
+                                    <SearchItem history={history}
+                                        isOtherUserCollection={isOtherUserCollection}
+                                        release={result}
+                                        currentRelease={currentRelease}
+                                        requcomponentDidMountestPending={requestPending}
+                                        clearCurrentRelease={clearCurrentRelease}
+                                        collectionType={collectionType}
+                                        filterType={DATA_TYPE_RELEASE}
+                                        getSpecificUser={getSpecificUser}
+                                        getSpecificResult={getSpecificResult}
+                                        setSpecificResult={setSpecificResult}
+                                        key={result.id + new Date()}>
+                                    </SearchItem>
+                                );
+                            })
+                            :
+                            !requestPending && <div className="no-results">
+                                {collectionType === COLLECTION_TYPE_WISHLIST
+                                    ? !isOtherUserCollection
+                                        ? <p>YOU HAVE NO RECORDS IN YOU WISHLIST</p>
+                                        : <p>USER HAS NO RECORDS IN HIS WISHLIST</p>
+                                    : null}
+                                {collectionType === COLLECTION_TYPE_COLLECTION && !hideCollection
+                                    ? !isOtherUserCollection
+                                        ? <p>YOU HAVE NO RECORDS IN YOUR COLLECTION</p>
+                                        : <p>USER HAS NO RECORDS IN HIS COLLECTION</p>
+                                    : null}
+                                {collectionType === COLLECTION_TYPE_COLLECTION && hideCollection
 
-                                        ? <p>THIS USER'S COLLECTION IS HIDDEN</p>
-                                        : null
-                                    }
-                                    {collectionType === COLLECTION_TYPE_FOR_SELL
-                                        ? !isOtherUserCollection
-                                            ? <p>YOU HAVE NO RECORDS FOR SALE</p>
-                                            : <p>USER HAS NO RECORDS FOR SALE</p>
-                                        : null}
-                                    {collectionType === COLLECTION_TYPE_MARKET ? <p>THE MARKET IS EMPTY</p> : null}
-                                    {!isOtherUserCollection && collectionType ? <Button color="success"
-                                                                                        onClick={() => this.props.history.push(ROUTE_SEARCH)}>
-                                        SEARCH FOR RECORDS
+                                    ? <p>THIS USER'S COLLECTION IS HIDDEN</p>
+                                    : null
+                                }
+                                {collectionType === COLLECTION_TYPE_FOR_SELL
+                                    ? !isOtherUserCollection
+                                        ? <p>YOU HAVE NO RECORDS FOR SALE</p>
+                                        : <p>USER HAS NO RECORDS FOR SALE</p>
+                                    : null}
+                                {collectionType === COLLECTION_TYPE_MARKET ? <p>THE MARKET IS EMPTY</p> : null}
+                                {!isOtherUserCollection && collectionType ? <Button color="success"
+                                    onClick={() => this.props.history.push(ROUTE_SEARCH)}>
+                                    SEARCH FOR RECORDS
                                     </Button> : null}
-                                </div>
-                            }
-                        </Fragment>
+                            </div>
+                        }
+                    </Fragment>
                     }
                 </div>
             </div>
